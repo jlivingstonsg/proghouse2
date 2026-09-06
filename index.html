@@ -1,0 +1,1156 @@
+<title>RoboCam Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --ground:#f2f2ee;
+    --surface:#ffffff;
+    --surface-2:#faf9f5;
+    --ink:#1b1d21;
+    --ink-soft:#494c53;
+    --ink-faint:#7b7e86;
+    --border:#dcdcd4;
+    --border-strong:#c3c3b9;
+    --accent:#d8492420;
+    --accent-line:#d84924;
+    --accent-ink:#ad3a1c;
+    --server:#2f9e6b;
+    --connect:#8a4fc9;
+    --code-bg:#f3f2ec;
+    --shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#141619;
+      --surface:#1c1f24;
+      --surface-2:#21252b;
+      --ink:#e9e8e3;
+      --ink-soft:#b2b4ba;
+      --ink-faint:#83868d;
+      --border:#31353c;
+      --border-strong:#434952;
+      --accent:#f0693f24;
+      --accent-line:#ef6a41;
+      --accent-ink:#f7936f;
+      --server:#43b981;
+      --connect:#ab7ae0;
+      --code-bg:#23272d;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#141619;
+    --surface:#1c1f24;
+    --surface-2:#21252b;
+    --ink:#e9e8e3;
+    --ink-soft:#b2b4ba;
+    --ink-faint:#83868d;
+    --border:#31353c;
+    --border-strong:#434952;
+    --accent:#f0693f24;
+    --accent-line:#ef6a41;
+    --accent-ink:#f7936f;
+    --server:#43b981;
+    --connect:#ab7ae0;
+    --code-bg:#23272d;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .lang-sv{display:none}
+  [data-lang="sv"] .lang-en{display:none}
+  [data-lang="sv"] .lang-sv{display:block}
+  [data-lang="sv"] span.lang-sv{display:inline}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:10px clamp(16px,4vw,40px);
+    background:color-mix(in srgb,var(--ground) 88%,transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar .mark{
+    font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg button{
+    font:inherit;font-size:.8rem;font-weight:500;
+    padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);
+    cursor:pointer;line-height:1.2;
+  }
+  .seg button+button{border-left:1px solid var(--border)}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+  .seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+
+  /* ---------- shell ---------- */
+  .wrap{
+    max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 96px;
+    display:grid;grid-template-columns:232px minmax(0,1fr);gap:56px;
+  }
+  nav.toc{
+    position:sticky;top:64px;align-self:start;
+    max-height:calc(100vh - 84px);overflow-y:auto;
+    padding:28px 0;font-size:.86rem;line-height:1.45;
+  }
+  nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+  nav.toc a{
+    display:block;padding:4px 10px;border-left:2px solid var(--border);
+    color:var(--ink-faint);text-decoration:none;
+  }
+  nav.toc a:hover{color:var(--ink);border-color:var(--border-strong)}
+  nav.toc a.active{color:var(--accent-ink);border-color:var(--accent-line);font-weight:500}
+  main{min-width:0;padding-top:28px}
+
+  /* ---------- hero ---------- */
+  header.hero{border-bottom:1px solid var(--border);padding-bottom:34px;margin-bottom:10px}
+  .kicker{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);
+    margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(2.1rem,5vw,3.1rem);line-height:1.04;margin:0 0 18px;
+    font-weight:700;letter-spacing:-.02em;text-wrap:balance;
+  }
+  .deck{font-size:1.12rem;color:var(--ink-soft);max-width:60ch;margin:0}
+  .facts{
+    margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  }
+  .facts div{background:var(--surface);padding:12px 14px}
+  .facts dt{
+    font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-faint);margin:0 0 3px;
+  }
+  .facts dd{margin:0;font-size:.92rem;font-weight:500}
+
+  /* ---------- sections ---------- */
+  section{
+    padding-top:52px;margin-top:8px;scroll-margin-top:70px;
+  }
+  section>.eyebrow{
+    font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);margin:0 0 8px;
+  }
+  h2{
+    font-size:clamp(1.5rem,3vw,1.95rem);line-height:1.12;margin:0 0 18px;
+    font-weight:600;letter-spacing:-.015em;text-wrap:balance;
+  }
+  h3{
+    font-size:1.12rem;font-weight:600;margin:30px 0 10px;letter-spacing:-.01em;
+  }
+  h4{font-size:.98rem;font-weight:600;margin:20px 0 6px}
+  p{margin:0 0 14px}
+  main a{color:var(--accent-ink);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+  strong{font-weight:600}
+  ul,ol.steps{margin:0 0 16px;padding-left:1.25em}
+  li{margin:5px 0}
+  li::marker{color:var(--ink-faint)}
+
+  .lede{font-size:1.06rem;color:var(--ink-soft)}
+
+  /* callout */
+  .note{
+    border:1px solid var(--border);border-left:3px solid var(--accent-line);
+    background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:16px 0;
+    font-size:.95rem;
+  }
+  .note b{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);display:block;margin-bottom:4px}
+
+  /* fork flag under hero */
+  .fork-flag{
+    margin-top:22px;border:1px solid var(--border-strong);border-radius:10px;
+    background:var(--surface);box-shadow:var(--shadow);
+    padding:16px 18px;font-size:.95rem;
+  }
+  .fork-flag .lab{
+    font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--connect);display:block;margin-bottom:5px;
+  }
+  .fork-flag a{color:var(--accent-ink)}
+
+  /* part divider */
+  .part{border-top:2px solid var(--ink);margin-top:76px;padding-top:8px}
+  .part>.eyebrow{color:var(--connect)}
+  .part h2{font-size:clamp(1.7rem,3.4vw,2.2rem)}
+
+  /* app buttons inline */
+  .btn-pill{
+    display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.78rem;
+    padding:1px 8px;border-radius:999px;border:1px solid;vertical-align:baseline;white-space:nowrap;
+  }
+  .btn-pill.green{color:var(--server);border-color:var(--server);background:color-mix(in srgb,var(--server) 12%,transparent)}
+  .btn-pill.purple{color:var(--connect);border-color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .btn-pill.grey{color:var(--ink-soft);border-color:var(--border-strong);background:var(--surface-2)}
+
+  /* code */
+  code{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;
+    background:var(--code-bg);padding:1px 5px;border-radius:4px;
+  }
+  pre{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.82rem;line-height:1.55;
+    background:var(--code-bg);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;overflow-x:auto;margin:0 0 16px;
+  }
+  pre code{background:none;padding:0;font-size:1em}
+
+  /* cards grid */
+  .grid{display:grid;gap:14px;margin:16px 0}
+  .grid.two{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .grid.three{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+  .card{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:16px 17px;box-shadow:var(--shadow);
+  }
+  .card h4{margin:0 0 6px}
+  .card p{margin:0;font-size:.92rem;color:var(--ink-soft)}
+  .card .tag{
+    font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);display:block;margin-bottom:8px;
+  }
+
+  /* tables */
+  .tbl-scroll{overflow-x:auto;margin:16px 0;border:1px solid var(--border);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:.9rem}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+  thead th{
+    background:var(--surface-2);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:600;white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.mono,th.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+
+  /* keycode grid */
+  .keys{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
+    gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+    margin:16px 0;
+  }
+  .keys div{
+    background:var(--surface);padding:7px 11px;font-size:.83rem;
+    display:flex;gap:9px;align-items:baseline;
+  }
+  .keys .kc{
+    font-family:"IBM Plex Mono",monospace;color:var(--accent-ink);font-weight:500;
+    min-width:2.4em;font-variant-numeric:tabular-nums;
+  }
+  .keys .kn{color:var(--ink-soft)}
+
+  /* topology diagram */
+  .topo{
+    margin:20px 0;border:1px solid var(--border);border-radius:12px;background:var(--surface);
+    padding:20px;box-shadow:var(--shadow);
+  }
+  .topo svg{width:100%;height:auto;display:block}
+  .topo .lbl{font:500 12px/1.3 "IBM Plex Mono",monospace;fill:var(--ink-soft)}
+  .topo .ttl{font:600 13px/1.3 "IBM Plex Sans",sans-serif;fill:var(--ink)}
+  .topo .box{fill:var(--surface-2);stroke:var(--border-strong)}
+  .topo .flow{font:400 10.5px/1.2 "IBM Plex Mono",monospace;fill:var(--ink-faint)}
+  .topo .wire{stroke:var(--accent-line);stroke-width:1.6;fill:none}
+  .topo .wire.bt{stroke:var(--connect)}
+  .topo .wire.wifi{stroke:var(--server)}
+
+  /* timeline */
+  .timeline{list-style:none;margin:8px 0 0;padding:0;position:relative}
+  .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:14px;width:2px;background:var(--border)}
+  .timeline>li{position:relative;padding:0 0 22px 34px;margin:0}
+  .timeline>li::before{
+    content:"";position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;
+    background:var(--surface);border:2px solid var(--accent-line);
+  }
+  .timeline .ver{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:.95rem}
+  .timeline .date{font-family:"IBM Plex Mono",monospace;font-size:.74rem;color:var(--ink-faint);margin-left:8px}
+  .timeline p{margin:4px 0 0;font-size:.94rem;color:var(--ink-soft)}
+
+  /* downloads */
+  .dl{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border)}
+  .dl:last-child{border-bottom:0}
+  .dl .ext{
+    font-family:"IBM Plex Mono",monospace;font-size:.64rem;font-weight:600;letter-spacing:.06em;
+    color:var(--ink-faint);border:1px solid var(--border-strong);border-radius:5px;
+    padding:3px 6px;margin-top:2px;flex-shrink:0;min-width:3.4em;text-align:center;
+  }
+  .dl .meta{font-size:.98rem;font-weight:500}
+  .dl .sub{font-size:.85rem;color:var(--ink-faint);margin-top:2px}
+
+  footer{
+    max-width:1200px;margin:0 auto;padding:28px clamp(16px,4vw,40px) 60px;
+    border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem;
+  }
+  footer a{color:var(--ink-soft)}
+
+  @media (max-width:920px){
+    .wrap{grid-template-columns:1fr;gap:0}
+    nav.toc{display:none}
+    main{padding-top:22px}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+  html{scroll-behavior:smooth}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · Field Manual</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Language">
+      <button id="en" aria-pressed="true">EN</button>
+      <button id="sv" aria-pressed="false">SV</button>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="lt" aria-pressed="false">Light</button>
+      <button id="dk" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <ol id="tocList"></ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="kicker">Android · First-person robot control</p>
+      <h1>RoboCam</h1>
+      <p class="deck lang-en">An Android app that turns a phone into an on-board camera and control server, so you can drive a LEGO Mindstorms EV3 &mdash; or an Arduino, Raspberry Pi or PC robot &mdash; in first person from any browser. This page collects everything published about the original on proghouse.ru, and documents <a href="#fork">RoboCam54</a>, an independent private build that adds LEGO SPIKE Prime, a 360&deg; camera and VR.</p>
+      <p class="deck lang-sv">En Android-app som gör en telefon till kamera och styrserver ombord, så att du kan köra en LEGO Mindstorms EV3 &mdash; eller en robot byggd på Arduino, Raspberry Pi eller PC &mdash; i förstaperson från valfri webbläsare. Den här sidan samlar allt som publicerats om originalet på proghouse.ru, och dokumenterar <a href="#fork">RoboCam54</a>, ett fristående privat bygge som lägger till LEGO SPIKE Prime, en 360&deg;-kamera och VR.</p>
+
+      <dl class="facts">
+        <div><dt>Platform</dt><dd>Android 2.3+</dd></div>
+        <div><dt>Package</dt><dd class="mono" style="font-family:'IBM Plex Mono',monospace;font-size:.8rem">ru.proghouse.robocam</dd></div>
+        <div><dt>Price</dt><dd><span class="lang-en">Free</span><span class="lang-sv">Gratis</span></dd></div>
+        <div><dt>Developer</dt><dd>Alexey (ПрогХаус)</dd></div>
+        <div><dt><span class="lang-en">Latest</span><span class="lang-sv">Senaste</span></dt><dd>1.4.5</dd></div>
+        <div><dt>Status</dt><dd><span class="lang-en">No longer on Google Play</span><span class="lang-sv">Ej längre på Google Play</span></dd></div>
+      </dl>
+
+      <div class="fork-flag">
+        <span class="lab">Part II</span>
+        <span class="lang-en"><strong>RoboCam54</strong> is an independent Android reimplementation of RoboCam by M.Sc. Magnus (Sweden), built with Claude Code. The original was never open-sourced; RoboCam54 was rebuilt from scratch in Kotlin and adds <strong>LEGO SPIKE Prime</strong> support, a <strong>Huawei 360&deg; USB camera</strong> with a pan/tilt viewer, a <strong>Google Cardboard VR</strong> viewer and a <strong>Clear&nbsp;Cache</strong> button. It is a private build &mdash; the source code is not being released. Original author Alexey has confirmed he is fine with this page covering the developed app. &rarr; <a href="#fork">jump to Part II</a></span>
+        <span class="lang-sv"><strong>RoboCam54</strong> är en fristående Android-omskrivning av RoboCam av teknologie magister Magnus (Sverige), byggd med Claude Code. Originalet släpptes aldrig som öppen källkod; RoboCam54 är byggd från grunden i Kotlin och lägger till stöd för <strong>LEGO SPIKE Prime</strong>, en <strong>Huawei 360&deg;-USB-kamera</strong> med panorerings-/lutningsvy, en <strong>Google Cardboard-VR</strong>-vy och en knapp för att <strong>rensa cachen</strong>. Det är ett privat bygge &mdash; källkoden släpps inte. Originalupphovspersonen Alexej har bekräftat att den här sidan får omfatta den vidareutvecklade appen. &rarr; <a href="#fork">hoppa till del II</a></span>
+      </div>
+    </header>
+
+    <!-- 1 -->
+    <section id="what" data-title-en="What RoboCam is" data-title-sv="Vad RoboCam är">
+      <p class="eyebrow"><span class="lang-en">Overview</span><span class="lang-sv">Översikt</span></p>
+      <h2><span class="lang-en">What RoboCam is</span><span class="lang-sv">Vad RoboCam är</span></h2>
+
+      <div class="lang-en">
+        <p class="lede">RoboCam runs on the phone you strap to the robot. It streams that phone's camera over Wi-Fi and, at the same time, relays a driver's joystick and keyboard input from a browser back down to the robot's motors over Bluetooth. The person driving never touches the robot &mdash; they look through its camera and steer from a phone, tablet or computer on the same network.</p>
+        <p>The app began as an EV3 tool (version 1.0, September 2016) and grew over four years into a general first-person-view controller. Every capability added since &mdash; settings transfer, keyboard support, a raw Bluetooth protocol for non-LEGO robots, and an on-device joystick screen &mdash; is documented in its own section below.</p>
+        <ul>
+          <li><strong>First-person driving</strong> of a two-wheeled robot, a car, or a machine with a complex drive.</li>
+          <li><strong>Configurable controls</strong> &mdash; up to four joysticks and any number of keyboard groups, mapped to motor ports or to EV3 mailboxes.</li>
+          <li><strong>Browser client</strong> &mdash; no second app to install; the driver just opens a URL.</li>
+          <li><strong>Observers</strong> can watch the video feed without being able to steer.</li>
+          <li><strong>Works beyond LEGO</strong> &mdash; Arduino, Raspberry Pi and PC robots via a documented byte protocol over Bluetooth.</li>
+        </ul>
+      </div>
+      <div class="lang-sv">
+        <p class="lede">RoboCam körs på telefonen du spänner fast på roboten. Den strömmar telefonens kamera över Wi-Fi och skickar samtidigt förarens styrspaks- och tangentbordsinmatning från en webbläsare vidare ner till robotens motorer via Bluetooth. Föraren rör aldrig roboten &mdash; hen ser genom dess kamera och styr från en telefon, surfplatta eller dator på samma nätverk.</p>
+        <p>Appen började som ett EV3-verktyg (version 1.0, september 2016) och växte under fyra år till en allmän förstapersonsstyrning. Varje funktion som lagts till sedan dess &mdash; överföring av inställningar, tangentbordsstöd, ett rått Bluetooth-protokoll för icke-LEGO-robotar och en styrspaksskärm på själva enheten &mdash; beskrivs i egna avsnitt nedan.</p>
+        <ul>
+          <li><strong>Förstapersonskörning</strong> av en tvåhjulig robot, en bil eller en maskin med komplex drivning.</li>
+          <li><strong>Konfigurerbara reglage</strong> &mdash; upp till fyra styrspakar och valfritt antal tangentbordsgrupper, kopplade till motorportar eller till EV3-brevlådor.</li>
+          <li><strong>Webbläsarklient</strong> &mdash; ingen andra app att installera; föraren öppnar bara en URL.</li>
+          <li><strong>Åskådare</strong> kan se videoströmmen utan att kunna styra.</li>
+          <li><strong>Fungerar bortom LEGO</strong> &mdash; robotar med Arduino, Raspberry Pi och PC via ett dokumenterat byteprotokoll över Bluetooth.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="how" data-title-en="How it works" data-title-sv="Så fungerar det">
+      <p class="eyebrow"><span class="lang-en">Architecture</span><span class="lang-sv">Arkitektur</span></p>
+      <h2><span class="lang-en">How it works</span><span class="lang-sv">Så fungerar det</span></h2>
+
+      <div class="topo" aria-hidden="true">
+        <svg viewBox="0 0 720 250" role="img">
+          <rect class="box" x="12" y="150" width="150" height="74" rx="9"/>
+          <text class="ttl" x="87" y="176" text-anchor="middle">EV3 / Arduino</text>
+          <text class="lbl" x="87" y="196" text-anchor="middle">robot</text>
+          <text class="flow" x="87" y="214" text-anchor="middle">motors · sensors</text>
+
+          <rect class="box" x="255" y="150" width="150" height="74" rx="9"/>
+          <text class="ttl" x="330" y="176" text-anchor="middle">Phone 1</text>
+          <text class="lbl" x="330" y="196" text-anchor="middle">RoboCam app</text>
+          <text class="flow" x="330" y="214" text-anchor="middle">on the robot</text>
+
+          <rect class="box" x="530" y="150" width="175" height="74" rx="9"/>
+          <text class="ttl" x="617" y="176" text-anchor="middle">Phone 2 / tablet / PC</text>
+          <text class="lbl" x="617" y="196" text-anchor="middle">browser client</text>
+          <text class="flow" x="617" y="214" text-anchor="middle">the driver</text>
+
+          <path class="wire bt" d="M162 176 H255"/>
+          <text class="flow" x="208" y="168" text-anchor="middle" fill="var(--connect)">Bluetooth</text>
+          <path class="wire bt" d="M255 200 H162" />
+          <text class="flow" x="208" y="242" text-anchor="middle" fill="var(--connect)">motor commands ⇄ sensor data</text>
+
+          <path class="wire wifi" d="M405 176 H530"/>
+          <text class="flow" x="467" y="168" text-anchor="middle" fill="var(--server)">Wi-Fi · same router</text>
+          <path class="wire wifi" d="M530 200 H405"/>
+          <text class="flow" x="467" y="242" text-anchor="middle" fill="var(--server)">joystick coords ⇄ video stream</text>
+
+          <rect class="box" x="255" y="20" width="450" height="40" rx="8"/>
+          <text class="lbl" x="480" y="44" text-anchor="middle">Wi-Fi router — both phones on one network (or Phone 1's own hotspot)</text>
+          <path class="wire wifi" d="M330 60 V150 M617 60 V150" stroke-dasharray="3 4"/>
+        </svg>
+      </div>
+
+      <div class="lang-en">
+        <ul>
+          <li><strong>Phone 1</strong> carries the app, rides on the robot with its camera facing forward, and pairs with the robot over <strong>Bluetooth</strong>. Motor commands go out; sensor data comes back.</li>
+          <li><strong>Phone 2</strong> (or a tablet or computer) connects to Phone 1 over <strong>Wi-Fi</strong>. Both must be on the same router. Joystick coordinates travel one way; the camera stream travels the other.</li>
+          <li>When you touch joysticks <em>A</em> and <em>B</em> in the browser, Phone 2 sends the touch coordinates to Phone 1, which converts them into motor commands according to the robot's settings.</li>
+          <li>No router nearby? Turn on Phone 1's Wi-Fi <strong>hotspot</strong> and connect Phone 2 to it directly &mdash; see <a href="#norouter">Connecting without a router</a>.</li>
+        </ul>
+      </div>
+      <div class="lang-sv">
+        <ul>
+          <li><strong>Telefon 1</strong> har appen, sitter på roboten med kameran riktad framåt och parkopplas med roboten via <strong>Bluetooth</strong>. Motorkommandon skickas ut; sensordata kommer tillbaka.</li>
+          <li><strong>Telefon 2</strong> (eller en surfplatta eller dator) ansluter till telefon 1 via <strong>Wi-Fi</strong>. Båda måste vara på samma router. Styrspakskoordinater går åt ena hållet; kameraströmmen åt andra.</li>
+          <li>När du rör vid styrspakarna <em>A</em> och <em>B</em> i webbläsaren skickar telefon 2 beröringskoordinaterna till telefon 1, som omvandlar dem till motorkommandon enligt robotens inställningar.</li>
+          <li>Ingen router i närheten? Slå på telefon 1:s <strong>surfzon</strong> och anslut telefon 2 direkt till den &mdash; se <a href="#norouter">Anslutning utan router</a>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="requirements" data-title-en="Requirements" data-title-sv="Krav">
+      <p class="eyebrow"><span class="lang-en">Before you start</span><span class="lang-sv">Innan du börjar</span></p>
+      <h2><span class="lang-en">Requirements</span><span class="lang-sv">Krav</span></h2>
+      <div class="grid two">
+        <div class="card">
+          <span class="tag"><span class="lang-en">On the robot</span><span class="lang-sv">På roboten</span></span>
+          <h4><span class="lang-en">Android phone with RoboCam</span><span class="lang-sv">Android-telefon med RoboCam</span></h4>
+          <p class="lang-en">Android 2.3 or newer. At least one built-in camera, plus Bluetooth <em>and</em> Wi-Fi. A robot you can mount the phone on with the camera pointing forward.</p>
+          <p class="lang-sv">Android 2.3 eller senare. Minst en inbyggd kamera, samt Bluetooth <em>och</em> Wi-Fi. En robot där du kan montera telefonen med kameran riktad framåt.</p>
+        </div>
+        <div class="card">
+          <span class="tag"><span class="lang-en">In the driver's hands</span><span class="lang-sv">I förarens händer</span></span>
+          <h4><span class="lang-en">A device with a modern browser</span><span class="lang-sv">En enhet med modern webbläsare</span></h4>
+          <p class="lang-en">HTML5 support &mdash; recent Chrome, Yandex Browser, Firefox or Opera, tested on Android. A touchscreen (ideally 2-point) and Wi-Fi. Any OS works in principle; full testing was Android only.</p>
+          <p class="lang-sv">HTML5-stöd &mdash; senaste Chrome, Yandex Browser, Firefox eller Opera, testat på Android. Pekskärm (helst 2-punkts) och Wi-Fi. Vilket OS som helst fungerar i princip; full testning gjordes endast på Android.</p>
+        </div>
+      </div>
+      <p class="lang-en">For an EV3 robot you also need the LEGO Mindstorms EV3 set itself. The tutorials use the <strong>EV3 Explorer</strong>, a simple driving robot with a phone frame that tilts up and down; a build guide PDF is in <a href="#downloads">Downloads</a>.</p>
+      <p class="lang-sv">För en EV3-robot behöver du även själva LEGO Mindstorms EV3-setet. Handledningarna använder <strong>EV3 Explorer</strong> (Исследователь EV3), en enkel körrobot med en telefonram som lutar upp och ner; en bygganvisning i PDF finns under <a href="#downloads">Nedladdningar</a>.</p>
+    </section>
+
+    <!-- 4 -->
+    <section id="install" data-title-en="Install &amp; download" data-title-sv="Installera &amp; ladda ner">
+      <p class="eyebrow"><span class="lang-en">Getting the app</span><span class="lang-sv">Skaffa appen</span></p>
+      <h2><span class="lang-en">Install &amp; download</span><span class="lang-sv">Installera &amp; ladda ner</span></h2>
+      <div class="lang-en">
+        <p>The app was published free on Google Play as <code>ru.proghouse.robocam</code>. As of 2025 it is <strong>no longer listed on Google Play</strong>, so the manual APK downloads on proghouse.ru are now the way to get it. Two builds are offered:</p>
+        <ul>
+          <li><strong>RoboCam &mdash; regular version.</strong> The normal build for current phones.</li>
+          <li><strong>RoboCam with RenderScript.</strong> An alternative build for some older phones where the regular version has trouble.</li>
+        </ul>
+        <p>On first launch, Android 6 and up asks for camera permission &mdash; grant it, the camera is required. Settings export/import later asks for storage permission the same way.</p>
+      </div>
+      <div class="lang-sv">
+        <p>Appen publicerades gratis på Google Play som <code>ru.proghouse.robocam</code>. Sedan 2025 finns den <strong>inte längre på Google Play</strong>, så de manuella APK-nedladdningarna på proghouse.ru är numera vägen till den. Två versioner erbjuds:</p>
+        <ul>
+          <li><strong>RoboCam &mdash; vanlig version.</strong> Den normala versionen för dagens telefoner.</li>
+          <li><strong>RoboCam med RenderScript.</strong> En alternativ version för vissa äldre telefoner där den vanliga versionen krånglar.</li>
+        </ul>
+        <p>Vid första start ber Android 6 och senare om kameratillstånd &mdash; ge det, kameran krävs. Export/import av inställningar ber senare om lagringstillstånd på samma sätt.</p>
+      </div>
+      <div class="note">
+        <b><span class="lang-en">Links</span><span class="lang-sv">Länkar</span></b>
+        <span class="lang-en">Original hub: <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a> · Play page (delisted): <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">play.google.com/store/apps/details?id=ru.proghouse.robocam</a></span>
+        <span class="lang-sv">Ursprunglig samlingssida: <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a> · Play-sida (borttagen): <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">play.google.com/store/apps/details?id=ru.proghouse.robocam</a></span>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section id="mainscreen" data-title-en="The main screen" data-title-sv="Huvudskärmen">
+      <p class="eyebrow"><span class="lang-en">First run</span><span class="lang-sv">Första körningen</span></p>
+      <h2><span class="lang-en">The main screen</span><span class="lang-sv">Huvudskärmen</span></h2>
+      <p class="lang-en">Behind a live camera preview sit three round buttons. Each one is also a status indicator &mdash; a white background means "off / not connected".</p>
+      <p class="lang-sv">Bakom en live-kameraförhandsvisning sitter tre runda knappar. Var och en är också en statusindikator &mdash; vit bakgrund betyder "av / ej ansluten".</p>
+      <div class="grid three">
+        <div class="card">
+          <span class="tag">Left</span>
+          <h4><span class="btn-pill green">Server</span></h4>
+          <p class="lang-en">Starts and stops the RoboCam server that browser clients connect to. Blinks while initialising, turns green when running.</p>
+          <p class="lang-sv">Startar och stoppar RoboCam-servern som webbläsarklienter ansluter till. Blinkar under initiering, blir grön när den körs.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Centre</span>
+          <h4><span class="btn-pill purple">Connect to EV3</span></h4>
+          <p class="lang-en">Connects to / disconnects from the robot over Bluetooth. The hint below shows the connection state and the name of the current robot settings.</p>
+          <p class="lang-sv">Ansluter till / kopplar från roboten via Bluetooth. Tipsraden under visar anslutningsläget och namnet på de aktuella robotinställningarna.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Right</span>
+          <h4><span class="btn-pill grey">Settings</span></h4>
+          <p class="lang-en">Opens RoboCam's settings, split into <em>Server</em> and <em>Robot</em>.</p>
+          <p class="lang-sv">Öppnar RoboCams inställningar, uppdelade i <em>Server</em> och <em>Robot</em>.</p>
+        </div>
+      </div>
+      <p class="lang-en">After a fresh install the robot settings default to <strong>EV3 Explorer</strong>, so if you build that model you can drive it with no configuration at all.</p>
+      <p class="lang-sv">Efter en ny installation står robotinställningarna på <strong>EV3 Explorer</strong>, så bygger du den modellen kan du köra den helt utan konfiguration.</p>
+    </section>
+
+    <!-- 6 -->
+    <section id="connect" data-title-en="Start the server &amp; connect" data-title-sv="Starta servern &amp; anslut">
+      <p class="eyebrow"><span class="lang-en">Walkthrough</span><span class="lang-sv">Genomgång</span></p>
+      <h2><span class="lang-en">Start the server and connect a client</span><span class="lang-sv">Starta servern och anslut en klient</span></h2>
+      <p class="lang-en">Server and robot can be brought up in either order.</p>
+      <p class="lang-sv">Server och robot kan startas i valfri ordning.</p>
+      <div class="lang-en">
+        <ol class="steps">
+          <li>Tap the <span class="btn-pill green">Server</span> button on Phone 1. It blinks (&ldquo;Initialising RoboCam server&hellip;&rdquo;), then turns green (&ldquo;RoboCam server is running&rdquo;).</li>
+          <li>Connect Phone 1 to your Wi-Fi router. The hint now shows a connection address such as <code>http://192.168.1.153:8088</code> (port <strong>8088</strong>).</li>
+          <li>On Phone 2, on the same router, open a supported browser and go to that address.</li>
+          <li>Log in. Defaults: username <code>admin</code>, password <code>123</code>.</li>
+          <li>The camera view from Phone 1 loads. Rotate Phone 1 to landscape and the client follows automatically (unless Phone 1 is locked).</li>
+          <li>Tap the fullscreen icon (top-right of the page) to hide browser chrome and enlarge the feed.</li>
+          <li>Tap <span class="btn-pill purple">Connect to EV3</span>. Allow Bluetooth if prompted, then pick your robot from the paired-devices list. Joysticks appear on the client and you can drive.</li>
+        </ol>
+        <p>The hand icon (top-right of the client) swaps the two joysticks left-to-right, to switch quickly between a left- and right-handed layout.</p>
+        <h3>Shutting down</h3>
+        <p>When you finish, stop the server (green button) and disconnect the EV3 (purple button), in either order. Motors stop or return to their start position depending on settings.</p>
+      </div>
+      <div class="lang-sv">
+        <ol class="steps">
+          <li>Tryck på <span class="btn-pill green">Server</span>-knappen på telefon 1. Den blinkar (&rdquo;Initierar RoboCam-server&hellip;&rdquo;) och blir sedan grön (&rdquo;RoboCam-servern körs&rdquo;).</li>
+          <li>Anslut telefon 1 till din Wi-Fi-router. Tipsraden visar nu en anslutningsadress som <code>http://192.168.1.153:8088</code> (port <strong>8088</strong>).</li>
+          <li>På telefon 2, på samma router, öppna en stödd webbläsare och gå till den adressen.</li>
+          <li>Logga in. Standard: användarnamn <code>admin</code>, lösenord <code>123</code>.</li>
+          <li>Kameravyn från telefon 1 laddas. Vrid telefon 1 till liggande läge så följer klienten med automatiskt (om inte telefon 1 är låst).</li>
+          <li>Tryck på helskärmsikonen (uppe till höger på sidan) för att dölja webbläsarens gränssnitt och förstora bilden.</li>
+          <li>Tryck på <span class="btn-pill purple">Anslut till EV3</span>. Tillåt Bluetooth om du blir tillfrågad och välj sedan din robot i listan över parkopplade enheter. Styrspakar dyker upp i klienten och du kan köra.</li>
+        </ol>
+        <p>Handikonen (uppe till höger i klienten) byter plats på de två styrspakarna i sidled, för att snabbt växla mellan vänster- och högerhänt layout.</p>
+        <h3>Avstängning</h3>
+        <p>När du är klar, stoppa servern (gröna knappen) och koppla från EV3 (lila knappen), i valfri ordning. Motorerna stannar eller återgår till startläget beroende på inställningarna.</p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="server-settings" data-title-en="Server settings" data-title-sv="Serverinställningar">
+      <p class="eyebrow"><span class="lang-en">Configuration</span><span class="lang-sv">Konfiguration</span></p>
+      <h2><span class="lang-en">Server settings</span><span class="lang-sv">Serverinställningar</span></h2>
+      <p class="lang-en">Settings &rarr; <em>Server</em>. Two groups: camera and security. Saving server settings may drop connected clients, who then reconnect.</p>
+      <p class="lang-sv">Inställningar &rarr; <em>Server</em>. Två grupper: kamera och säkerhet. Att spara serverinställningar kan koppla bort anslutna klienter, som sedan återansluter.</p>
+      <div class="grid two">
+        <div class="card">
+          <span class="tag">Camera</span>
+          <p class="lang-en"><strong>Camera</strong> (front or back), <strong>image size</strong> and <strong>JPEG quality</strong>. Smaller size and lower JPEG quality (40% or less) mean smoother, faster video but a coarser picture; higher quality (90%+) means a better picture but slower streaming. Tune for your link.</p>
+          <p class="lang-sv"><strong>Kamera</strong> (fram eller bak), <strong>bildstorlek</strong> och <strong>JPEG-kvalitet</strong>. Mindre storlek och lägre JPEG-kvalitet (40&nbsp;% eller lägre) ger jämnare, snabbare video men grövre bild; högre kvalitet (90&nbsp;%+) ger bättre bild men långsammare strömning. Justera efter din anslutning.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Security</span>
+          <p class="lang-en"><strong>Driver</strong> name and password (default <code>admin</code> / <code>123</code>). <strong>Observers</strong> are on by default &mdash; they see the video but cannot steer (default <code>guest</code> / <code>123</code>). Untick &ldquo;Allow observers&rdquo; to disable them.</p>
+          <p class="lang-sv"><strong>Förare</strong>: namn och lösenord (standard <code>admin</code> / <code>123</code>). <strong>Åskådare</strong> är på som standard &mdash; de ser videon men kan inte styra (standard <code>guest</code> / <code>123</code>). Avmarkera &rdquo;Tillåt åskådare&rdquo; för att stänga av dem.</p>
+        </div>
+      </div>
+      <div class="note">
+        <b><span class="lang-en">One driver only</span><span class="lang-sv">Endast en förare</span></b>
+        <span class="lang-en">The driver and observer counts are unlimited, but more than one driver causes conflicts over control and video. Keep observers to a minimum too, or turn them off &mdash; many observers hurt the stream.</span>
+        <span class="lang-sv">Antalet förare och åskådare är obegränsat, men fler än en förare orsakar konflikter om styrning och video. Håll även åskådare till ett minimum, eller stäng av dem &mdash; många åskådare försämrar strömmen.</span>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="robot-settings" data-title-en="Robot settings: joysticks" data-title-sv="Robotinställningar: styrspakar">
+      <p class="eyebrow"><span class="lang-en">Configuration</span><span class="lang-sv">Konfiguration</span></p>
+      <h2><span class="lang-en">Robot settings &mdash; joysticks</span><span class="lang-sv">Robotinställningar &mdash; styrspakar</span></h2>
+      <p class="lang-en">Settings &rarr; <em>Robot</em> holds one profile per robot. <strong>Add</strong> / <strong>Delete</strong> at the top; the current profile shows just below and its name also appears under the centre button on the main screen. Each profile starts with a name and description (both shown in the list), then joystick and key-group settings.</p>
+      <p class="lang-sv">Inställningar &rarr; <em>Robot</em> innehåller en profil per robot. <strong>Lägg till</strong> / <strong>Ta bort</strong> högst upp; den aktuella profilen visas strax under och dess namn syns även under mittknappen på huvudskärmen. Varje profil börjar med namn och beskrivning (båda visas i listan), sedan inställningar för styrspakar och tangentgrupper.</p>
+
+      <h3><span class="lang-en">Four joysticks, two pairs</span><span class="lang-sv">Fyra styrspakar, två par</span></h3>
+      <p class="lang-en">You can configure up to four joysticks, but the client only ever shows one pair at a time &mdash; <strong>1&ndash;2</strong> or <strong>3&ndash;4</strong>. Enabling both pairs adds a switch button on the client. Each joystick has its own <em>Visibility</em> tickbox.</p>
+      <p class="lang-sv">Du kan konfigurera upp till fyra styrspakar, men klienten visar alltid bara ett par åt gången &mdash; <strong>1&ndash;2</strong> eller <strong>3&ndash;4</strong>. Aktiverar du båda paren läggs en växlingsknapp till i klienten. Varje styrspak har en egen <em>Synlighet</em>-ruta.</p>
+
+      <h3><span class="lang-en">Shape</span><span class="lang-sv">Form</span></h3>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr>
+            <th><span class="lang-en">Shape</span><span class="lang-sv">Form</span></th>
+            <th><span class="lang-en">Behaviour</span><span class="lang-sv">Beteende</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="lang-en">Vertical</span><span class="lang-sv">Vertikal</span></td><td><span class="lang-en">Reads only touch height: &minus;100 at the bottom to 100 at the top, 0 in the middle. Horizontal position ignored.</span><span class="lang-sv">Läser bara beröringshöjd: &minus;100 längst ner till 100 längst upp, 0 i mitten. Horisontellt läge ignoreras.</span></td></tr>
+            <tr><td><span class="lang-en">Horizontal</span><span class="lang-sv">Horisontell</span></td><td><span class="lang-en">Same, sideways: &minus;100 at the far left to 100 at the far right, 0 centre.</span><span class="lang-sv">Samma, i sidled: &minus;100 längst till vänster till 100 längst till höger, 0 i mitten.</span></td></tr>
+            <tr><td><span class="lang-en">Round · Square</span><span class="lang-sv">Rund · Fyrkantig</span></td><td><span class="lang-en">Both axes, each &minus;100 to 100, 0 centre. On the round one, touches outside the circle are clamped to the circle's edge along the line to the centre.</span><span class="lang-sv">Båda axlarna, var och en &minus;100 till 100, 0 i mitten. På den runda begränsas beröringar utanför cirkeln till cirkelns kant längs linjen mot mitten.</span></td></tr>
+            <tr><td><span class="lang-en">Arrows · Vertical arrows · Horizontal arrows</span><span class="lang-sv">Pilar · Vertikala pilar · Horisontella pilar</span></td><td><span class="lang-en">Not position-sensitive &mdash; only which arrow is touched. Up = vertical 100 / horizontal 0; Down = &minus;100 / 0; Left = 0 / &minus;100; Right = 0 / 100.</span><span class="lang-sv">Inte lägeskänsliga &mdash; bara vilken pil som berörs. Upp = vertikal 100 / horisontell 0; Ner = &minus;100 / 0; Vänster = 0 / &minus;100; Höger = 0 / 100.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3><span class="lang-en">Type</span><span class="lang-sv">Typ</span></h3>
+      <div class="grid two">
+        <div class="card"><h4><span class="lang-en">Independent motors</span><span class="lang-sv">Oberoende motorer</span></h4><p class="lang-en">Horizontal and vertical touch coordinates drive separate motors, independently. Good for a car where one motor steers and another drives.</p><p class="lang-sv">Horisontella och vertikala beröringskoordinater driver separata motorer, oberoende av varandra. Bra för en bil där en motor styr och en annan driver.</p></div>
+        <div class="card"><h4><span class="lang-en">Steering 1</span><span class="lang-sv">Styrning 1</span></h4><p class="lang-en">Two independent drive wheels, driven like a car &mdash; no turning on the spot. Closer to vertical centre = lower speed.</p><p class="lang-sv">Två oberoende drivhjul, körs som en bil &mdash; kan inte snurra på stället. Närmare vertikal mitt = lägre fart.</p></div>
+        <div class="card"><h4><span class="lang-en">Steering 2</span><span class="lang-sv">Styrning 2</span></h4><p class="lang-en">Same two-wheel drive, but the robot <em>can</em> spin on the spot.</p><p class="lang-sv">Samma tvåhjulsdrift, men roboten <em>kan</em> snurra på stället.</p></div>
+        <div class="card"><h4><span class="lang-en">Mailbox</span><span class="lang-sv">Brevlåda</span></h4><p class="lang-en">Just forwards the raw touch coordinates into EV3 mailboxes. Write your own EV3 program to turn them into motion &mdash; this is how you build custom control laws (e.g. a Gyro Boy).</p><p class="lang-sv">Skickar bara vidare de råa beröringskoordinaterna till EV3-brevlådor. Skriv ett eget EV3-program som gör dem till rörelse &mdash; så bygger du egna styrlagar (t.ex. en Gyro Boy).</p></div>
+      </div>
+      <div class="note">
+        <b><span class="lang-en">Mailbox names</span><span class="lang-sv">Brevlådenamn</span></b>
+        <span class="lang-en">Joystick 1 &rarr; <code>x</code>, <code>y</code> · Joystick 2 &rarr; <code>w</code>, <code>z</code> · Joystick 3 &rarr; <code>a</code>, <code>b</code> · Joystick 4 &rarr; <code>c</code>, <code>d</code></span>
+        <span class="lang-sv">Styrspak 1 &rarr; <code>x</code>, <code>y</code> · Styrspak 2 &rarr; <code>w</code>, <code>z</code> · Styrspak 3 &rarr; <code>a</code>, <code>b</code> · Styrspak 4 &rarr; <code>c</code>, <code>d</code></span>
+      </div>
+
+      <h3><span class="lang-en">Touch-end behaviour</span><span class="lang-sv">Beteende när beröringen slutar</span></h3>
+      <p class="lang-en">Set separately for the horizontal and vertical axes (all shapes except arrows): <strong>Return to zero</strong> &mdash; the robot stops when you let go (the usual choice); or <strong>Hold position</strong> &mdash; the last coordinate is kept, used e.g. for the EV3 Explorer's tilting phone frame.</p>
+      <p class="lang-sv">Ställs in separat för horisontell och vertikal axel (alla former utom pilar): <strong>Återgå till noll</strong> &mdash; roboten stannar när du släpper (det vanliga valet); eller <strong>Behåll läget</strong> &mdash; den sista koordinaten behålls, används t.ex. för EV3 Explorers lutande telefonram.</p>
+
+      <h3><span class="lang-en">Port settings</span><span class="lang-sv">Portinställningar</span></h3>
+      <p class="lang-en">For <em>Independent motors</em>, <em>Steering 1</em> and <em>Steering 2</em>, each joystick has an unlimited list of ports. Add / Delete as needed.</p>
+      <p class="lang-sv">För <em>Oberoende motorer</em>, <em>Styrning 1</em> och <em>Styrning 2</em> har varje styrspak en obegränsad lista av portar. Lägg till / ta bort efter behov.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr>
+            <th><span class="lang-en">Setting</span><span class="lang-sv">Inställning</span></th>
+            <th><span class="lang-en">Meaning</span><span class="lang-sv">Betydelse</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="lang-en">Joystick axis</span><span class="lang-sv">Styrspaksaxel</span></td><td><span class="lang-en">Independent motors only. Horizontal or Vertical &mdash; which axis moves this motor.</span><span class="lang-sv">Endast oberoende motorer. Horisontell eller Vertikal &mdash; vilken axel som rör denna motor.</span></td></tr>
+            <tr><td><span class="lang-en">Motor</span><span class="lang-sv">Motor</span></td><td><span class="lang-en">Steering 1 / 2 only. Left or Right.</span><span class="lang-sv">Endast styrning 1 / 2. Vänster eller höger.</span></td></tr>
+            <tr><td><span class="lang-en">EV3 brick</span><span class="lang-sv">EV3-enhet</span></td><td><span class="lang-en">1&ndash;4, for daisy-chained bricks. Use 1 for a single brick.</span><span class="lang-sv">1&ndash;4, för sammankopplade enheter. Använd 1 för en enda enhet.</span></td></tr>
+            <tr><td><span class="lang-en">Port number</span><span class="lang-sv">Portnummer</span></td><td class="mono">A &ndash; D</td></tr>
+            <tr><td><span class="lang-en">Changed value</span><span class="lang-sv">Ändrat värde</span></td><td><span class="lang-en">Independent motors only. <em>Motor power</em> &mdash; farther from centre = faster. <em>Motor angle</em> &mdash; farther from centre = larger turn angle; speed is then set by the <em>Power</em> field (higher = snappier, holds the angle better).</span><span class="lang-sv">Endast oberoende motorer. <em>Motoreffekt</em> &mdash; längre från mitten = snabbare. <em>Motorvinkel</em> &mdash; längre från mitten = större vridvinkel; farten sätts då av fältet <em>Effekt</em> (högre = snabbare respons, håller vinkeln bättre).</span></td></tr>
+            <tr><td><span class="lang-en">Invert</span><span class="lang-sv">Invertera</span></td><td><span class="lang-en">Flips the computed power or angle.</span><span class="lang-sv">Vänder den beräknade effekten eller vinkeln.</span></td></tr>
+            <tr><td><span class="lang-en">Coefficient</span><span class="lang-sv">Koefficient</span></td><td><span class="lang-en">Scales the computed value up or down.</span><span class="lang-sv">Skalar det beräknade värdet upp eller ner.</span></td></tr>
+            <tr><td><span class="lang-en">Brake</span><span class="lang-sv">Bromsa</span></td><td><span class="lang-en">On: motors stop hard. Off: they coast to a stop.</span><span class="lang-sv">På: motorerna stannar tvärt. Av: de rullar ut till stopp.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="keyboard" data-title-en="Keyboard control" data-title-sv="Tangentbordsstyrning">
+      <p class="eyebrow"><span class="lang-en">Version 1.2</span><span class="lang-sv">Version 1.2</span></p>
+      <h2><span class="lang-en">Keyboard control</span><span class="lang-sv">Tangentbordsstyrning</span></h2>
+      <p class="lang-en">From 1.2 the client accepts a physical keyboard, so you can drive an EV3 in first person from a desktop or laptop. The client watches the keys named in the settings; when one is pressed or released, its code and new state go to the app, which either drives motors directly or forwards the codes into EV3 mailboxes.</p>
+      <p class="lang-sv">Från 1.2 tar klienten emot ett fysiskt tangentbord, så du kan köra en EV3 i förstaperson från en stationär eller bärbar dator. Klienten bevakar tangenterna som anges i inställningarna; när en trycks ner eller släpps skickas dess kod och nya tillstånd till appen, som antingen driver motorer direkt eller skickar koderna vidare till EV3-brevlådor.</p>
+
+      <h3><span class="lang-en">Two profile-wide options</span><span class="lang-sv">Två profilövergripande val</span></h3>
+      <ul>
+        <li><span class="lang-en"><strong>Show debug info</strong> &mdash; the client displays joystick coordinates as you use them and the codes of pressed keys.</span><span class="lang-sv"><strong>Visa felsökningsinfo</strong> &mdash; klienten visar styrspakskoordinater medan du använder dem och koderna för nedtryckta tangenter.</span></li>
+        <li><span class="lang-en"><strong>Hide joysticks when the keyboard is used</strong> &mdash; joysticks vanish on the first keypress and return when you click the screen.</span><span class="lang-sv"><strong>Dölj styrspakar när tangentbordet används</strong> &mdash; styrspakarna försvinner vid första tangenttryckningen och återkommer när du klickar på skärmen.</span></li>
+      </ul>
+
+      <h3><span class="lang-en">Key groups</span><span class="lang-sv">Tangentgrupper</span></h3>
+      <p class="lang-en">Keys are organised into an unlimited number of <strong>key groups</strong>, scrolled to near the bottom of the robot profile. Each group has an <em>Active</em> tickbox and a <em>Type</em>: <strong>Independent motors</strong>, <strong>Steering</strong>, or <strong>Mailbox</strong> &mdash; the same meanings as for joysticks. In the EV3 Explorer profile there are usually two groups: one to steer (<code>W A S D</code> + arrows), one for the phone frame (<code>Y</code> and <code>H</code>).</p>
+      <p class="lang-sv">Tangenter organiseras i ett obegränsat antal <strong>tangentgrupper</strong>, en bit ner i robotprofilen. Varje grupp har en <em>Aktiv</em>-ruta och en <em>Typ</em>: <strong>Oberoende motorer</strong>, <strong>Styrning</strong> eller <strong>Brevlåda</strong> &mdash; samma betydelser som för styrspakar. I EV3 Explorer-profilen finns normalt två grupper: en för att styra (<code>W A S D</code> + pilar), en för telefonramen (<code>Y</code> och <code>H</code>).</p>
+      <div class="note">
+        <b><span class="lang-en">Battery</span><span class="lang-sv">Batteri</span></b>
+        <span class="lang-en">Key states are polled continuously on the client even when the keyboard is idle. If you only use joysticks, deactivate all key groups to spare the client's CPU and battery. Upgrading from an older version? The old EV3 Explorer profile has no key groups &mdash; delete it and let RoboCam recreate it.</span>
+        <span class="lang-sv">Tangenttillstånd avläses kontinuerligt på klienten även när tangentbordet är overksamt. Använder du bara styrspakar, avaktivera alla tangentgrupper för att spara klientens processor och batteri. Uppgraderar du från en äldre version? Den gamla EV3 Explorer-profilen saknar tangentgrupper &mdash; ta bort den och låt RoboCam återskapa den.</span>
+      </div>
+
+      <h3><span class="lang-en">Stepped speed &amp; angle</span><span class="lang-sv">Stegvis fart &amp; vinkel</span></h3>
+      <p class="lang-en">A key is only ever on or off, so an abrupt jump to full power can fling the phone off its frame or over-steer. Six fields smooth this out, separately for the horizontal-axis and vertical-axis keys: <em>Increase / Decrease (horizontal)</em>, <em>Increase / Decrease (vertical)</em>, and a <em>pause between steps</em> for each axis.</p>
+      <p class="lang-sv">En tangent är bara på eller av, så ett tvärt hopp till full effekt kan slänga av telefonen från ramen eller översväng. Sex fält jämnar ut detta, separat för tangenterna på horisontell och vertikal axel: <em>Öka / Minska (horisontell)</em>, <em>Öka / Minska (vertikal)</em>, och en <em>paus mellan steg</em> för varje axel.</p>
+      <ul>
+        <li><span class="lang-en">Step values <strong>0&ndash;200</strong>. 0 or 200 means an instant change, not a ramp.</span><span class="lang-sv">Stegvärden <strong>0&ndash;200</strong>. 0 eller 200 innebär omedelbar ändring, ingen ramp.</span></li>
+        <li><span class="lang-en">Pause is in milliseconds, <strong>minimum 100</strong>. Real pauses can be longer &mdash; EV3 command delays add up.</span><span class="lang-sv">Pausen anges i millisekunder, <strong>minst 100</strong>. Verkliga pauser kan bli längre &mdash; EV3-kommandofördröjningar tillkommer.</span></li>
+        <li><span class="lang-en">Example: increase 15, decrease 50, pause 100&nbsp;ms &rarr; hold <code>W</code> and speed rises 15 units every 100&nbsp;ms to 100; release and it falls 50 units every 100&nbsp;ms to 0. Gentle start, firmer stop.</span><span class="lang-sv">Exempel: öka 15, minska 50, paus 100&nbsp;ms &rarr; håll <code>W</code> och farten stiger 15 enheter var 100:e&nbsp;ms till 100; släpp och den faller 50 enheter var 100:e&nbsp;ms till 0. Mjuk start, bestämdare stopp.</span></li>
+      </ul>
+      <p class="lang-en">Assign keys with the four buttons <em>Keys up / left / down / right</em> (each opens a picker; you can also press a physical key to select it). Group ports are configured just like joystick ports.</p>
+      <p class="lang-sv">Tilldela tangenter med de fyra knapparna <em>Tangenter upp / vänster / ner / höger</em> (var och en öppnar en väljare; du kan också trycka på en fysisk tangent för att välja den). Grupportar konfigureras precis som styrspaksportar.</p>
+
+      <h3><span class="lang-en">Mailbox key groups</span><span class="lang-sv">Brevlådetangentgrupper</span></h3>
+      <p class="lang-en">A <em>Mailbox</em> group has only a <strong>mailbox name</strong> and a <strong>Keys</strong> list. Only the listed keys are sent. The EV3 mailbox block cannot receive an array, so only the <em>last</em> pressed key code arrives, or <code>0</code> when it is released &mdash; for independent handling of several keys, make one mailbox per key.</p>
+      <p class="lang-sv">En <em>Brevlåde</em>-grupp har bara ett <strong>brevlådenamn</strong> och en <strong>Tangenter</strong>-lista. Endast de listade tangenterna skickas. EV3:s brevlådeblock kan inte ta emot en array, så bara koden för den <em>senast</em> nedtryckta tangenten kommer fram, eller <code>0</code> när den släpps &mdash; för oberoende hantering av flera tangenter, gör en brevlåda per tangent.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="autorun" data-title-en="Auto-run an EV3 program" data-title-sv="Autostarta ett EV3-program">
+      <p class="eyebrow"><span class="lang-en">Version 1.2</span><span class="lang-sv">Version 1.2</span></p>
+      <h2><span class="lang-en">Auto-run a program on the EV3</span><span class="lang-sv">Autostarta ett program på EV3</span></h2>
+      <p class="lang-en">If your robot needs a custom EV3 program running while RoboCam is connected (to read mailboxes and drive motors, say), tick <strong>Run program</strong> and enter the full path, e.g. <code>../prjs/MyProject/MyProgram.rbf</code>. Programs sent from the LEGO MINDSTORMS EV3 software land in <code>../prjs/&lt;ProjectName&gt;/&lt;ProgramName&gt;.rbf</code>.</p>
+      <p class="lang-sv">Om din robot behöver ett eget EV3-program igång medan RoboCam är anslutet (för att läsa brevlådor och driva motorer, t.ex.), markera <strong>Kör program</strong> och ange den fullständiga sökvägen, t.ex. <code>../prjs/MyProject/MyProgram.rbf</code>. Program som skickas från LEGO MINDSTORMS EV3-programvaran hamnar i <code>../prjs/&lt;Projektnamn&gt;/&lt;Programnamn&gt;.rbf</code>.</p>
+      <ul>
+        <li><span class="lang-en">The program starts the moment RoboCam connects, and <strong>restarts</strong> whenever the driver client disconnects.</span><span class="lang-sv">Programmet startar i samma stund RoboCam ansluter och <strong>startar om</strong> varje gång förarklienten kopplar från.</span></li>
+        <li><span class="lang-en">The path is <strong>case-sensitive</strong>; one wrong character and nothing runs.</span><span class="lang-sv">Sökvägen är <strong>skiftlägeskänslig</strong>; ett fel tecken och inget körs.</span></li>
+        <li><span class="lang-en">If another user program is already running when RoboCam connects, the configured program does not start.</span><span class="lang-sv">Om ett annat användarprogram redan körs när RoboCam ansluter startar inte det konfigurerade programmet.</span></li>
+      </ul>
+    </section>
+
+    <!-- 11 -->
+    <section id="keycodes" data-title-en="Key code table" data-title-sv="Tabell över tangentkoder">
+      <p class="eyebrow"><span class="lang-en">Reference</span><span class="lang-sv">Referens</span></p>
+      <h2><span class="lang-en">Key code table</span><span class="lang-sv">Tabell över tangentkoder</span></h2>
+      <p class="lang-en">Codes mostly follow ASCII / JavaScript key codes. Browser hot-keys (F1 help, F5 reload, etc.) are unavailable inside RoboCam and are omitted here. These are the codes RoboCam can use:</p>
+      <p class="lang-sv">Koderna följer i huvudsak ASCII / JavaScript-tangentkoder. Webbläsarens snabbtangenter (F1 hjälp, F5 uppdatera, osv.) är inte tillgängliga i RoboCam och utelämnas här. Detta är koderna RoboCam kan använda:</p>
+      <div class="keys" id="keyGrid"></div>
+    </section>
+
+    <!-- 12 -->
+    <section id="transfer" data-title-en="Import, export, copy, send" data-title-sv="Importera, exportera, kopiera, skicka">
+      <p class="eyebrow"><span class="lang-en">Version 1.1</span><span class="lang-sv">Version 1.1</span></p>
+      <h2><span class="lang-en">Import, export, copy and send settings</span><span class="lang-sv">Importera, exportera, kopiera och skicka inställningar</span></h2>
+      <p class="lang-en">Every robot profile can be moved between phones or shared. Open the profile, tap the three-dot menu (top-right), and pick an action. On Android 6+ you grant shared-storage permission once.</p>
+      <p class="lang-sv">Varje robotprofil kan flyttas mellan telefoner eller delas. Öppna profilen, tryck på trepunktsmenyn (uppe till höger) och välj en åtgärd. På Android 6+ ger du lagringstillstånd en gång.</p>
+      <div class="grid two">
+        <div class="card"><h4><span class="lang-en">Export to file</span><span class="lang-sv">Exportera till fil</span></h4><p class="lang-en">Writes the profile to the Downloads folder (e.g. <code>/storage/emulated/0/Download</code>) as <code>RoboCam&lt;name&gt;&lt;date&gt;.xml</code>. Repeat exports get a <code>2</code>, <code>3</code>&hellip; suffix rather than overwriting.</p><p class="lang-sv">Skriver profilen till Nedladdningar-mappen (t.ex. <code>/storage/emulated/0/Download</code>) som <code>RoboCam&lt;namn&gt;&lt;datum&gt;.xml</code>. Upprepade exporter får suffixet <code>2</code>, <code>3</code>&hellip; i stället för att skriva över.</p></div>
+        <div class="card"><h4><span class="lang-en">Send</span><span class="lang-sv">Skicka</span></h4><p class="lang-en">Shares the XML over Bluetooth, email, etc. &mdash; only apps that can send an XML file appear. The file is staged in <code>/storage/emulated/0/.robocam</code> and overwritten each time, so wait for one send to finish before changing settings and sending again.</p><p class="lang-sv">Delar XML-filen via Bluetooth, e-post, osv. &mdash; bara appar som kan skicka en XML-fil visas. Filen mellanlagras i <code>/storage/emulated/0/.robocam</code> och skrivs över varje gång, så vänta tills en sändning är klar innan du ändrar inställningar och skickar igen.</p></div>
+        <div class="card"><h4><span class="lang-en">Make a copy</span><span class="lang-sv">Gör en kopia</span></h4><p class="lang-en">Duplicates the profile in place &mdash; a base for a new robot built on existing settings.</p><p class="lang-sv">Duplicerar profilen på plats &mdash; en grund för en ny robot byggd på befintliga inställningar.</p></div>
+        <div class="card"><h4><span class="lang-en">Import from file</span><span class="lang-sv">Importera från fil</span></h4><p class="lang-en">From the robot list, three-dot menu &rarr; <em>Import from file</em>, then browse to the XML. Imported profiles get a <code>2</code> (then <code>3</code>&hellip;) appended to the name.</p><p class="lang-sv">Från robotlistan, trepunktsmeny &rarr; <em>Importera från fil</em>, bläddra sedan till XML-filen. Importerade profiler får <code>2</code> (sedan <code>3</code>&hellip;) tillagt i namnet.</p></div>
+      </div>
+      <div class="note">
+        <b><span class="lang-en">Unsaved edits travel too</span><span class="lang-sv">Osparade ändringar följer med</span></b>
+        <span class="lang-en">Export and Send use the profile <em>as currently shown</em>, including unsaved edits. Rename a robot, export, then close without saving &mdash; the file has the new name, the app keeps the old.</span>
+        <span class="lang-sv">Export och Skicka använder profilen <em>som den visas just nu</em>, inklusive osparade ändringar. Byt namn på en robot, exportera, stäng sedan utan att spara &mdash; filen har det nya namnet, appen behåller det gamla.</span>
+      </div>
+    </section>
+
+    <!-- 13 -->
+    <section id="nonstandard" data-title-en="Arduino, Raspberry Pi &amp; PC" data-title-sv="Arduino, Raspberry Pi &amp; PC">
+      <p class="eyebrow"><span class="lang-en">Version 1.3.1</span><span class="lang-sv">Version 1.3.1</span></p>
+      <h2><span class="lang-en">Non-standard robots &mdash; the Bluetooth protocol</span><span class="lang-sv">Icke-standardrobotar &mdash; Bluetooth-protokollet</span></h2>
+      <p class="lang-en">From 1.3.1 RoboCam can also talk to any robot that can work directly with Bluetooth data &mdash; Arduino, Raspberry Pi, a PC &mdash; running any firmware or OS, in any language. Everything built for EV3 is unchanged; this adds a driver and settings for &ldquo;non-standard&rdquo; robots. RoboCam is the master: it sends command messages, your program replies.</p>
+      <p class="lang-sv">Från 1.3.1 kan RoboCam också prata med vilken robot som helst som kan arbeta direkt med Bluetooth-data &mdash; Arduino, Raspberry Pi, en PC &mdash; med valfri firmware eller OS, i valfritt språk. Allt som byggts för EV3 är oförändrat; detta lägger till en drivrutin och inställningar för &rdquo;icke-standard&rdquo;-robotar. RoboCam är master: den skickar kommandomeddelanden, ditt program svarar.</p>
+
+      <h3><span class="lang-en">Message framing</span><span class="lang-sv">Meddelanderamning</span></h3>
+      <div class="lang-en">
+        <ul>
+          <li>Each message is preceded by <strong>two bytes</strong> giving the payload size (little-endian, unsigned). Those two bytes are not counted in the size.</li>
+          <li>Read the two size bytes, then read exactly that many more bytes.</li>
+          <li>Reply to every command <strong>within one second</strong>. A later reply is treated as an error.</li>
+          <li>First payload byte of a command = the command code. First payload byte of a reply = the result: <code>0</code> success, <code>1</code> error / unsupported.</li>
+        </ul>
+      </div>
+      <div class="lang-sv">
+        <ul>
+          <li>Varje meddelande föregås av <strong>två byte</strong> som anger nyttolastens storlek (little-endian, teckenlös). Dessa två byte räknas inte in i storleken.</li>
+          <li>Läs de två storleksbyten, läs sedan exakt så många byte till.</li>
+          <li>Svara på varje kommando <strong>inom en sekund</strong>. Ett senare svar behandlas som ett fel.</li>
+          <li>Kommandots första nyttolastbyte = kommandokoden. Svarets första nyttolastbyte = resultatet: <code>0</code> lyckat, <code>1</code> fel / stöds ej.</li>
+        </ul>
+      </div>
+
+      <h3><span class="lang-en">Commands</span><span class="lang-sv">Kommandon</span></h3>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th class="mono">#</th><th><span class="lang-en">Name</span><span class="lang-sv">Namn</span></th><th><span class="lang-en">Purpose</span><span class="lang-sv">Syfte</span></th></tr></thead>
+          <tbody>
+            <tr><td class="mono">0</td><td class="mono">CMD_START</td><td><span class="lang-en">Handshake. Command bytes <code>SS C T V</code>: <code>T</code> is a check byte (0&ndash;254), <code>V</code> is RoboCam's max protocol version (currently 1). Reply <code>SS R T V C</code>: return <code>T+1</code>, protocol version 1, and encoding <code>C</code> &mdash; <code>0</code> US-ASCII or <code>1</code> UTF-8 (Arduino uses US-ASCII). Wrong reply or timeout &rarr; RoboCam aborts. Reply must be 4 bytes.</span><span class="lang-sv">Handskakning. Kommandobyte <code>SS C T V</code>: <code>T</code> är en kontrollbyte (0&ndash;254), <code>V</code> är RoboCams högsta protokollversion (för närvarande 1). Svar <code>SS R T V C</code>: returnera <code>T+1</code>, protokollversion 1, och kodning <code>C</code> &mdash; <code>0</code> US-ASCII eller <code>1</code> UTF-8 (Arduino använder US-ASCII). Fel svar eller timeout &rarr; RoboCam avbryter. Svaret måste vara 4 byte.</span></td></tr>
+            <tr><td class="mono">1</td><td class="mono">CMD_CALLSIGN</td><td><span class="lang-en">Only sent if a callsign and answer are set in the profile. Command carries the callsign as a null-terminated string; reply with the configured answer string (result byte first). A wrong answer &rarr; RoboCam disconnects.</span><span class="lang-sv">Skickas bara om anropssignal och svar är angivna i profilen. Kommandot bär anropssignalen som en null-avslutad sträng; svara med den konfigurerade svarssträngen (resultatbyte först). Fel svar &rarr; RoboCam kopplar från.</span></td></tr>
+            <tr><td class="mono">2</td><td class="mono">CMD_CTRL</td><td><span class="lang-en">Controller change. Payload is one or more <code>J V</code> pairs. <code>J</code>: <code>0</code>=X, <code>1</code>=Y (joystick 1), <code>2</code>=W, <code>3</code>=Z (js 2), <code>4</code>=A, <code>5</code>=B (js 3), <code>6</code>=C, <code>7</code>=D (js 4), <code>255</code>=key pressed, <code>254</code>=key released. <code>V</code>: for an axis, the coordinate &minus;100&hellip;100; for a key, the key code. Reply is a single result byte (ignored, but expected &mdash; return <code>0</code>).</span><span class="lang-sv">Reglageändring. Nyttolasten är ett eller flera <code>J V</code>-par. <code>J</code>: <code>0</code>=X, <code>1</code>=Y (styrspak 1), <code>2</code>=W, <code>3</code>=Z (sp 2), <code>4</code>=A, <code>5</code>=B (sp 3), <code>6</code>=C, <code>7</code>=D (sp 4), <code>255</code>=tangent nedtryckt, <code>254</code>=tangent släppt. <code>V</code>: för en axel, koordinaten &minus;100&hellip;100; för en tangent, tangentkoden. Svaret är en enda resultatbyte (ignoreras, men förväntas &mdash; returnera <code>0</code>).</span></td></tr>
+            <tr><td class="mono">3</td><td class="mono">CMD_TEST</td><td><span class="lang-en">Keepalive, roughly once a second. Reply within one second with result <code>0</code>, or RoboCam considers the link lost.</span><span class="lang-sv">Anslutningskontroll, ungefär en gång per sekund. Svara inom en sekund med resultat <code>0</code>, annars anser RoboCam att förbindelsen är förlorad.</span></td></tr>
+            <tr><td class="mono">255</td><td class="mono">CMD_STOP</td><td><span class="lang-en">Stop and recentre. Sent when the client link drops or the driver disconnects. Halt movement, return servos to their start position. Reply result <code>0</code> (ignored, expected).</span><span class="lang-sv">Stanna och återcentrera. Skickas när klientförbindelsen bryts eller föraren kopplar från. Stoppa rörelsen, återför servon till startläget. Svara med resultat <code>0</code> (ignoreras, förväntas).</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3><span class="lang-en">Worked example (octal / hex bytes)</span><span class="lang-sv">Genomarbetat exempel (oktala / hex-byte)</span></h3>
+<pre><code>CMD_START   command  0300 00 D1 01
+            reply    0400 00 D2 01 00      ; T+1 = D2, version 1, encoding 0 (US-ASCII)
+
+CMD_CALLSIGN command  0900 01 526F626F43616D00        ; "RoboCam\0"
+            reply    0C00 00 5265736561726368657200   ; "Researcher\0"
+
+CMD_CTRL    command  0600 02 00 5A 01 9C FF 59
+                     ; X = 90, Y = -100, key 89 (Y) pressed
+            reply    0100 00
+
+CMD_TEST    command  0100 03      reply  0100 00
+CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
+
+      <h3><span class="lang-en">Arduino wiring</span><span class="lang-sv">Arduino-koppling</span></h3>
+      <p class="lang-en">Examples target an <strong>Arduino Uno + HC-06</strong> at default settings (9600 baud). Cross-wire: module RX &rarr; Uno TX, module TX &rarr; Uno RX. Then <code>Serial.begin(9600)</code> and read/write with <code>Serial.read()</code>, <code>Serial.write()</code>, <code>Serial.available()</code>. Read the size as <code>Serial.read() + (Serial.read() &lt;&lt; 8)</code>; send it as two bytes <code>replySize &amp; 0xFF</code> then <code>(replySize &gt;&gt; 8) &amp; 0xFF</code>, followed by the payload. Reply fast &mdash; slow replies mean a laggy robot.</p>
+      <p class="lang-sv">Exemplen riktar sig mot en <strong>Arduino Uno + HC-06</strong> med standardinställningar (9600 baud). Korskoppla: modulens RX &rarr; Unos TX, modulens TX &rarr; Unos RX. Sedan <code>Serial.begin(9600)</code> och läs/skriv med <code>Serial.read()</code>, <code>Serial.write()</code>, <code>Serial.available()</code>. Läs storleken som <code>Serial.read() + (Serial.read() &lt;&lt; 8)</code>; skicka den som två byte <code>replySize &amp; 0xFF</code> sedan <code>(replySize &gt;&gt; 8) &amp; 0xFF</code>, följt av nyttolasten. Svara snabbt &mdash; långsamma svar ger en trög robot.</p>
+
+      <h3><span class="lang-en">Non-standard robot settings</span><span class="lang-sv">Inställningar för icke-standardrobot</span></h3>
+      <p class="lang-en">Settings &rarr; Robot &rarr; Add &rarr; <em>Non-standard robot</em>. Fewer options than an EV3 profile: name, description, <em>Show debug info</em>, <em>Hide joysticks when keyboard is used</em>, <strong>callsign</strong> + <strong>answer</strong>, then the four joysticks (visibility, shape, touch-end behaviour per axis) and a <em>Keys</em> list with an <em>Active</em> tickbox. No ports &mdash; motor logic lives in your program.</p>
+      <p class="lang-sv">Inställningar &rarr; Robot &rarr; Lägg till &rarr; <em>Icke-standardrobot</em>. Färre val än en EV3-profil: namn, beskrivning, <em>Visa felsökningsinfo</em>, <em>Dölj styrspakar när tangentbordet används</em>, <strong>anropssignal</strong> + <strong>svar</strong>, sedan de fyra styrspakarna (synlighet, form, beteende när beröringen slutar per axel) och en <em>Tangenter</em>-lista med en <em>Aktiv</em>-ruta. Inga portar &mdash; motorlogiken bor i ditt program.</p>
+      <div class="note">
+        <b><span class="lang-en">Common error</span><span class="lang-sv">Vanligt fel</span></b>
+        <span class="lang-en">&ldquo;Cannot verify the device. Is this really a robot?&rdquo; means no reply to <code>CMD_START</code> arrived, or the reply was not 4 bytes.</span>
+        <span class="lang-sv">&rdquo;Det går inte att verifiera enheten. Är detta verkligen en robot?&rdquo; betyder att inget svar på <code>CMD_START</code> kom fram, eller att svaret inte var 4 byte.</span>
+      </div>
+    </section>
+
+    <!-- 14 -->
+    <section id="local" data-title-en="Local controls" data-title-sv="Lokala reglage">
+      <p class="eyebrow"><span class="lang-en">Version 1.4.2</span><span class="lang-sv">Version 1.4.2</span></p>
+      <h2><span class="lang-en">Local controls &mdash; the phone as a plain remote</span><span class="lang-sv">Lokala reglage &mdash; telefonen som en vanlig fjärrkontroll</span></h2>
+      <p class="lang-en">Sometimes you don't need first-person view at all &mdash; you just want the phone to <em>be</em> the remote. Version 1.4.2 adds local controls; they are off by default and everything else is unchanged.</p>
+      <p class="lang-sv">Ibland behöver du ingen förstapersonsvy alls &mdash; du vill bara att telefonen ska <em>vara</em> fjärrkontrollen. Version 1.4.2 lägger till lokala reglage; de är av som standard och allt annat är oförändrat.</p>
+      <ol class="steps">
+        <li><span class="lang-en">In <em>Server</em> settings, tick <strong>Use local controls</strong>. All other server settings disappear. Save.</span><span class="lang-sv">I <em>Server</em>-inställningarna, markera <strong>Använd lokala reglage</strong>. Alla andra serverinställningar försvinner. Spara.</span></li>
+        <li><span class="lang-en">Back on the main screen, the left button now shows a joystick and the camera is off.</span><span class="lang-sv">Tillbaka på huvudskärmen visar vänsterknappen nu en styrspak och kameran är av.</span></li>
+        <li><span class="lang-en">Tap <span class="btn-pill purple">Connect to EV3</span>, then the left button to open the on-device joystick screen &mdash; the same joysticks as in the browser.</span><span class="lang-sv">Tryck på <span class="btn-pill purple">Anslut till EV3</span>, sedan vänsterknappen för att öppna styrspaksskärmen på enheten &mdash; samma styrspakar som i webbläsaren.</span></li>
+        <li><span class="lang-en">On a small screen, also tick <strong>Maximise joysticks</strong> in Server settings to enlarge them.</span><span class="lang-sv">På en liten skärm, markera även <strong>Maximera styrspakar</strong> i serverinställningarna för att förstora dem.</span></li>
+      </ol>
+      <p class="lang-en">A keyboard attached to the phone works here too &mdash; but only while the RoboCam app is in the foreground and the phone is unlocked.</p>
+      <p class="lang-sv">Ett tangentbord anslutet till telefonen fungerar även här &mdash; men bara medan RoboCam-appen är i förgrunden och telefonen är olåst.</p>
+    </section>
+
+    <!-- 15 -->
+    <section id="norouter" data-title-en="Without a router" data-title-sv="Utan router">
+      <p class="eyebrow"><span class="lang-en">Tricks</span><span class="lang-sv">Knep</span></p>
+      <h2><span class="lang-en">Connecting without a router</span><span class="lang-sv">Anslutning utan router</span></h2>
+      <div class="grid two">
+        <div class="card">
+          <h4><span class="lang-en">Phone 1's hotspot</span><span class="lang-sv">Telefon 1:s surfzon</span></h4>
+          <p class="lang-en">Turn on the Wi-Fi hotspot on Phone 1 (in Android's network settings). Phone 1 becomes the router; connect Phone 2 to it. The server address is in the button hint &mdash; for a hotspot it is almost always <code>http://192.168.43.1:8088</code>.</p>
+          <p class="lang-sv">Slå på Wi-Fi-surfzonen på telefon 1 (i Androids nätverksinställningar). Telefon 1 blir routern; anslut telefon 2 till den. Serveradressen står i knapptipset &mdash; för en surfzon är den nästan alltid <code>http://192.168.43.1:8088</code>.</p>
+        </div>
+        <div class="card">
+          <h4><span class="lang-en">Phone 1 as its own client</span><span class="lang-sv">Telefon 1 som sin egen klient</span></h4>
+          <p class="lang-en">Start the server and connect to the robot on Phone 1, then open a browser on the <em>same</em> phone at <code>http://localhost:8088</code> and log in as the driver. You get joysticks and can drive &mdash; but no camera feed. Wi-Fi can be off.</p>
+          <p class="lang-sv">Starta servern och anslut till roboten på telefon 1, öppna sedan en webbläsare på <em>samma</em> telefon på <code>http://localhost:8088</code> och logga in som förare. Du får styrspakar och kan köra &mdash; men ingen kamerabild. Wi-Fi kan vara av.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section id="downloads" data-title-en="Ready-made settings &amp; files" data-title-sv="Färdiga inställningar &amp; filer">
+      <p class="eyebrow"><span class="lang-en">Downloads</span><span class="lang-sv">Nedladdningar</span></p>
+      <h2><span class="lang-en">Ready-made settings &amp; files</span><span class="lang-sv">Färdiga inställningar &amp; filer</span></h2>
+      <p class="lang-en">All hosted on proghouse.ru's download component. Import the XML profiles as described above.</p>
+      <p class="lang-sv">Alla finns på proghouse.rus nedladdningskomponent. Importera XML-profilerna enligt beskrivningen ovan.</p>
+
+      <div class="dl"><span class="ext">PDF</span><div><div class="meta"><span class="lang-en">EV3 Explorer build instructions</span><span class="lang-sv">Bygganvisning för EV3 Explorer</span></div><div class="sub"><span class="lang-en">v2 &mdash; sturdier frame. From the base LEGO Mindstorms Education EV3 set (45544). 04.06.2016 · 4.95 MB</span><span class="lang-sv">v2 &mdash; stadigare ram. Från grundsetet LEGO Mindstorms Education EV3 (45544). 2016-06-04 · 4,95 MB</span></div></div></div>
+      <div class="dl"><span class="ext">XML</span><div><div class="meta"><span class="lang-en">Formula 1 racer &mdash; standard</span><span class="lang-sv">Formel 1-racer &mdash; standard</span></div><div class="sub"><span class="lang-en">Vertical + horizontal joystick (throttle / steering) plus a third combined joystick, to demo pair 1&ndash;2 / 3&ndash;4 switching. 22.10.2016 · 892 B</span><span class="lang-sv">Vertikal + horisontell styrspak (gas / styrning) plus en tredje kombinerad styrspak, för att visa växling mellan par 1&ndash;2 / 3&ndash;4. 2016-10-22 · 892 B</span></div></div></div>
+      <div class="dl"><span class="ext">XML</span><div><div class="meta"><span class="lang-en">Formula 1 racer &mdash; speed version</span><span class="lang-sv">Formel 1-racer &mdash; snabbversion</span></div><div class="sub">22.10.2016 · 900 B</div></div></div>
+      <div class="dl"><span class="ext">XML</span><div><div class="meta"><span class="lang-en">Claw robot EV3</span><span class="lang-sv">Klorobot EV3</span></div><div class="sub"><span class="lang-en">Round joystick drives the wheels, arrows work the claw. 22.10.2016 · 533 B</span><span class="lang-sv">Rund styrspak driver hjulen, pilar sköter klon. 2016-10-22 · 533 B</span></div></div></div>
+      <div class="dl"><span class="ext">XML</span><div><div class="meta"><span class="lang-en">Selenokhod EV3 settings</span><span class="lang-sv">Selenokhod EV3-inställningar</span></div><div class="sub"><span class="lang-en">Arrow joysticks; joystick 1 feeds coordinates to EV3 mailboxes for an on-brick program. 22.10.2016 · 382 B</span><span class="lang-sv">Pilstyrspakar; styrspak 1 matar koordinater till EV3-brevlådor för ett program på enheten. 2016-10-22 · 382 B</span></div></div></div>
+      <div class="dl"><span class="ext">EV3</span><div><div class="meta"><span class="lang-en">Selenokhod helper program (SelenokhodFPV.ev3)</span><span class="lang-sv">Selenokhod-hjälpprogram (SelenokhodFPV.ev3)</span></div><div class="sub"><span class="lang-en">Run on the brick before connecting RoboCam. Needs LEGO Mindstorms Education EV3 software 1.1.1+. 22.10.2016 · 4.56 KB</span><span class="lang-sv">Kör på enheten innan du ansluter RoboCam. Kräver LEGO Mindstorms Education EV3-programvara 1.1.1+. 2016-10-22 · 4,56 KB</span></div></div></div>
+      <div class="dl"><span class="ext">INO</span><div><div class="meta"><span class="lang-en">Arduino Explorer sketch</span><span class="lang-sv">Arduino Explorer-skiss</span></div><div class="sub"><span class="lang-en">Wheeled Arduino robot with a servo-tilted phone holder, driven via RoboCam. 10.09.2017 · 15.07 KB</span><span class="lang-sv">Hjulburen Arduino-robot med servolutad telefonhållare, körd via RoboCam. 2017-09-10 · 15,07 KB</span></div></div></div>
+      <div class="dl"><span class="ext">XML</span><div><div class="meta"><span class="lang-en">Arduino Explorer RoboCam settings</span><span class="lang-sv">RoboCam-inställningar för Arduino Explorer</span></div><div class="sub">11.09.2017 · 448 B</div></div></div>
+      <div class="dl"><span class="ext">ZIP</span><div><div class="meta"><span class="lang-en">Servo holder &amp; rail (3D models)</span><span class="lang-sv">Servohållare &amp; skena (3D-modeller)</span></div><div class="sub"><span class="lang-en">For the Amperka-kit Arduino robot; designed in Tinkercad. 06.10.2017</span><span class="lang-sv">För Arduino-roboten från Amperka-setet; ritade i Tinkercad. 2017-10-06</span></div></div></div>
+    </section>
+
+    <!-- 17 -->
+    <section id="history" data-title-en="Version history" data-title-sv="Versionshistorik">
+      <p class="eyebrow"><span class="lang-en">Timeline</span><span class="lang-sv">Tidslinje</span></p>
+      <h2><span class="lang-en">Version history</span><span class="lang-sv">Versionshistorik</span></h2>
+      <ol class="timeline">
+        <li>
+          <span class="ver">1.0</span><span class="date">2016-09-21</span>
+          <p class="lang-en">First release. First-person control of a LEGO Mindstorms EV3: server + browser client, up to four joysticks in two pairs, joystick shapes and types, port mapping, EV3 mailboxes, observers, router-less hotspot mode, phone-as-own-client.</p>
+          <p class="lang-sv">Första utgåvan. Förstapersonsstyrning av en LEGO Mindstorms EV3: server + webbläsarklient, upp till fyra styrspakar i två par, styrspaksformer och -typer, portmappning, EV3-brevlådor, åskådare, routerfritt surfzonläge, telefon-som-egen-klient.</p>
+        </li>
+        <li>
+          <span class="ver">1.1</span>
+          <p class="lang-en">Import, export, copy and send robot profiles (XML). Ready-made profiles published for the F1 racer, claw robot and Selenokhod.</p>
+          <p class="lang-sv">Importera, exportera, kopiera och skicka robotprofiler (XML). Färdiga profiler publicerade för F1-racern, klorobotten och Selenokhod.</p>
+        </li>
+        <li>
+          <span class="ver">1.2</span>
+          <p class="lang-en">Physical keyboard support on the client. Key groups with stepped speed/angle ramps. Auto-run a user program on the EV3 by path. &ldquo;Show debug info&rdquo; and &ldquo;Hide joysticks when keyboard is used&rdquo;.</p>
+          <p class="lang-sv">Stöd för fysiskt tangentbord i klienten. Tangentgrupper med stegvisa fart-/vinkelramper. Autostarta ett användarprogram på EV3 via sökväg. &rdquo;Visa felsökningsinfo&rdquo; och &rdquo;Dölj styrspakar när tangentbordet används&rdquo;.</p>
+        </li>
+        <li>
+          <span class="ver">1.3.1</span><span class="date">2017-09</span>
+          <p class="lang-en">Support for non-standard robots (Arduino, Raspberry Pi, PC) via a documented byte protocol over Bluetooth. New &ldquo;Non-standard robot&rdquo; profile type. Arduino Explorer example (sketch, settings, 3D-printed parts).</p>
+          <p class="lang-sv">Stöd för icke-standardrobotar (Arduino, Raspberry Pi, PC) via ett dokumenterat byteprotokoll över Bluetooth. Ny profiltyp &rdquo;Icke-standardrobot&rdquo;. Exemplet Arduino Explorer (skiss, inställningar, 3D-utskrivna delar).</p>
+        </li>
+        <li>
+          <span class="ver">1.4.2</span>
+          <p class="lang-en">Local controls &mdash; an on-device joystick screen that turns the phone into a plain remote, with an optional &ldquo;Maximise joysticks&rdquo; mode. Camera off in this mode.</p>
+          <p class="lang-sv">Lokala reglage &mdash; en styrspaksskärm på enheten som gör telefonen till en vanlig fjärrkontroll, med ett valfritt &rdquo;Maximera styrspakar&rdquo;-läge. Kameran av i detta läge.</p>
+        </li>
+        <li>
+          <span class="ver">1.4.5</span>
+          <p class="lang-en">Latest known version (referenced in the app's support comments). No public changelog article.</p>
+          <p class="lang-sv">Senaste kända version (nämnd i appens supportkommentarer). Ingen offentlig ändringsloggsartikel.</p>
+        </li>
+      </ol>
+      <div class="note">
+        <b><span class="lang-en">Development status</span><span class="lang-sv">Utvecklingsstatus</span></b>
+        <span class="lang-en">In March 2022 the developer stated there were no plans to develop RoboCam further, and that it supports only EV3 and direct Bluetooth communication (not, for example, LEGO Mindstorms Robot Inventor 51515). By 2025 the app was no longer on Google Play. The developer's GitHub is <a href="https://github.com/zMotoR">github.com/zMotoR</a>.</span>
+        <span class="lang-sv">I mars 2022 uppgav utvecklaren att det inte fanns några planer på att utveckla RoboCam vidare, och att appen bara stöder EV3 och direkt Bluetooth-kommunikation (inte t.ex. LEGO Mindstorms Robot Inventor 51515). År 2025 fanns appen inte längre på Google Play. Utvecklarens GitHub är <a href="https://github.com/zMotoR">github.com/zMotoR</a>.</span>
+      </div>
+    </section>
+
+    <!-- ============ PART II — THE ROBOCAM54 FORK ============ -->
+    <!-- F1 -->
+    <section id="fork" class="part" data-title-en="RoboCam54: the developed app" data-title-sv="RoboCam54: den vidareutvecklade appen">
+      <p class="eyebrow">Part II · <span class="lang-en">The independent build</span><span class="lang-sv">Det fristående bygget</span></p>
+      <h2><span class="lang-en">RoboCam54 &mdash; an independent reimplementation</span><span class="lang-sv">RoboCam54 &mdash; en fristående omskrivning</span></h2>
+
+      <div class="lang-en">
+        <p class="lede">RoboCam54 is a from-scratch, independent Android version of RoboCam by <strong>M.Sc. Magnus</strong> (Sweden), written in Kotlin with Claude Code. Alexey's app was never open-sourced and its code was never shared, so RoboCam54 was rebuilt by studying the original's behaviour, its decompiled browser client, and the public LEGO / EV3 protocol documentation. Alexey has confirmed he is fine with this page covering the developed app.</p>
+        <p><strong>The source code is private and is not being released</strong> &mdash; this section documents what the app does, not how to obtain or build it. Package <code>com.robocam.robocam54</code>, version name 1.0.</p>
+        <h3>What carries over unchanged</h3>
+        <p>The server + browser-client model, up to four joysticks in two pairs, every joystick shape and type, key groups with stepped ramps, EV3 mailboxes, import / export / copy / send of XML profiles, local controls, spectators, the login (<code>admin</code>&nbsp;/&nbsp;<code>123</code>, <code>guest</code>&nbsp;/&nbsp;<code>123</code>) and port <strong>8088</strong>.</p>
+        <h3>What is different from Alexey's app</h3>
+        <ul>
+          <li><strong>Android 7.0 (API 24)+</strong>, targeting Android 15 &mdash; versus Android 2.3 for the original. Runtime Bluetooth permissions, camera + data-sync foreground-service types.</li>
+          <li><strong>Three robot profile types:</strong> <em>EV3</em> (Bluetooth Classic / RFCOMM, unchanged), <em>SPIKE Prime</em> (new, Bluetooth LE), and <em>Custom</em>.</li>
+          <li>The <em>Custom</em> type is this fork's take on &ldquo;non-standard robots&rdquo;. Instead of the original's binary <code>CMD_START</code>&hellip;<code>CMD_STOP</code> framing it sends one plain-text line per change &mdash; <code>callsign,x0,y0,x1,y1\r\n</code> (the two joystick axis pairs as integers) &mdash; over Bluetooth serial, so an Arduino sketch can parse it as CSV. A bundled &ldquo;Custom Researcher&rdquo; starter profile is provided.</li>
+          <li>New: the Huawei 360 camera + 360&deg; viewer, the Cardboard VR viewer, and the Clear Cache button (all below).</li>
+          <li>The proghouse.ru ad banner is gone from the home screen; all twelve function keys <strong>F1&ndash;F12</strong> are selectable; the video stream and on-device preview rotate to follow the phone.</li>
+          <li>Ships a draft privacy policy and Play release-signing config. Collects nothing &mdash; no account, analytics, ads or crash reporting.</li>
+        </ul>
+      </div>
+      <div class="lang-sv">
+        <p class="lede">RoboCam54 är en Android-version av RoboCam byggd från grunden av <strong>teknologie magister Magnus</strong> (Sverige), skriven i Kotlin med Claude Code. Alexejs app släpptes aldrig som öppen källkod och koden delades aldrig, så RoboCam54 byggdes om genom att studera originalets beteende, dess dekompilerade webbläsarklient och den offentliga LEGO-/EV3-protokolldokumentationen. Alexej har bekräftat att den här sidan får omfatta den vidareutvecklade appen.</p>
+        <p><strong>Källkoden är privat och släpps inte</strong> &mdash; det här avsnittet beskriver vad appen gör, inte hur man skaffar eller bygger den. Paket <code>com.robocam.robocam54</code>, versionsnamn 1.0.</p>
+        <h3>Vad som är oförändrat</h3>
+        <p>Modellen server + webbläsarklient, upp till fyra styrspakar i två par, alla styrspaksformer och -typer, tangentgrupper med stegvisa ramper, EV3-brevlådor, import / export / kopiering / sändning av XML-profiler, lokala reglage, åskådare, inloggningen (<code>admin</code>&nbsp;/&nbsp;<code>123</code>, <code>guest</code>&nbsp;/&nbsp;<code>123</code>) och port <strong>8088</strong>.</p>
+        <h3>Vad som skiljer sig från Alexejs app</h3>
+        <ul>
+          <li><strong>Android 7.0 (API 24)+</strong>, med mål Android 15 &mdash; jämfört med Android 2.3 för originalet. Bluetooth-tillstånd vid körning, förgrundstjänsttyper för kamera + datasynkronisering.</li>
+          <li><strong>Tre robotprofiltyper:</strong> <em>EV3</em> (Bluetooth Classic / RFCOMM, oförändrat), <em>SPIKE Prime</em> (ny, Bluetooth LE) och <em>Custom</em>.</li>
+          <li><em>Custom</em>-typen är den här forkens variant av &rdquo;icke-standardrobotar&rdquo;. I stället för originalets binära <code>CMD_START</code>&hellip;<code>CMD_STOP</code>-ramning skickar den en rad ren text per ändring &mdash; <code>callsign,x0,y0,x1,y1\r\n</code> (de två styrspaksaxelparen som heltal) &mdash; över Bluetooth-seriellt, så att en Arduino-skiss kan tolka den som CSV. En medföljande startprofil &rdquo;Custom Researcher&rdquo; ingår.</li>
+          <li>Nytt: Huawei 360-kameran + 360&deg;-vyn, Cardboard-VR-vyn och knappen Rensa cache (allt nedan).</li>
+          <li>proghouse.ru-annonsbannern är borta från startskärmen; alla tolv funktionstangenter <strong>F1&ndash;F12</strong> går att välja; videoströmmen och förhandsvisningen på enheten roterar med telefonen.</li>
+          <li>Levereras med ett utkast till integritetspolicy och signeringskonfiguration för Play. Samlar inte in något &mdash; inget konto, ingen analys, inga annonser, ingen kraschrapportering.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <b><span class="lang-en">Relationship to the original</span><span class="lang-sv">Förhållande till originalet</span></b>
+        <span class="lang-en">RoboCam54 keeps the RoboCam name with the original author's knowledge and consent for this page. It is a separate project and a separate codebase, not a patch of Alexey's binary. It is a private build: not on Google Play, and its source code is not publicly released.</span>
+        <span class="lang-sv">RoboCam54 behåller namnet RoboCam med originalupphovspersonens vetskap och samtycke för den här sidan. Det är ett separat projekt och en separat kodbas, inte en patch av Alexejs binär. Det är ett privat bygge: inte på Google Play, och dess källkod släpps inte offentligt.</span>
+      </div>
+    </section>
+
+    <!-- F2 -->
+    <section id="spike" data-title-en="LEGO SPIKE Prime" data-title-sv="LEGO SPIKE Prime">
+      <p class="eyebrow"><span class="lang-en">Fork feature</span><span class="lang-sv">Forkfunktion</span></p>
+      <h2><span class="lang-en">LEGO SPIKE Prime support</span><span class="lang-sv">Stöd för LEGO SPIKE Prime</span></h2>
+      <p class="lang-en">SPIKE Prime is a third robot type alongside EV3 and Custom. The hub connects over <strong>Bluetooth Low Energy</strong>, not Classic &mdash; so choosing a SPIKE profile and tapping <span class="btn-pill purple">Connect to robot</span> opens a BLE scan-and-pick screen instead of the paired-devices list.</p>
+      <p class="lang-sv">SPIKE Prime är en tredje robottyp vid sidan av EV3 och Custom. Enheten ansluter via <strong>Bluetooth Low Energy</strong>, inte Classic &mdash; så att välja en SPIKE-profil och trycka på <span class="btn-pill purple">Anslut till robot</span> öppnar en BLE-sök-och-välj-skärm i stället för listan över parkopplade enheter.</p>
+
+      <div class="note">
+        <b><span class="lang-en">Pybricks firmware is required</span><span class="lang-sv">Pybricks-firmware krävs</span></b>
+        <span class="lang-en">Stock LEGO SPIKE firmware's Bluetooth protocol has <em>no</em> live &ldquo;set motor power&rdquo; command &mdash; it can only upload and run whole programs. So the hub must run <strong>Pybricks firmware</strong> (flash it once at <a href="https://code.pybricks.com">code.pybricks.com</a>), and you upload the receiver program <strong><code>pybricks_rc_receiver.py</code></strong> once via Pybricks Code and save it to a hub slot. RoboCam54 auto-starts that program on connect (Pybricks <code>START_USER_PROGRAM</code>) and streams live commands into its standard input.</span>
+        <span class="lang-sv">LEGO:s ordinarie SPIKE-firmware har <em>inget</em> live-kommando för &rdquo;sätt motoreffekt&rdquo; &mdash; den kan bara ladda upp och köra hela program. Därför måste enheten köra <strong>Pybricks-firmware</strong> (flasha den en gång på <a href="https://code.pybricks.com">code.pybricks.com</a>), och du laddar upp mottagarprogrammet <strong><code>pybricks_rc_receiver.py</code></strong> en gång via Pybricks Code och sparar det i en enhetslucka. RoboCam54 startar programmet automatiskt vid anslutning (Pybricks <code>START_USER_PROGRAM</code>) och strömmar live-kommandon till dess standardinmatning.</span>
+      </div>
+
+      <h3><span class="lang-en">Wire protocol</span><span class="lang-sv">Byteprotokoll</span></h3>
+      <p class="lang-en">App &rarr; hub, <strong>3 bytes per command</strong>, latest-value-wins, no heartbeat (a command means &ldquo;run at this power until told otherwise&rdquo;).</p>
+      <p class="lang-sv">App &rarr; enhet, <strong>3 byte per kommando</strong>, senaste värdet vinner, ingen puls (ett kommando betyder &rdquo;kör med denna effekt tills annat sägs&rdquo;).</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th class="mono"><span class="lang-en">Byte</span><span class="lang-sv">Byte</span></th><th><span class="lang-en">Meaning</span><span class="lang-sv">Betydelse</span></th></tr></thead>
+          <tbody>
+            <tr><td class="mono">0</td><td><span class="lang-en">opcode &mdash; <code>M</code> drive at power, <code>S</code> stop + brake, <code>F</code> stop + coast (float)</span><span class="lang-sv">op-kod &mdash; <code>M</code> kör med effekt, <code>S</code> stopp + broms, <code>F</code> stopp + frihjul (float)</span></td></tr>
+            <tr><td class="mono">1</td><td><span class="lang-en">port letter <code>A</code>&ndash;<code>F</code> (ASCII) &mdash; the hub has six ports</span><span class="lang-sv">portbokstav <code>A</code>&ndash;<code>F</code> (ASCII) &mdash; enheten har sex portar</span></td></tr>
+            <tr><td class="mono">2</td><td><span class="lang-en">signed power &minus;100&hellip;100 for <code>M</code>; <code>0</code> for <code>S</code>/<code>F</code></span><span class="lang-sv">effekt med tecken &minus;100&hellip;100 för <code>M</code>; <code>0</code> för <code>S</code>/<code>F</code></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3><span class="lang-en">Profile &amp; settings</span><span class="lang-sv">Profil &amp; inställningar</span></h3>
+      <ul>
+        <li><span class="lang-en">Ports are <strong>A&ndash;F</strong>. The <code>&lt;SpikePrime&gt;</code> profile reuses the EV3 editor's joystick / key-group model and the steering types (independent motors, steering 1, steering 2) &mdash; no mailbox, no angle/step motor mode.</span><span class="lang-sv">Portarna är <strong>A&ndash;F</strong>. Profilen <code>&lt;SpikePrime&gt;</code> återanvänder EV3-redigerarens styrspaks-/tangentgruppsmodell och styrningstyperna (oberoende motorer, styrning 1, styrning 2) &mdash; ingen brevlåda, inget vinkel-/stegläge för motor.</span></li>
+        <li><span class="lang-en">Bundled <strong>&ldquo;Spike Researcher&rdquo;</strong> default profile: 2-wheeled, motors A + B.</span><span class="lang-sv">Medföljande standardprofil <strong>&rdquo;Spike Researcher&rdquo;</strong>: tvåhjulig, motorer A + B.</span></li>
+        <li><span class="lang-en"><strong>Start hub program on disconnect</strong> &mdash; mirrors EV3's run-program-on-disconnect. Spike Settings has a <em>Program slot (0&ndash;4)</em> field; on disconnect RoboCam54 tells the hub (slot-aware Pybricks <code>START_USER_PROGRAM</code>, firmware v1.5+) to run that slot.</span><span class="lang-sv"><strong>Starta enhetsprogram vid frånkoppling</strong> &mdash; motsvarar EV3:s kör-program-vid-frånkoppling. Spike-inställningarna har ett fält <em>Programlucka (0&ndash;4)</em>; vid frånkoppling ber RoboCam54 enheten (luckmedveten Pybricks <code>START_USER_PROGRAM</code>, firmware v1.5+) att köra den luckan.</span></li>
+        <li><span class="lang-en"><strong>Holonomic / omni-wheel robots</strong> &mdash; a second hub program, <code>omni.py</code>, does kiwi-drive mixing for a 3-omni-wheel base (motors A/B/C) and takes virtual input channels <code>D</code> = strafe, <code>E</code> = forward, <code>F</code> = rotate. A round joystick plus the 360 viewer's drag-rotate can then drive a robot that strafes in any direction.</span><span class="lang-sv"><strong>Holonoma robotar / omnihjul</strong> &mdash; ett andra enhetsprogram, <code>omni.py</code>, gör kiwi-drive-mixning för en bas med tre omnihjul (motorer A/B/C) och tar virtuella inkanaler <code>D</code> = sidled, <code>E</code> = framåt, <code>F</code> = rotation. En rund styrspak plus 360-vyns dra-rotera kan då köra en robot som kan förflytta sig i sidled åt valfritt håll.</span></li>
+        <li><span class="lang-en">BLE robustness fixes found in hardware testing: automatic connect-retry (Android's first GATT attempt often fails with status 133), a connect-timeout watchdog, and a write-queue watchdog that self-heals a dropped GATT ack instead of silently wedging every later drive command while still showing &ldquo;Connected&rdquo;.</span><span class="lang-sv">BLE-robusthetsfixar från hårdvarutester: automatiskt återförsök vid anslutning (Androids första GATT-försök misslyckas ofta med status 133), en vakthund för anslutningstimeout, och en vakthund för skrivkön som självläker en förlorad GATT-bekräftelse i stället för att tyst blockera alla senare körkommandon medan &rdquo;Ansluten&rdquo; fortfarande visas.</span></li>
+      </ul>
+      <div class="note">
+        <b><span class="lang-en">Hardware status</span><span class="lang-sv">Hårdvarustatus</span></b>
+        <span class="lang-en">SPIKE Prime driving via Pybricks is confirmed working on hardware. The omni-wheel receiver uploads cleanly via Pybricks Code but its drive behaviour was not yet verified on a real robot at the time of writing.</span>
+        <span class="lang-sv">SPIKE Prime-körning via Pybricks är bekräftat fungerande på hårdvara. Omnihjulsmottagaren laddas upp utan problem via Pybricks Code, men dess körbeteende var ännu inte verifierat på en riktig robot när detta skrevs.</span>
+      </div>
+    </section>
+
+    <!-- F3 -->
+    <section id="cam360" data-title-en="Huawei 360 camera &amp; viewer" data-title-sv="Huawei 360-kamera &amp; vy">
+      <p class="eyebrow"><span class="lang-en">Fork feature</span><span class="lang-sv">Forkfunktion</span></p>
+      <h2><span class="lang-en">Huawei 360&deg; camera &amp; the <code>/360</code> viewer</span><span class="lang-sv">Huawei 360&deg;-kamera &amp; <code>/360</code>-vyn</span></h2>
+      <p class="lang-en">Server Settings &rarr; Camera gains <strong>&ldquo;Huawei 360 Camera (USB)&rdquo;</strong>, always listed. Plug the camera into the phone's USB port &mdash; the app declares USB-host. <code>UsbCameraManager</code> has three capture modes: <strong>Huawei HaCam</strong> (vendor <code>0x12D1</code>, <code>USBC</code>/<code>USBS</code> command frames, H.264 decoded with MediaCodec), <strong>standard UVC</strong> (MJPEG payloads), and a <strong>generic</strong> raw-bulk JPEG scanner.</p>
+      <p class="lang-sv">Server­inställningar &rarr; Kamera får <strong>&rdquo;Huawei 360 Camera (USB)&rdquo;</strong>, alltid listad. Anslut kameran till telefonens USB-port &mdash; appen deklarerar USB-värd. <code>UsbCameraManager</code> har tre infångningslägen: <strong>Huawei HaCam</strong> (tillverkare <code>0x12D1</code>, <code>USBC</code>/<code>USBS</code>-kommandoramar, H.264 avkodad med MediaCodec), <strong>standard-UVC</strong> (MJPEG-nyttolaster) och en <strong>generisk</strong> rå-bulk-JPEG-avsökare.</p>
+
+      <p class="lang-en">When the 360 camera is selected the browser is served <strong><code>/360</code></strong> (alias <code>/cam360</code>): an equirectangular viewer you pan, tilt and zoom around the whole sphere.</p>
+      <p class="lang-sv">När 360-kameran är vald får webbläsaren <strong><code>/360</code></strong> (alias <code>/cam360</code>): en ekvirektangulär vy som du panorerar, lutar och zoomar runt hela sfären.</p>
+      <div class="grid two">
+        <div class="card">
+          <span class="tag"><span class="lang-en">Mouse / keyboard</span><span class="lang-sv">Mus / tangentbord</span></span>
+          <p class="lang-en">Click to pointer-lock for FPS-style look. <strong>W A S D</strong> then drives the robot <em>relative to where the camera faces</em> (W = forward along the current heading, A/D = strafe). Arrow keys always pan/tilt. While locked, dragging left/right also sends a <strong>rotate</strong> command (joystick 1's X axis) for holonomic robots.</p>
+          <p class="lang-sv">Klicka för att låsa pekaren för FPS-liknande blick. <strong>W A S D</strong> kör då roboten <em>relativt kamerans riktning</em> (W = framåt längs nuvarande kurs, A/D = i sidled). Piltangenter panorerar/lutar alltid. Medan pekaren är låst skickar dra åt vänster/höger även ett <strong>rotations</strong>-kommando (styrspak 1:s X-axel) för holonoma robotar.</p>
+        </div>
+        <div class="card">
+          <span class="tag"><span class="lang-en">Touch</span><span class="lang-sv">Pekskärm</span></span>
+          <p class="lang-en">Left half of the screen is one joystick, right half the other. Default: left drives (camera-relative), right is a rate-based look joystick &mdash; hold it deflected to keep turning. Each joystick anchors where your finger first lands.</p>
+          <p class="lang-sv">Skärmens vänstra halva är en styrspak, den högra en annan. Standard: vänster kör (kamerarelativt), höger är en hastighetsbaserad blickstyrspak &mdash; håll den utböjd för att fortsätta vrida. Varje styrspak förankras där fingret först landar.</p>
+        </div>
+      </div>
+      <p class="lang-en">A <strong>360&deg; options</strong> panel appears in Server Settings (only for this camera): <strong>Swap 360&deg; joystick sides</strong> (left = look, right = drive) and <strong>360&deg; joystick / mouse sensitivity</strong> &mdash; a slider 1&ndash;100 where 50 = 1.0&times; (default), 100 = 2&times;, 25 = 0.5&times;.</p>
+      <p class="lang-sv">En panel med <strong>360&deg;-alternativ</strong> visas i serverinställningarna (bara för den här kameran): <strong>Byt sidor på 360&deg;-styrspakarna</strong> (vänster = blick, höger = kör) och <strong>Känslighet för 360&deg;-styrspak / mus</strong> &mdash; ett reglage 1&ndash;100 där 50 = 1,0&times; (standard), 100 = 2&times;, 25 = 0,5&times;.</p>
+    </section>
+
+    <!-- F4 -->
+    <section id="vr" data-title-en="Google Cardboard VR" data-title-sv="Google Cardboard-VR">
+      <p class="eyebrow"><span class="lang-en">Fork feature</span><span class="lang-sv">Forkfunktion</span></p>
+      <h2><span class="lang-en">Google Cardboard VR viewer</span><span class="lang-sv">Google Cardboard-VR-vy</span></h2>
+      <div class="lang-en">
+        <p><strong><code>/vr</code></strong> (alias <code>/cardboard</code>) renders the 360&deg; stream <strong>stereo split-screen</strong> with <strong>phone-gyroscope head-look</strong>, for dropping the phone into a Google Cardboard or generic VR headset. It is <strong>view only</strong> &mdash; no joysticks, no login. Drive from the main page or <code>/360</code> on another device while the headset phone just shows the view. Both eyes see the same crop (the 360 camera has no stereo depth). Head direction is derived from the full W3C <code>DeviceOrientation</code> rotation matrix, not a naive per-axis reading, so the vertical &ldquo;phone in a headset&rdquo; pose doesn't hit gimbal lock.</p>
+        <ul>
+          <li><strong>Needs HTTPS.</strong> Chrome only exposes the gyroscope (<code>DeviceOrientationEvent</code>) on a secure context. RoboCam54 runs a <strong>separate HTTPS listener</strong> (<code>CardboardSecureServer</code>) on <strong>main port&nbsp;+&nbsp;1</strong>, serving only <code>/cardboard</code> and <code>/frame</code>, with a bundled <strong>self-signed certificate</strong> &mdash; the browser shows a one-time &ldquo;connection not private&rdquo; warning you tap through. Everything else stays on plain HTTP.</li>
+          <li><code>/cardboard-status</code> (plain HTTP, always reachable) reports whether the HTTPS listener started &mdash; for diagnosing over the LAN without adb.</li>
+          <li>The server-info banner on the home screen now shows all three URLs: the main address, <code>/360</code> and <code>/vr</code>.</li>
+        </ul>
+        <p>Confirmed working on hardware.</p>
+      </div>
+      <div class="lang-sv">
+        <p><strong><code>/vr</code></strong> (alias <code>/cardboard</code>) återger 360&deg;-strömmen i <strong>stereo-delad skärm</strong> med <strong>huvudblick via telefonens gyroskop</strong>, för att lägga telefonen i en Google Cardboard eller generisk VR-headset. Den är <strong>endast visning</strong> &mdash; inga styrspakar, ingen inloggning. Kör från huvudsidan eller <code>/360</code> på en annan enhet medan headset-telefonen bara visar vyn. Båda ögonen ser samma beskärning (360-kameran har inget stereodjup). Huvudriktningen härleds från hela W3C-<code>DeviceOrientation</code>-rotationsmatrisen, inte en naiv avläsning per axel, så den lodräta &rdquo;telefon i headset&rdquo;-posen hamnar inte i gimbal-lås.</p>
+        <ul>
+          <li><strong>Kräver HTTPS.</strong> Chrome exponerar bara gyroskopet (<code>DeviceOrientationEvent</code>) i en säker kontext. RoboCam54 kör en <strong>separat HTTPS-lyssnare</strong> (<code>CardboardSecureServer</code>) på <strong>huvudport&nbsp;+&nbsp;1</strong>, som bara serverar <code>/cardboard</code> och <code>/frame</code>, med ett medföljande <strong>självsignerat certifikat</strong> &mdash; webbläsaren visar en engångsvarning &rdquo;anslutningen är inte privat&rdquo; som du klickar dig förbi. Allt annat ligger kvar på vanlig HTTP.</li>
+          <li><code>/cardboard-status</code> (vanlig HTTP, alltid nåbar) rapporterar om HTTPS-lyssnaren startade &mdash; för felsökning över LAN utan adb.</li>
+          <li>Serverinfo-bannern på startskärmen visar nu alla tre adresserna: huvudadressen, <code>/360</code> och <code>/vr</code>.</li>
+        </ul>
+        <p>Bekräftat fungerande på hårdvara.</p>
+      </div>
+    </section>
+
+    <!-- F5 -->
+    <section id="clearcache" data-title-en="Clear Cache &amp; other changes" data-title-sv="Rensa cache &amp; övrigt">
+      <p class="eyebrow"><span class="lang-en">Fork feature</span><span class="lang-sv">Forkfunktion</span></p>
+      <h2><span class="lang-en">Clear Cache button &amp; other changes</span><span class="lang-sv">Knappen Rensa cache &amp; övriga ändringar</span></h2>
+      <ul>
+        <li><span class="lang-en"><strong>Clear Cache</strong> button in Server Settings wipes the app's <code>cache</code> and <code>externalCache</code> directories on demand. It is a manual button, deliberately <em>not</em> tied to saving settings &mdash; a settings save can be mid-way through writing a shared-settings temp file, and clearing then would delete it.</span><span class="lang-sv"><strong>Rensa cache</strong>-knappen i serverinställningarna tömmer appens kataloger <code>cache</code> och <code>externalCache</code> på begäran. Det är en manuell knapp, medvetet <em>inte</em> kopplad till att spara inställningar &mdash; ett sparande kan vara mitt i att skriva en tillfällig fil för delade inställningar, och att rensa då skulle radera den.</span></li>
+        <li><span class="lang-en">The video stream and on-device preview now rotate to follow the phone's physical orientation (matching the original); portrait frames are letterboxed rather than sent at a swapped size.</span><span class="lang-sv">Videoströmmen och förhandsvisningen på enheten roterar nu med telefonens fysiska orientering (som originalet); stående bildrutor visas med svarta kanter i stället för att skickas med utbytt storlek.</span></li>
+        <li><span class="lang-en">The proghouse.ru ad banner / WebView was removed from the home screen.</span><span class="lang-sv">proghouse.ru-annonsbannern / WebView togs bort från startskärmen.</span></li>
+        <li><span class="lang-en">All twelve function keys <strong>F1&ndash;F12</strong> are selectable for key groups.</span><span class="lang-sv">Alla tolv funktionstangenter <strong>F1&ndash;F12</strong> går att välja för tangentgrupper.</span></li>
+        <li><span class="lang-en">A draft privacy policy and release-signing setup were prepared. The app collects nothing: no account, analytics, ads or crash reporting.</span><span class="lang-sv">Ett utkast till integritetspolicy och signeringsuppsättning förbereddes. Appen samlar inte in något: inget konto, ingen analys, inga annonser, ingen kraschrapportering.</span></li>
+      </ul>
+
+      <h3><span class="lang-en">RoboCam54 development timeline</span><span class="lang-sv">RoboCam54:s utvecklingstidslinje</span></h3>
+      <p class="lang-en">From the app's development history.</p>
+      <p class="lang-sv">Från appens utvecklingshistorik.</p>
+      <ol class="timeline">
+        <li><span class="ver">core</span><span class="date">2026-04-27 &ndash; 05</span><p class="lang-en">From-scratch clone: HTTP / WebSocket / MJPEG server, EV3 Bluetooth, browser client, all settings activities, local controls. Then full EV3 parity &mdash; corrected opcodes (<code>OUTPUT_POWER 0xA4</code>, <code>WRITEMAILBOX 0x9E</code>), packet-length fixes, the original steering formula, F1&ndash;F12, the text-protocol <em>Custom</em> robot type. Reached a &ldquo;final tested, complete&rdquo; parity milestone.</p><p class="lang-sv">Klon från grunden: HTTP-/WebSocket-/MJPEG-server, EV3-Bluetooth, webbläsarklient, alla inställningsvyer, lokala reglage. Sedan full EV3-paritet &mdash; rättade op-koder (<code>OUTPUT_POWER 0xA4</code>, <code>WRITEMAILBOX 0x9E</code>), paketlängdsfixar, originalets styrningsformel, F1&ndash;F12, textprotokoll-roboten <em>Custom</em>. Nådde en &rdquo;färdig, testad&rdquo; paritetsmilstolpe.</p></li>
+        <li><span class="ver">360 cam</span><span class="date">2026-05-11</span><p class="lang-en">Huawei 360 USB camera option + the <code>/cam360</code> equirectangular viewer.</p><p class="lang-sv">Huawei 360-USB-kameraalternativ + den ekvirektangulära <code>/cam360</code>-vyn.</p></li>
+        <li><span class="ver">360 controls</span><span class="date">2026-08-05</span><p class="lang-en"><code>/cam360</code> gains FPS mouse control, camera-relative WASD drive, dual touch joysticks, and the sensitivity setting.</p><p class="lang-sv"><code>/cam360</code> får FPS-musstyrning, kamerarelativ WASD-körning, dubbla pekstyrspakar och känslighetsinställningen.</p></li>
+        <li><span class="ver">SPIKE</span><span class="date">2026-08-18 &ndash; 08-23</span><p class="lang-en">LEGO SPIKE Prime added as a third robot type over BLE, then pivoted to Pybricks after confirming stock firmware has no live motor primitive; BLE robustness fixes.</p><p class="lang-sv">LEGO SPIKE Prime tillagd som en tredje robottyp över BLE, sedan bytt till Pybricks efter att ha bekräftat att ordinarie firmware saknar live-motorprimitiv; BLE-robusthetsfixar.</p></li>
+        <li><span class="ver">VR + cache</span><span class="date">2026-08-25</span><p class="lang-en">Clear Cache button; Cardboard VR viewer with its dedicated HTTPS listener; stream orientation follows rotation.</p><p class="lang-sv">Knappen Rensa cache; Cardboard-VR-vy med egen HTTPS-lyssnare; strömorientering följer rotationen.</p></li>
+        <li><span class="ver">omni</span><span class="date">2026-08-26</span><p class="lang-en">SPIKE &ldquo;start hub program on disconnect&rdquo; + slot targeting; omni-wheel holonomic receiver; mouse-drag rotate.</p><p class="lang-sv">SPIKE &rdquo;starta enhetsprogram vid frånkoppling&rdquo; + luckval; holonom omnihjulsmottagare; dra-med-musen-rotera.</p></li>
+        <li><span class="ver">release prep</span><span class="date">2026-09-05</span><p class="lang-en">Draft privacy policy + Play release-signing config; launcher-icon fix.</p><p class="lang-sv">Utkast till integritetspolicy + signeringskonfiguration för Play; fix av programikonen.</p></li>
+      </ol>
+    </section>
+
+    <!-- 18 -->
+    <section id="sources" data-title-en="Source articles" data-title-sv="Källartiklar">
+      <p class="eyebrow"><span class="lang-en">Provenance</span><span class="lang-sv">Ursprung</span></p>
+      <h2><span class="lang-en">Source articles</span><span class="lang-sv">Källartiklar</span></h2>
+      <p class="lang-en">This page is compiled and translated from the five RoboCam tutorials by Alexey on proghouse.ru, plus the tag hub and their comment threads.</p>
+      <p class="lang-sv">Den här sidan är sammanställd och översatt från de fem RoboCam-handledningarna av Alexej på proghouse.ru, samt taggsidan och deras kommentarstrådar.</p>
+      <ul>
+        <li><a href="http://proghouse.ru/article-box/92-robocam">Управление роботом LEGO Mindstorms EV3 от первого лица</a> &mdash; <span class="lang-en">first-person EV3 control (v1.0)</span><span class="lang-sv">förstapersonsstyrning av EV3 (v1.0)</span></li>
+        <li><a href="http://proghouse.ru/article-box/97-robocam-settings">Импорт, экспорт, копирование и отправка настроек</a> &mdash; <span class="lang-en">transferring settings (v1.1)</span><span class="lang-sv">överföra inställningar (v1.1)</span></li>
+        <li><a href="http://proghouse.ru/article-box/102-robocam-keyboard">RoboCam &ndash; управляем роботом с клавиатуры компьютера</a> &mdash; <span class="lang-en">keyboard control (v1.2)</span><span class="lang-sv">tangentbordsstyrning (v1.2)</span></li>
+        <li><a href="http://proghouse.ru/article-box/128-robocam-arduino">Делаем управление Arduino-роботом от первого лица</a> &mdash; <span class="lang-en">Arduino / non-standard robots (v1.3.1)</span><span class="lang-sv">Arduino / icke-standardrobotar (v1.3.1)</span></li>
+        <li><a href="http://proghouse.ru/article-box/131-robocam-local-controls">Превращаем смартфон в пульт управления роботом</a> &mdash; <span class="lang-en">local controls (v1.4.2)</span><span class="lang-sv">lokala reglage (v1.4.2)</span></li>
+      </ul>
+      <p class="lang-en">Community: the RoboCam group linked from the articles. Hub: <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>.</p>
+      <p class="lang-sv">Gemenskap: RoboCam-gruppen som länkas från artiklarna. Samlingssida: <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>.</p>
+      <h3><span class="lang-en">Part II</span><span class="lang-sv">Del II</span></h3>
+      <p class="lang-en">The RoboCam54 section is compiled from the app's source and development history, shared by its developer. The code is private, so there is no repository to link. The one external dependency it names is <a href="https://code.pybricks.com">code.pybricks.com</a> &mdash; the Pybricks firmware and uploader, required on the hub for SPIKE Prime.</p>
+      <p class="lang-sv">RoboCam54-avsnittet är sammanställt från appens källkod och utvecklingshistorik, delad av dess utvecklare. Koden är privat, så det finns inget kodförråd att länka till. Det enda externa beroende som nämns är <a href="https://code.pybricks.com">code.pybricks.com</a> &mdash; Pybricks-firmware och uppladdare, som krävs på enheten för SPIKE Prime.</p>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <p class="lang-en"><strong>Part I</strong> is compiled from public material on <a href="http://proghouse.ru/tags/robocam">proghouse.ru</a> (ПрогХаус, 2013&ndash;2026), written by Alexey; RoboCam, its screenshots and downloads are the work of their author. <strong>Part II</strong> documents <strong>RoboCam54</strong>, an independent private build by M.Sc. Magnus, published here with the original author's consent; its source code is not released. This is an unofficial bilingual reference, not affiliated with ПрогХаус. Byte values and paths are reproduced as published.</p>
+  <p class="lang-sv"><strong>Del I</strong> är sammanställd från offentligt material på <a href="http://proghouse.ru/tags/robocam">proghouse.ru</a> (ПрогХаус, 2013&ndash;2026), skrivet av Alexej; RoboCam, dess skärmbilder och nedladdningar är upphovspersonens verk. <strong>Del II</strong> dokumenterar <strong>RoboCam54</strong>, ett fristående privat bygge av teknologie magister Magnus, publicerat här med originalupphovspersonens samtycke; dess källkod släpps inte. Detta är en inofficiell tvåspråkig referens, utan koppling till ПрогХаус. Byte-värden och sökvägar återges som de publicerats.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+
+  // ---------- language ----------
+  var LKEY="robocam-lang", TKEY="robocam-theme";
+  function setLang(l){
+    root.setAttribute("data-lang",l);
+    document.getElementById("en").setAttribute("aria-pressed",String(l==="en"));
+    document.getElementById("sv").setAttribute("aria-pressed",String(l==="sv"));
+    try{localStorage.setItem(LKEY,l);}catch(e){}
+    buildToc();
+  }
+  try{setLang(localStorage.getItem(LKEY)==="sv"?"sv":"en");}catch(e){setLang("en");}
+  document.getElementById("en").onclick=function(){setLang("en");};
+  document.getElementById("sv").onclick=function(){setLang("sv");};
+
+  // ---------- theme ----------
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  try{setTheme(localStorage.getItem(TKEY)||"system");}catch(e){setTheme("system");}
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+
+  // ---------- TOC ----------
+  var sections=[].slice.call(document.querySelectorAll("main section[id]"));
+  function buildToc(){
+    var l=root.getAttribute("data-lang")||"en";
+    var ol=document.getElementById("tocList");
+    ol.innerHTML="";
+    sections.forEach(function(s){
+      var li=document.createElement("li");
+      var a=document.createElement("a");
+      a.href="#"+s.id;
+      a.textContent=s.getAttribute("data-title-"+l)||s.getAttribute("data-title-en");
+      a.dataset.id=s.id;
+      li.appendChild(a);ol.appendChild(li);
+    });
+  }
+  buildToc();
+
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(ents){
+      ents.forEach(function(en){
+        if(en.isIntersecting){
+          var links=document.querySelectorAll("#tocList a");
+          for(var i=0;i<links.length;i++){
+            links[i].classList.toggle("active",links[i].dataset.id===en.target.id);
+          }
+        }
+      });
+    },{rootMargin:"-15% 0px -70% 0px"});
+    sections.forEach(function(s){io.observe(s);});
+  }
+
+  // ---------- key code table ----------
+  var keys=[
+    [8,"Backspace"],[9,"Tab"],[12,"Clear"],[13,"Enter"],[16,"Shift"],[17,"Ctrl"],[18,"Alt"],
+    [19,"Pause"],[20,"Caps Lock"],[27,"Esc"],[32,"Space"],[33,"Page Up"],[34,"Page Down"],
+    [35,"End"],[36,"Home"],[37,"Left"],[38,"Up"],[39,"Right"],[40,"Down"],[45,"Ins"],[46,"Del"],
+    [48,"0"],[49,"1"],[50,"2"],[51,"3"],[52,"4"],[53,"5"],[54,"6"],[55,"7"],[56,"8"],[57,"9"],
+    [65,"A"],[66,"B"],[67,"C"],[68,"D"],[69,"E"],[70,"F"],[71,"G"],[72,"H"],[73,"I"],[74,"J"],
+    [75,"K"],[76,"L"],[77,"M"],[78,"N"],[79,"O"],[80,"P"],[81,"Q"],[82,"R"],[83,"S"],[84,"T"],
+    [85,"U"],[86,"V"],[87,"W"],[88,"X"],[89,"Y"],[90,"Z"],
+    [96,"0 (Numpad)"],[97,"1 (Numpad)"],[98,"2 (Numpad)"],[99,"3 (Numpad)"],[100,"4 (Numpad)"],
+    [101,"5 (Numpad)"],[102,"6 (Numpad)"],[103,"7 (Numpad)"],[104,"8 (Numpad)"],[105,"9 (Numpad)"],
+    [106,"* (Numpad)"],[107,"+ (Numpad)"],[109,"- (Numpad)"],[110,". (Numpad)"],
+    [113,"F2"],[115,"F4"],[118,"F7"],[119,"F8"],[120,"F9"],[121,"F10"],
+    [144,"Num Lock"],[145,"Scroll Lock"],
+    [186,"( ; )"],[188,"( , )"],[189,"( - )"],[190,"( . )"],[191,"( / )"],[192,"( ` )"],
+    [219,"( [ )"],[220,"( \\ )"],[221,"( ] )"],[222,"( ' )"]
+  ];
+  var kg=document.getElementById("keyGrid");
+  keys.forEach(function(k){
+    var d=document.createElement("div");
+    d.innerHTML='<span class="kc">'+k[0]+'</span><span class="kn"></span>';
+    d.querySelector(".kn").textContent=k[1];
+    kg.appendChild(d);
+  });
+})();
+</script>
