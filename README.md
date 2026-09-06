@@ -1,6 +1,6 @@
 # RoboCam Field Manual
 
-### 🔗 Read it online → **<https://jlivingstonsg.github.io/proghouse2/>**
+🔗 **Read it online → <https://jlivingstonsg.github.io/proghouse2/>**
 
 A bilingual (English / Swedish) reference for the **RoboCam** Android app — first-person
 control of LEGO Mindstorms EV3, LEGO SPIKE Prime and Arduino / Raspberry Pi / PC robots
