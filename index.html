@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Bilingual EN/SV field manual for the RoboCam Android app — first-person control of LEGO EV3, SPIKE Prime and Arduino robots.">
 <title>RoboCam Field Manual</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1071,17 +1076,21 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
 <script>
 (function(){
   var root=document.documentElement;
+  var sections=[].slice.call(document.querySelectorAll("main section[id]"));
 
   // ---------- language ----------
   var LKEY="robocam-lang", TKEY="robocam-theme";
   function setLang(l){
     root.setAttribute("data-lang",l);
+    root.setAttribute("lang",l==="sv"?"sv":"en");
     document.getElementById("en").setAttribute("aria-pressed",String(l==="en"));
     document.getElementById("sv").setAttribute("aria-pressed",String(l==="sv"));
     try{localStorage.setItem(LKEY,l);}catch(e){}
     buildToc();
   }
-  try{setLang(localStorage.getItem(LKEY)==="sv"?"sv":"en");}catch(e){setLang("en");}
+  var startLang="en";
+  try{if(localStorage.getItem(LKEY)==="sv"){startLang="sv";}}catch(e){}
+  try{setLang(startLang);}catch(e){}
   document.getElementById("en").onclick=function(){setLang("en");};
   document.getElementById("sv").onclick=function(){setLang("sv");};
 
@@ -1098,10 +1107,10 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
   document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
 
   // ---------- TOC ----------
-  var sections=[].slice.call(document.querySelectorAll("main section[id]"));
   function buildToc(){
-    var l=root.getAttribute("data-lang")||"en";
     var ol=document.getElementById("tocList");
+    if(!ol||!sections){return;}
+    var l=root.getAttribute("data-lang")||"en";
     ol.innerHTML="";
     sections.forEach(function(s){
       var li=document.createElement("li");
@@ -1154,3 +1163,4 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
   });
 })();
 </script>
+</html>
