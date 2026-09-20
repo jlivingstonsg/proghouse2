@@ -346,13 +346,13 @@
         <div><dt>Price</dt><dd><span class="lang-en">Free</span><span class="lang-sv">Gratis</span></dd></div>
         <div><dt>Developer</dt><dd>Alexey (ПрогХаус)</dd></div>
         <div><dt><span class="lang-en">Latest</span><span class="lang-sv">Senaste</span></dt><dd>1.4.5</dd></div>
-        <div><dt>Status</dt><dd><span class="lang-en">No longer on Google Play</span><span class="lang-sv">Ej längre på Google Play</span></dd></div>
+        <div><dt>Status</dt><dd><span class="lang-en">Original: no longer on Google Play. RoboCam54: closed testing on Google Play</span><span class="lang-sv">Originalet: ej längre på Google Play. RoboCam54: slutet test på Google Play</span></dd></div>
       </dl>
 
       <div class="fork-flag">
         <span class="lab">Part II</span>
-        <span class="lang-en"><strong>RoboCam54</strong> is an independent Android reimplementation of RoboCam by M.Sc. Magnus (Sweden), built with Claude Code. The original was never open-sourced; RoboCam54 was rebuilt from scratch in Kotlin and adds <strong>LEGO SPIKE Prime</strong> support, a <strong>Huawei 360&deg; USB camera</strong> with a pan/tilt viewer, a <strong>Google Cardboard VR</strong> viewer and a <strong>Clear&nbsp;Cache</strong> button. It is a private build &mdash; the source code is not being released. Original author Alexey has confirmed he is fine with this page covering the developed app. &rarr; <a href="#fork">jump to Part II</a></span>
-        <span class="lang-sv"><strong>RoboCam54</strong> är en fristående Android-omskrivning av RoboCam av teknologie magister Magnus (Sverige), byggd med Claude Code. Originalet släpptes aldrig som öppen källkod; RoboCam54 är byggd från grunden i Kotlin och lägger till stöd för <strong>LEGO SPIKE Prime</strong>, en <strong>Huawei 360&deg;-USB-kamera</strong> med panorerings-/lutningsvy, en <strong>Google Cardboard-VR</strong>-vy och en knapp för att <strong>rensa cachen</strong>. Det är ett privat bygge &mdash; källkoden släpps inte. Originalupphovspersonen Alexej har bekräftat att den här sidan får omfatta den vidareutvecklade appen. &rarr; <a href="#fork">hoppa till del II</a></span>
+        <span class="lang-en"><strong>RoboCam54</strong> is an independent Android reimplementation of RoboCam by M.Sc. Magnus (Sweden), built with Claude Code. The original was never open-sourced; RoboCam54 was rebuilt from scratch in Kotlin and adds <strong>LEGO SPIKE Prime</strong> support, a <strong>Huawei 360&deg; USB camera</strong> with a pan/tilt viewer, a <strong>Google Cardboard VR</strong> viewer and a <strong>Clear&nbsp;Cache</strong> button. It is now in closed testing on Google Play; the source code is private and is not being released. Original author Alexey has confirmed he is fine with this page covering the developed app. &rarr; <a href="#fork">jump to Part II</a></span>
+        <span class="lang-sv"><strong>RoboCam54</strong> är en fristående Android-omskrivning av RoboCam av teknologie magister Magnus (Sverige), byggd med Claude Code. Originalet släpptes aldrig som öppen källkod; RoboCam54 är byggd från grunden i Kotlin och lägger till stöd för <strong>LEGO SPIKE Prime</strong>, en <strong>Huawei 360&deg;-USB-kamera</strong> med panorerings-/lutningsvy, en <strong>Google Cardboard-VR</strong>-vy och en knapp för att <strong>rensa cachen</strong>. Den är nu i slutet test på Google Play; källkoden är privat och släpps inte. Originalupphovspersonen Alexej har bekräftat att den här sidan får omfatta den vidareutvecklade appen. &rarr; <a href="#fork">hoppa till del II</a></span>
       </div>
     </header>
 
@@ -897,38 +897,38 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
 
       <div class="lang-en">
         <p class="lede">RoboCam54 is a from-scratch, independent Android version of RoboCam by <strong>M.Sc. Magnus</strong> (Sweden), written in Kotlin with Claude Code. Alexey's app was never open-sourced and its code was never shared, so RoboCam54 was rebuilt by studying the original's behaviour, its decompiled browser client, and the public LEGO / EV3 protocol documentation. Alexey has confirmed he is fine with this page covering the developed app.</p>
-        <p><strong>The source code is private and is not being released</strong> &mdash; this section documents what the app does, not how to obtain or build it. Package <code>com.robocam.robocam54</code>, version name 1.0.</p>
+        <p><strong>The source code is private and is not being released</strong> &mdash; this section documents what the app does, not how to obtain or build it. Package <code>com.robocam.robocam54</code>, version name 1.0 (versionCode 3).</p>
         <h3>What carries over unchanged</h3>
         <p>The server + browser-client model, up to four joysticks in two pairs, every joystick shape and type, key groups with stepped ramps, EV3 mailboxes, import / export / copy / send of XML profiles, local controls, spectators, the login (<code>admin</code>&nbsp;/&nbsp;<code>123</code>, <code>guest</code>&nbsp;/&nbsp;<code>123</code>) and port <strong>8088</strong>.</p>
         <h3>What is different from Alexey's app</h3>
         <ul>
-          <li><strong>Android 7.0 (API 24)+</strong>, targeting Android 15 &mdash; versus Android 2.3 for the original. Runtime Bluetooth permissions, camera + data-sync foreground-service types.</li>
+          <li><strong>Android 7.0 (API 24)+</strong>, targeting Android 16 (API 36) &mdash; versus Android 2.3 for the original. Runtime Bluetooth permissions, camera + data-sync foreground-service types.</li>
           <li><strong>Three robot profile types:</strong> <em>EV3</em> (Bluetooth Classic / RFCOMM, unchanged), <em>SPIKE Prime</em> (new, Bluetooth LE), and <em>Custom</em>.</li>
           <li>The <em>Custom</em> type is this fork's take on &ldquo;non-standard robots&rdquo;. Instead of the original's binary <code>CMD_START</code>&hellip;<code>CMD_STOP</code> framing it sends one plain-text line per change &mdash; <code>callsign,x0,y0,x1,y1\r\n</code> (the two joystick axis pairs as integers) &mdash; over Bluetooth serial, so an Arduino sketch can parse it as CSV. A bundled &ldquo;Custom Researcher&rdquo; starter profile is provided.</li>
           <li>New: the Huawei 360 camera + 360&deg; viewer, the Cardboard VR viewer, and the Clear Cache button (all below).</li>
           <li>The proghouse.ru ad banner is gone from the home screen; all twelve function keys <strong>F1&ndash;F12</strong> are selectable; the video stream and on-device preview rotate to follow the phone.</li>
-          <li>Ships a draft privacy policy and Play release-signing config. Collects nothing &mdash; no account, analytics, ads or crash reporting.</li>
+          <li>Has a published <a href="https://jlivingstonsg.github.io/robocam-privacy/">privacy policy</a> and Play release signing. Collects nothing &mdash; no account, analytics, ads or crash reporting.</li>
         </ul>
       </div>
       <div class="lang-sv">
         <p class="lede">RoboCam54 är en Android-version av RoboCam byggd från grunden av <strong>teknologie magister Magnus</strong> (Sverige), skriven i Kotlin med Claude Code. Alexejs app släpptes aldrig som öppen källkod och koden delades aldrig, så RoboCam54 byggdes om genom att studera originalets beteende, dess dekompilerade webbläsarklient och den offentliga LEGO-/EV3-protokolldokumentationen. Alexej har bekräftat att den här sidan får omfatta den vidareutvecklade appen.</p>
-        <p><strong>Källkoden är privat och släpps inte</strong> &mdash; det här avsnittet beskriver vad appen gör, inte hur man skaffar eller bygger den. Paket <code>com.robocam.robocam54</code>, versionsnamn 1.0.</p>
+        <p><strong>Källkoden är privat och släpps inte</strong> &mdash; det här avsnittet beskriver vad appen gör, inte hur man skaffar eller bygger den. Paket <code>com.robocam.robocam54</code>, versionsnamn 1.0 (versionskod 3).</p>
         <h3>Vad som är oförändrat</h3>
         <p>Modellen server + webbläsarklient, upp till fyra styrspakar i två par, alla styrspaksformer och -typer, tangentgrupper med stegvisa ramper, EV3-brevlådor, import / export / kopiering / sändning av XML-profiler, lokala reglage, åskådare, inloggningen (<code>admin</code>&nbsp;/&nbsp;<code>123</code>, <code>guest</code>&nbsp;/&nbsp;<code>123</code>) och port <strong>8088</strong>.</p>
         <h3>Vad som skiljer sig från Alexejs app</h3>
         <ul>
-          <li><strong>Android 7.0 (API 24)+</strong>, med mål Android 15 &mdash; jämfört med Android 2.3 för originalet. Bluetooth-tillstånd vid körning, förgrundstjänsttyper för kamera + datasynkronisering.</li>
+          <li><strong>Android 7.0 (API 24)+</strong>, med mål Android 16 (API 36) &mdash; jämfört med Android 2.3 för originalet. Bluetooth-tillstånd vid körning, förgrundstjänsttyper för kamera + datasynkronisering.</li>
           <li><strong>Tre robotprofiltyper:</strong> <em>EV3</em> (Bluetooth Classic / RFCOMM, oförändrat), <em>SPIKE Prime</em> (ny, Bluetooth LE) och <em>Custom</em>.</li>
           <li><em>Custom</em>-typen är den här forkens variant av &rdquo;icke-standardrobotar&rdquo;. I stället för originalets binära <code>CMD_START</code>&hellip;<code>CMD_STOP</code>-ramning skickar den en rad ren text per ändring &mdash; <code>callsign,x0,y0,x1,y1\r\n</code> (de två styrspaksaxelparen som heltal) &mdash; över Bluetooth-seriellt, så att en Arduino-skiss kan tolka den som CSV. En medföljande startprofil &rdquo;Custom Researcher&rdquo; ingår.</li>
           <li>Nytt: Huawei 360-kameran + 360&deg;-vyn, Cardboard-VR-vyn och knappen Rensa cache (allt nedan).</li>
           <li>proghouse.ru-annonsbannern är borta från startskärmen; alla tolv funktionstangenter <strong>F1&ndash;F12</strong> går att välja; videoströmmen och förhandsvisningen på enheten roterar med telefonen.</li>
-          <li>Levereras med ett utkast till integritetspolicy och signeringskonfiguration för Play. Samlar inte in något &mdash; inget konto, ingen analys, inga annonser, ingen kraschrapportering.</li>
+          <li>Har en publicerad <a href="https://jlivingstonsg.github.io/robocam-privacy/">integritetspolicy</a> och signering för Play. Samlar inte in något &mdash; inget konto, ingen analys, inga annonser, ingen kraschrapportering.</li>
         </ul>
       </div>
       <div class="note">
         <b><span class="lang-en">Relationship to the original</span><span class="lang-sv">Förhållande till originalet</span></b>
-        <span class="lang-en">RoboCam54 keeps the RoboCam name with the original author's knowledge and consent for this page. It is a separate project and a separate codebase, not a patch of Alexey's binary. It is a private build: not on Google Play, and its source code is not publicly released.</span>
-        <span class="lang-sv">RoboCam54 behåller namnet RoboCam med originalupphovspersonens vetskap och samtycke för den här sidan. Det är ett separat projekt och en separat kodbas, inte en patch av Alexejs binär. Det är ett privat bygge: inte på Google Play, och dess källkod släpps inte offentligt.</span>
+        <span class="lang-en">RoboCam54 keeps the RoboCam name with the original author's knowledge and consent for this page. It is a separate project and a separate codebase, not a patch of Alexey's binary. It is distributed through a Google Play closed test (not publicly listed yet), and its source code is not publicly released.</span>
+        <span class="lang-sv">RoboCam54 behåller namnet RoboCam med originalupphovspersonens vetskap och samtycke för den här sidan. Det är ett separat projekt och en separat kodbas, inte en patch av Alexejs binär. Den distribueras via ett slutet test på Google Play (ännu inte offentligt listad), och dess källkod släpps inte offentligt.</span>
       </div>
     </section>
 
@@ -1032,7 +1032,7 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
         <li><span class="lang-en">The video stream and on-device preview now rotate to follow the phone's physical orientation (matching the original); portrait frames are letterboxed rather than sent at a swapped size.</span><span class="lang-sv">Videoströmmen och förhandsvisningen på enheten roterar nu med telefonens fysiska orientering (som originalet); stående bildrutor visas med svarta kanter i stället för att skickas med utbytt storlek.</span></li>
         <li><span class="lang-en">The proghouse.ru ad banner / WebView was removed from the home screen.</span><span class="lang-sv">proghouse.ru-annonsbannern / WebView togs bort från startskärmen.</span></li>
         <li><span class="lang-en">All twelve function keys <strong>F1&ndash;F12</strong> are selectable for key groups.</span><span class="lang-sv">Alla tolv funktionstangenter <strong>F1&ndash;F12</strong> går att välja för tangentgrupper.</span></li>
-        <li><span class="lang-en">A draft privacy policy and release-signing setup were prepared. The app collects nothing: no account, analytics, ads or crash reporting.</span><span class="lang-sv">Ett utkast till integritetspolicy och signeringsuppsättning förbereddes. Appen samlar inte in något: inget konto, ingen analys, inga annonser, ingen kraschrapportering.</span></li>
+        <li><span class="lang-en">A privacy policy was published and release signing was set up. The app collects nothing: no account, analytics, ads or crash reporting.</span><span class="lang-sv">En integritetspolicy publicerades och signering för release sattes upp. Appen samlar inte in något: inget konto, ingen analys, inga annonser, ingen kraschrapportering.</span></li>
       </ul>
 
       <h3><span class="lang-en">RoboCam54 development timeline</span><span class="lang-sv">RoboCam54:s utvecklingstidslinje</span></h3>
@@ -1046,6 +1046,7 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
         <li><span class="ver">VR + cache</span><span class="date">2026-08-25</span><p class="lang-en">Clear Cache button; Cardboard VR viewer with its dedicated HTTPS listener; stream orientation follows rotation.</p><p class="lang-sv">Knappen Rensa cache; Cardboard-VR-vy med egen HTTPS-lyssnare; strömorientering följer rotationen.</p></li>
         <li><span class="ver">omni</span><span class="date">2026-08-26</span><p class="lang-en">SPIKE &ldquo;start hub program on disconnect&rdquo; + slot targeting; omni-wheel holonomic receiver; mouse-drag rotate.</p><p class="lang-sv">SPIKE &rdquo;starta enhetsprogram vid frånkoppling&rdquo; + luckval; holonom omnihjulsmottagare; dra-med-musen-rotera.</p></li>
         <li><span class="ver">release prep</span><span class="date">2026-09-05</span><p class="lang-en">Draft privacy policy + Play release-signing config; launcher-icon fix.</p><p class="lang-sv">Utkast till integritetspolicy + signeringskonfiguration för Play; fix av programikonen.</p></li>
+        <li><span class="ver">Play test</span><span class="date">2026-09-19 &ndash; 09-20</span><p class="lang-en">Target API raised to 36 (Android 16); release build shrunk with R8 (versionCode 3) and sideload-tested on real Bluetooth robots; privacy policy published; closed test set up on Google Play.</p><p class="lang-sv">Mål-API höjt till 36 (Android 16); releasebygget krympt med R8 (versionskod 3) och testat via sidoladdning med riktiga Bluetooth-robotar; integritetspolicy publicerad; slutet test uppsatt på Google Play.</p></li>
       </ol>
     </section>
 
