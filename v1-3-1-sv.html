@@ -93,7 +93,7 @@
   <p class="kicker">Version 1.3.1 · översatt artikel</p>
   <h1>Bygg förstapersonsstyrning för en Arduino-robot</h1>
   <p class="byline">Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 6 oktober 2017.</p>
-  <p class="shots">Skärmbilderna är från originalartikeln och visar appens ryska gränssnitt; texten beskriver varje skärm på svenska.</p>
+  <p class="shots">Skärmbilderna är från originalartikeln och har retuscherats så att gränssnittstexten är på svenska. De orörda originalen visar det ryska gränssnittet.</p>
 
   <div class="article">
 <p>Den senaste versionen av RoboCam kan styra inte bara EV3-robotar utan även robotar byggda på plattformar som Arduino, Raspberry Pi och liknande, där man kan arbeta direkt med data som tas emot och skickas via Bluetooth. Nu kan du hantera RoboCams kommandon precis som du vill.</p>
@@ -246,7 +246,7 @@ Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&
 <p><strong><span style="color: #339966;">0400</span><span style="color: #ff0000;">00</span><span style="color: #3366ff;">D2</span><span style="color: #ff9900;">01</span><span style="color: #cc99ff;">00</span></strong></p>
 <h3>Kommandot &laquo;Anropssignal&raquo; (CMD_CALLSIGN)</h3>
 <p>När RoboCam får ett felfritt svar på kommandot CMD_START, med kontrollbyten, protokollversionen och teckenkodningen rätt angivna, börjar den fortsatta kommunikationen mellan roboten och RoboCam. Direkt därefter får roboten kommandot <strong>CMD_CALLSIGN</strong>. Det sker dock bara om en anropssignal och ett svar på den är angivna i RoboCams inställningar. Om ingen anropssignal eller inget svar är angivet skickas inte kommandot. På bilden nedan är till exempel anropssignalen <strong>&laquo;RoboCam&raquo;</strong> och svaret <strong>&laquo;Researcher&raquo;</strong> angivna i inställningarna.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_02.png" loading="lazy" alt="Ange anropssignal och svar för roboten" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_02.png" loading="lazy" alt="Ange anropssignal och svar för roboten" style="border: 1px solid #000000;" /></p>
 <p>Ett meddelande med kommandot CMD_CALLSIGN ser ut så här:</p>
 <p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #993300;">AAA…0</span></strong></p>
 <ul style="list-style-type: disc;">
@@ -450,29 +450,29 @@ Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&
 <p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
 <h3>Robotinställningar</h3>
 <p>Nu när vi har gått igenom kommunikationsprotokollet kan vi titta på de inställningar som tillkommit för icke-standardrobotar. Öppna inställningarna i RoboCam (den grå runda knappen till höger),</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_03.png" loading="lazy" alt="Inställningsknappen i RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_03.png" loading="lazy" alt="Inställningsknappen i RoboCam" style="border: 1px solid #000000;" /></p>
 <p>välj sedan &laquo;Robot&raquo;.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_04.png" loading="lazy" alt="Robotinställningar i appen RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_04.png" loading="lazy" alt="Robotinställningar i appen RoboCam" style="border: 1px solid #000000;" /></p>
 <p>Robotinställningarna öppnas. Som du ser visar listan nu både inställningar för EV3-robotar och för icke-standardrobotar.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_06.png" loading="lazy" alt="Listan över RoboCams robotinställningar" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_06.png" loading="lazy" alt="Listan över RoboCams robotinställningar" style="border: 1px solid #000000;" /></p>
 <p>För att ändra inställningar du skapat tidigare väljer du dem helt enkelt i listan; för att lägga till nya inställningar för en icke-standardrobot trycker du på knappen &laquo;Lägg till&raquo; och väljer menyalternativet &laquo;Icke-standardrobot&raquo;.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_05.png" loading="lazy" alt="Menyalternativet &quot;Icke-standardrobot&quot; i RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_05.png" loading="lazy" alt="Menyalternativet &quot;Icke-standardrobot&quot; i RoboCam" style="border: 1px solid #000000;" /></p>
 <p>Om du bestämmer dig för att skapa nya inställningar får du en tom inställningsskärm.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_07.png" loading="lazy" alt="Tomma inställningar för icke-standardrobot i RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_07.png" loading="lazy" alt="Tomma inställningar för icke-standardrobot i RoboCam" style="border: 1px solid #000000;" /></p>
 <p>I artikeln beskriver jag inställningarna med utgångspunkt i inställningar jag skapat tidigare för att styra roboten du såg i videon högst upp i artikeln. Allra först anges robotens namn, som syns i listan över inställningar och på RoboCams huvudskärm om inställningarna är de aktuella. Därefter kommer en beskrivning, som bara syns i listan över inställningar.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_08.png" loading="lazy" alt="Arduino-robotens inställningar i RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_08.png" loading="lazy" alt="Arduino-robotens inställningar i RoboCam" style="border: 1px solid #000000;" /></p>
 <p>Om &laquo;<strong>Visa felsökningsinformation</strong>&raquo; är markerad visar klienten styrspakens koordinater medan den används, samt koderna för nedtryckta tangenter.</p>
 <p>Om &laquo;<strong>Dölj styrspakar vid tangentbordsanvändning</strong>&raquo; är markerad försvinner styrspakarna på klienten, som i EV3-inställningarna, så fort någon tangent trycks ned på klienten. Så fort du klickar på skärmen med musen visas styrspakarna igen.</p>
 <p>Därefter kommer inställningarna för anropssignal och svar. Texten som anges här används för kommandot CMD_CALLSIGN som beskrevs ovan.</p>
 <p>Nedanför finns inställningarna för RoboCams 4 styrspakar. Inställningarna är desamma för alla styrspakar, så vi tittar på dem med den första styrspaken som exempel. Den första kryssrutan, &laquo;<strong>Synlighet</strong>&raquo;, styr styrspakens synlighet; om den är avmarkerad visas styrspaken inte på klienten och fungerar inte.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_09.png" loading="lazy" alt="Styrspaksinställningar i appen RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_09.png" loading="lazy" alt="Styrspaksinställningar i appen RoboCam" style="border: 1px solid #000000;" /></p>
 <p>I listan &laquo;<strong>Form</strong>&raquo; kan du välja styrspakens form. Formerna är: vertikal, horisontell, rund, kvadratisk, pilar, vertikala pilar och horisontella pilar. Så här ser styrspakar av de beskrivna formerna ut:</p>
 <p style="text-align: center;"><img src="img/articles/robot/robocam-24.png" loading="lazy" alt="RoboCams styrspakar" /></p>
 <p>Hur styrspakarna fungerar beror på formen och beskrivs redan i artikeln &laquo;<a href="v1-0-sv.html">Styra en LEGO Mindstorms EV3-robot i förstaperson</a>&raquo;.</p>
 <p>De följande två listorna väljer hur styrspakarna beter sig när du slutar röra vid dem. Det finns bara två alternativ: &laquo;Återgå till noll&raquo; och &laquo;Behåll position&raquo;. I det första fallet återgår styrspaken till utgångsläget, det vill säga till noll, när du &laquo;släpper&raquo; den; i det andra stannar den där den är. Beteendet kan anges separat för styrspakens vertikala och horisontella axel.</p>
 <p>Allra längst ner ställs tangenterna in. Kryssrutan &laquo;<strong>Aktiv</strong>&raquo; slår på eller av RoboCam-klientens känslighet för tangenttryckningar. Om du inte planerar att styra med tangentbordet rekommenderas det att avmarkera den för att spara batteri på klientenheten.</p>
 <p>Lite längre ner kan du, om du trycker på inställningen &laquo;<strong>Tangenter</strong>&raquo;, välja de tangenter vars tillstånd du tänker följa.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_10.png" loading="lazy" alt="Ställa in tangenter för en icke-standardrobot i RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/sv/articles/robot/robocam-arduino_10.png" loading="lazy" alt="Ställa in tangenter för en icke-standardrobot i RoboCam" style="border: 1px solid #000000;" /></p>
 <p>Sammantaget finns det mycket färre inställningar för en icke-standardrobot än för en EV3-robot, men de som finns fungerar som för EV3-roboten, så läs de tidigare <a href="hub-sv.html">artiklarna om RoboCam</a> för mer detaljer.</p>
 <h3>Bygga Arduino-roboten</h3>
 <p>För att göra Arduino-roboten som styrs i förstaperson med RoboCam, som du ser i videon nedan, använde jag utbildningssatsen från Amperka samt ytterligare komponenter och delar: en Bluetooth-modul HC-06, extra plastdistanser, muttrar och brickor, två 3D-utskrivna delar för att hålla servomotorn, ett gem och två gummiband (sådana som används för sedlar).</p>

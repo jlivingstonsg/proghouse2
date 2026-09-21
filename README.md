@@ -27,8 +27,9 @@ Pages redeploys within a minute.
   the five original tutorials.
 - `v1-0-*.html`, `v1-1-*.html`, `v1-2-*.html`, `v1-3-1-*.html`, `v1-4-2-*.html`
   (`-en` / `-sv`) — full translated copies of the five tutorials, one per RoboCam version
-  (1.0, 1.1, 1.2, 1.3.1, 1.4.2). Screenshots are self-hosted in `img/`; they show the app's
-  original Russian interface.
+  (1.0, 1.1, 1.2, 1.3.1, 1.4.2). Screenshots are self-hosted: `img/en/` and `img/sv/` hold
+  retouched copies with the interface text translated into English and Swedish; images that
+  contain no Russian text (photos, 3D renders) are shared from `img/`.
 
 - `files/` — the author's downloads referenced by the tutorials, hosted here: the two RoboCam
   APKs (release 1.4.5: regular and RenderScript), the EV3 Explorer build guide (PDF), the

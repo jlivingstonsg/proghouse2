@@ -93,7 +93,7 @@
   <p class="kicker">Version 1.3.1 · translated article</p>
   <h1>Building first-person control for an Arduino robot</h1>
   <p class="byline">Translated from the Russian original by Alexey (ПрогХаус), published 6 October 2017.</p>
-  <p class="shots">The screenshots are from the original article and show the app's Russian interface; the text describes each screen in English.</p>
+  <p class="shots">The screenshots are from the original article, retouched so that the interface text is in English. The untouched originals show the Russian interface.</p>
 
   <div class="article">
 <p>The latest version of RoboCam can control not only EV3 robots but also robots built on platforms such as Arduino, Raspberry Pi and similar, where you can work directly with the data received and sent over Bluetooth. Now you can process RoboCam's commands however you like.</p>
@@ -246,7 +246,7 @@ Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&
 <p><strong><span style="color: #339966;">0400</span><span style="color: #ff0000;">00</span><span style="color: #3366ff;">D2</span><span style="color: #ff9900;">01</span><span style="color: #cc99ff;">00</span></strong></p>
 <h3>The &laquo;Callsign&raquo; command (CMD_CALLSIGN)</h3>
 <p>After RoboCam gets an error-free reply to the CMD_START command, with the check byte, protocol version number and encoding all correctly given, further communication between the robot and RoboCam begins. Right after that the robot receives the <strong>CMD_CALLSIGN</strong> command. This only happens, though, if a callsign and a reply to it are set in the RoboCam settings. If no callsign or reply is set, this command is not sent. In the picture below, for example, the callsign <strong>&laquo;RoboCam&raquo;</strong> and the reply <strong>&laquo;Researcher&raquo;</strong> are set in the settings.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_02.png" loading="lazy" alt="Setting the callsign and reply for the robot" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_02.png" loading="lazy" alt="Setting the callsign and reply for the robot" style="border: 1px solid #000000;" /></p>
 <p>A message with the CMD_CALLSIGN command looks like this:</p>
 <p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #993300;">AAA…0</span></strong></p>
 <ul style="list-style-type: disc;">
@@ -450,29 +450,29 @@ Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&
 <p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
 <h3>Robot settings</h3>
 <p>Now that we have dealt with the communication protocol, we can look at the settings that have appeared for non-standard robots. In RoboCam open the settings (the grey round button on the right),</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_03.png" loading="lazy" alt="The RoboCam settings button" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_03.png" loading="lazy" alt="The RoboCam settings button" style="border: 1px solid #000000;" /></p>
 <p>then choose &laquo;Robot&raquo;.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_04.png" loading="lazy" alt="Robot settings in the RoboCam app" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_04.png" loading="lazy" alt="Robot settings in the RoboCam app" style="border: 1px solid #000000;" /></p>
 <p>The robot settings open. As you can see, the list now shows both settings for EV3 robots and for non-standard robots.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_06.png" loading="lazy" alt="The list of RoboCam robot settings" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_06.png" loading="lazy" alt="The list of RoboCam robot settings" style="border: 1px solid #000000;" /></p>
 <p>To change settings you created earlier, simply choose them from the list; to add new settings for a non-standard robot, press the &laquo;Add&raquo; button and choose the menu item &laquo;Non-standard robot&raquo;.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_05.png" loading="lazy" alt="The &quot;Non-standard robot&quot; menu item in RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_05.png" loading="lazy" alt="The &quot;Non-standard robot&quot; menu item in RoboCam" style="border: 1px solid #000000;" /></p>
 <p>If you decide to create new settings, you get an empty settings screen.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_07.png" loading="lazy" alt="Empty non-standard robot settings in RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_07.png" loading="lazy" alt="Empty non-standard robot settings in RoboCam" style="border: 1px solid #000000;" /></p>
 <p>In the article I will describe the settings using, as an example, settings I created earlier for controlling the robot you saw in the video at the top of the article. At the very start the robot's name is given; it will be visible in the list of settings and on RoboCam's main screen if the settings are the current ones. Next comes a description, which is visible only in the list of settings.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_08.png" loading="lazy" alt="Arduino robot settings in RoboCam" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_08.png" loading="lazy" alt="Arduino robot settings in RoboCam" style="border: 1px solid #000000;" /></p>
 <p>If &laquo;<strong>Show debug information</strong>&raquo; is ticked, the client shows the joystick coordinates while a joystick is in use, and the codes of the keys pressed.</p>
 <p>If &laquo;<strong>Hide joysticks when using the keyboard</strong>&raquo; is ticked, then, as with the EV3 settings, the joysticks on the client disappear as soon as any key is pressed on the client. As soon as you click the screen with the mouse, the joysticks appear again.</p>
 <p>Next come the callsign and reply settings. The text given here is used for the CMD_CALLSIGN command described above.</p>
 <p>Below are the settings for RoboCam's 4 joysticks. The settings are the same for all joysticks, so let's look at them using the first joystick as an example. The first checkbox, &laquo;<strong>Visibility</strong>&raquo;, controls the joystick's visibility; if it is unticked, the joystick is not shown on the client and does not work.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_09.png" loading="lazy" alt="Joystick settings in the RoboCam app" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_09.png" loading="lazy" alt="Joystick settings in the RoboCam app" style="border: 1px solid #000000;" /></p>
 <p>From the &laquo;<strong>Shape</strong>&raquo; list you can choose the joystick's shape. The shapes are: vertical, horizontal, round, square, arrows, vertical arrows and horizontal arrows. This is what joysticks of the described shapes look like:</p>
 <p style="text-align: center;"><img src="img/articles/robot/robocam-24.png" loading="lazy" alt="RoboCam joysticks" /></p>
 <p>How the joysticks work depends on the shape and is already described in the article &laquo;<a href="v1-0-en.html">Controlling a LEGO Mindstorms EV3 robot in first person</a>&raquo;.</p>
 <p>The next two lists choose how the joysticks behave when you stop touching them. There are only two options: &laquo;Return to zero&raquo; and &laquo;Keep position&raquo;. In the first case, if you &laquo;let go&raquo; of the joystick it returns to its initial state, i.e. to zero; in the second it stays where it is. The behaviour can be set separately for the joystick's vertical axis and horizontal axis.</p>
 <p>At the very bottom the keys are configured. The &laquo;<strong>Active</strong>&raquo; checkbox turns RoboCam's client sensitivity to key presses on or off. If you don't plan to use the keyboard for control, it is recommended to untick it to save battery on the client device.</p>
 <p>A little lower, if you press the &laquo;<strong>Keys</strong>&raquo; setting, you can choose the keys whose state you intend to track.</p>
-<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_10.png" loading="lazy" alt="Configuring keys for a RoboCam non-standard robot" style="border: 1px solid #000000;" /></p>
+<p style="text-align: center;"><img src="img/en/articles/robot/robocam-arduino_10.png" loading="lazy" alt="Configuring keys for a RoboCam non-standard robot" style="border: 1px solid #000000;" /></p>
 <p>All in all there are far fewer settings for a non-standard robot than for an EV3 robot, but the ones there are work like the EV3 robot's, so read the earlier <a href="hub-en.html">articles about RoboCam</a> for more detail.</p>
 <h3>Building the Arduino robot</h3>
 <p>To make the Arduino robot controlled in first person with RoboCam, which you can see in the video below, I used the Amperka educational kit plus additional components and parts: an HC-06 Bluetooth module, extra plastic standoffs, nuts and washers, two parts 3D-printed to hold the servo motor, a paper clip and two rubber bands (the kind used for banknotes).</p>
