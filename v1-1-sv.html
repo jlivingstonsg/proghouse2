@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="sv">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 22 oktober 2016. Importera, exportera, kopiera och skicka robotinställningar i RoboCam">
+<title>RoboCam 1.1 &ndash; Importera, exportera, kopiera och skicka robotinställningar i RoboCam</title>
+<link rel="alternate" hreflang="en" href="v1-1-en.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse-artiklar</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Språk">
+      <a href="v1-1-en.html" hreflang="en" lang="en">English</a>
+      <a href="v1-1-sv.html" hreflang="sv" lang="sv" aria-current="page">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Tema">
+      <button id="lt" aria-pressed="false">Ljust</button>
+      <button id="dk" aria-pressed="false">Mörkt</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.1 · översatt artikel</p>
+  <h1>Importera, exportera, kopiera och skicka robotinställningar i RoboCam</h1>
+  <p class="byline">Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 22 oktober 2016.</p>
+  <p class="shots">Skärmbilderna är från originalartikeln och visar appens ryska gränssnitt; texten beskriver varje skärm på svenska.</p>
+
+  <div class="article">
+<p>Den förra artikeln om RoboCam beskrev hur man styr en EV3-robot i förstaperson. Men robotar och mekanismer kan se olika ut och var och en behöver sin egen styrning. Om du har utvecklat en ny robot uppstår frågan hur du delar dina inställningar med andra, för över dem till en annan telefon eller helt enkelt kopierar dem. Det finns en lösning: i den nya versionen av RoboCam har funktionerna import, export, kopiering och sändning av robotinställningar lagts till.</p>
+ 
+<p><img src="img/articles/robot/robocam-31.png" loading="lazy" alt="Importera, exportera, kopiera och skicka robotinställningar i appen RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Den här artikeln beskriver de nya funktionerna i version 1.1 av RoboCam. Alla artiklar om RoboCam finns <a href="hub-sv.html">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, eller från spegeln <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> om du vill ha en APK att installera manuellt.</p>
+<h3>Exportera inställningar till en fil</h3>
+<p>Först tittar vi på hur man exporterar inställningar. Öppna RoboCams inställningar genom att trycka på den grå knappen till höger.</p>
+<p><img src="img/articles/robot/robocam-03.png" loading="lazy" alt="Appen RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Välj sedan avsnittet &laquo;Robot&raquo;.</p>
+<p><img src="img/articles/robot/robocam-18.png" loading="lazy" alt="Välja ett inställningsavsnitt i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Välj de inställningar du vill exportera, till exempel &laquo;EV3 Explorer&raquo;.</p>
+<p><img src="img/articles/robot/robocam-32.png" loading="lazy" alt="Lista över robotinställningar i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>När robotens inställningar visas på skärmen, tryck på knappen med tre punkter uppe till höger och välj &laquo;Exportera till fil&raquo; i menyn som visas.</p>
+<p><img src="img/articles/robot/robocam-33.png" loading="lazy" alt="Exportera inställningar till en fil i RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om du har Android 6 eller senare kan du få en begäran om tillåtelse att komma åt telefonens delade mappar, se bilden nedan. Som regel behöver du bara ge tillståndet en gång; Android kommer ihåg ditt val. Tryck på &laquo;TILLÅT&raquo;.</p>
+<p><img src="img/articles/robot/robocam-37.png" loading="lazy" alt="Tillstånd att komma åt en Android-telefons delade mappar" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Inställningarna skrivs sedan direkt till en fil, och ett meddelande på skärmen visar var du hittar den. Som du ser sparas filen i nedladdningsmappen, hos mig &laquo;/storage/emulated/0/Download&raquo;. Namnet börjar alltid med prefixet &laquo;RoboCam&raquo;, följt av inställningarnas namn och dagens datum. Om filnamnet skulle krocka, till exempel om du exporterar inställningarna en andra gång i rad, skrivs den tidigare filen inte över; i stället skapas en andra fil i samma mapp med suffixet 2 i namnet, sedan suffixet 3 och så vidare.</p>
+<p><img src="img/articles/robot/robocam-34.png" loading="lazy" alt="Inställningarna exporterades i RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><em>Observera att inställningarna skrivs till filen tillsammans med osparade ändringar du har gjort. Om du till exempel öppnar inställningarna &laquo;EV3 Explorer&raquo;, ändrar robotens namn till &laquo;Min EV3 Explorer&raquo;, exporterar inställningarna till en fil och sedan stänger inställningarna utan att spara, innehåller filen namnet &laquo;Min EV3 Explorer&raquo;, medan själva inställningarna behåller &laquo;EV3 Explorer&raquo;.</em></p>
+<h3>Skicka robotinställningar</h3>
+<p>Nu lär vi oss att skicka inställningar till en annan telefon via Bluetooth eller med e-post. Precis som vid export öppnar du de robotinställningar du behöver, trycker på knappen med tre punkter uppe till höger och väljer &laquo;Skicka&raquo; i menyn.</p>
+<p><img src="img/articles/robot/robocam-35.png" loading="lazy" alt="Skicka robotinställningar från appen RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om du har Android 6 eller senare kan du få en begäran om tillåtelse att komma åt telefonens delade mappar, se bilden nedan. Som regel behöver du bara ge tillståndet en gång; Android kommer ihåg ditt val. Tryck på &laquo;TILLÅT&raquo;.</p>
+<p><img src="img/articles/robot/robocam-37.png" loading="lazy" alt="Tillstånd att komma åt en Android-telefons delade mappar" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Därefter visas en dialogruta där du väljer enhet eller app att skicka filen med. Alla möjliga alternativ visas inte, bara de som kan skicka en XML-fil med inställningar. Dialogrutan på bilden nedan ser olika ut i olika Android-versioner. Välj hur du vill skicka inställningsfilen och fortsätt beroende på ditt val och din Android-version. Mer om att skicka filer i Android finns i din enhets bruksanvisning.</p>
+<p><img src="img/articles/robot/robocam-36.png" loading="lazy" alt="Välja app för att skicka robotinställningar från RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><em>Observera att inställningarna skickas tillsammans med osparade ändringar du har gjort. Om du till exempel öppnar inställningarna &laquo;EV3 Explorer&raquo;, ändrar robotens namn till &laquo;Min EV3 Explorer&raquo;, skickar inställningarna och sedan stänger dem utan att spara, får den skickade filen robotnamnet &laquo;Min EV3 Explorer&raquo;, medan själva inställningarna behåller &laquo;EV3 Explorer&raquo;.</em></p>
+<p><em>Tänk också på att filen som skickas sparas i mappen &laquo;/storage/emulated/0/.robocam&raquo;. Om du ändrar inställningarna och skickar dem igen utan att vänta på att den första sändningen blir klar skrivs filen över, och de ändrade inställningarna kan då skickas två gånger.</em></p>
+<h3>Skapa en kopia av inställningar</h3>
+<p>Du kan vilja kopiera inställningar om du gör inställningar för en ny robot utifrån befintliga. Att skapa en kopia är mycket enkelt. Precis som vid export öppnar du de robotinställningar du behöver, trycker på knappen med tre punkter uppe till höger och väljer &laquo;Skapa kopia&raquo; i menyn.</p>
+<p><img src="img/articles/robot/robocam-38.png" loading="lazy" alt="Skapa en kopia av robotinställningar i RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Inställningarna kopieras direkt, och du ser ett meddelande om det. Tillbaka i listan över inställningar hittar du kopian.</p>
+<h3>Importera inställningar</h3>
+<p>Att importera inställningar är mycket enkelt. Säg att du har laddat ner en fil och lagt den i nedladdningsmappen &laquo;/storage/emulated/0/Download&raquo;. Öppna listan över robotinställningar och tryck på knappen med tre punkter uppe till höger. I menyn som visas väljer du &laquo;Importera från fil&raquo;.</p>
+<p><img src="img/articles/robot/robocam-40.png" loading="lazy" alt="Importera robotinställningar från en fil i RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om du har Android 6 eller senare kan du få en begäran om tillåtelse att komma åt telefonens delade mappar, se bilden nedan. Som regel behöver du bara ge tillståndet en gång; Android kommer ihåg ditt val. Tryck på &laquo;TILLÅT&raquo;.</p>
+<p><img src="img/articles/robot/robocam-41.png" loading="lazy" alt="Begäran om åtkomst till Androids delade filsystemsmappar" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Därefter visas en navigator för ditt filsystem. Använd den för att hitta den inställningsfil du vill importera. Tryck på mappar för att öppna dem. Använd pilen eller telefonens Bakåt-knapp för att lämna en mapp. Knappen &laquo;Avbryt&raquo; stänger navigatorn direkt.</p>
+<p><img src="img/articles/robot/robocam-42.png" loading="lazy" alt="RoboCams filnavigator" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>När du har hittat inställningsfilerna väljer du den som ska importeras.</p>
+<p><img src="img/articles/robot/robocam-43.png" loading="lazy" alt="Välja en fil med robotinställningar i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Inställningarna importeras direkt, ett meddelande visas, och du ser dem överst i listan. Som du ser har siffran 2 lagts till i namnet. Om du importerar samma inställningar igen läggs siffran 3 till, och så vidare. Efter importen kan inställningarna användas.</p>
+<p><img src="img/articles/robot/robocam-44.png" loading="lazy" alt="Robotinställningarna importerades i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Nu när vi vet hur man importerar inställningar finns här färdiga inställningar för några robotar. Det finns också videor som visar hur man styr robotarna med dessa inställningar.</p>
+<h3>Inställningar för att styra racerbilen Formel 1 EV3</h3>
+<p>De här inställningarna har tre styrspakar. De två första är en vertikal och en horisontell styrspak: den ena får bilens bakhjul att snurra och den andra fungerar som ratt. Den tredje styrspaken är ett andra sätt att köra: med den styr du hastighet och svängar samtidigt. Det är avsiktligt tre styrspakar så att du kan förstå hur växlingen mellan styrspakarna 1-2 och 3-4 fungerar. Jag fäste telefonen med två vinkelbeslag och två gummiband så att framhjulen syns i telefonens kamera, vilket gör det lättare att känna bilens mått.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/BKdGRlxzb_4" id="robj1" height="315" width="560" scrolling="no" ></iframe></center>
+</p>
+<p>Inställningsfiler för bilens standardversion och snabbversion finns listade nedan:</p>
+<p><div style="background-color:#EFEFEF; padding:6px;">Filer:</div>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>RoboCam-inställningar för racerbilen Formel 1 EV3</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>&nbsp;</p>
+<p>RoboCam-inställningar för racerbilen Formel 1 EV3.</p>
+<p>&nbsp;</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;22.10.2016   &nbsp;892 B &nbsp;2590</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>RoboCam-inställningar för racerbilen Formel 1 EV3 (snabbversion)</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>RoboCam-inställningar för racerbilen Formel 1 EV3 (snabbversion).</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;22.10.2016   &nbsp;900 B &nbsp;2581</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>Bygganvisningen och beskrivningen av racerbilen finns i originalartikeln &laquo;Racerbil Formel 1 EV3&raquo; (på ryska).</p>
+<h3>Inställningar för att styra roboten med klo</h3>
+<p>För klorobboten finns en rund styrspak och pilar. Den runda styrspaken styr robotens rörelser, det vill säga hjulen, och pilarna styr klon. Jag fäste telefonen med några extra delar så att klon syns i kameran. Då ser man direkt vad jag greppar och hur.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/vooHRusYYQs" id="robj2" height="315" width="560" scrolling="no" ></iframe></center>
+</p>
+<p>Här är inställningsfilen för klorobboten:</p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>RoboCam-inställningar för EV3-klorobboten</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>RoboCam-inställningar för EV3-klorobboten.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;22.10.2016   &nbsp;533 B &nbsp;2775</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>Bygganvisningen och beskrivningen av klorobboten finns i originalartikeln &laquo;Robot med klo LEGO EV3&raquo; (på ryska).</p>
+<h3>Inställningar för att styra Selenokhod EV3 (månbil)</h3>
+<p>Att köra Selenokhod är lite mer komplicerat än de tidigare robotarna. Styrspakarna här är pilar. Den första styrspaken skickar bara vidare beröringskoordinaterna till EV3-enheten (till dess brevlådor), och ett särskilt skrivet program inuti EV3 bearbetar sedan koordinaterna. För att roboten ska röra sig måste du därför köra programmet SelenokhodFPV.ev3 på den innan du ansluter RoboCam till roboten. Videon visar också en lokal anslutning till RoboCam-servern, det vill säga från samma telefon.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/h8Y4ClHqRCc" id="robj3" height="315" width="560" scrolling="no" ></iframe></center>
+
+</p>
+<p>Inställningsfilen och EV3-programmet finns listade nedan:</p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>RoboCam-inställningar för att styra Selenokhod EV3</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>RoboCam-inställningar för att styra Selenokhod EV3.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;22.10.2016   &nbsp;382 B &nbsp;2518</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Hjälpprogram för att styra Selenokhod EV3 med RoboCam</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Hjälpprogram för att styra Selenokhod EV3 med RoboCam.</p>
+<p><strong>För att köra programmet krävs programvaran LEGO Mindstorms Education EV3 version 1.1.1 eller senare.</strong></p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;22.10.2016   &nbsp;4.56 KB &nbsp;2193</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>Bygganvisningen och beskrivningen av Selenokhod EV3 finns i originalartikeln &laquo;Selenokhod&raquo; (på ryska).</p>
+  </div>
+
+  <h2>Alla RoboCam-versioner</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-sv.html"><span class="ver">v1.4.2</span> Förvandla en smartphone till fjärrkontroll för roboten med RoboCam</a></li>
+      <li><a href="v1-3-1-sv.html"><span class="ver">v1.3.1</span> Bygg förstapersonsstyrning för en Arduino-robot</a></li>
+      <li><a href="v1-2-sv.html"><span class="ver">v1.2</span> RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord</a></li>
+      <li><a href="v1-1-sv.html" aria-current="page"><span class="ver">v1.1</span> Importera, exportera, kopiera och skicka robotinställningar i RoboCam<span class="here">du är här</span></a></li>
+      <li><a href="v1-0-sv.html"><span class="ver">v1.0</span> Styr en LEGO Mindstorms EV3-robot i förstaperson</a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-sv.html">Alla artiklar (samlingssida)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Översättning av en artikel av Alexej (ПрогХаус); RoboCam, dess skärmbilder och nedladdningar är upphovspersonens verk. De ursprungliga handledningarna finns samlade på <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Inofficiell referens, inte knuten till ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

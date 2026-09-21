@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="sv">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 19 december 2016. RoboCam &amp;ndash; styr roboten i förstaperson med datorns tangentbord">
+<title>RoboCam 1.2 &ndash; RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord</title>
+<link rel="alternate" hreflang="en" href="v1-2-en.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse-artiklar</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Språk">
+      <a href="v1-2-en.html" hreflang="en" lang="en">English</a>
+      <a href="v1-2-sv.html" hreflang="sv" lang="sv" aria-current="page">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Tema">
+      <button id="lt" aria-pressed="false">Ljust</button>
+      <button id="dk" aria-pressed="false">Mörkt</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.2 · översatt artikel</p>
+  <h1>RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord</h1>
+  <p class="byline">Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 19 december 2016.</p>
+  <p class="shots">Skärmbilderna är från originalartikeln och visar appens ryska gränssnitt; texten beskriver varje skärm på svenska.</p>
+
+  <div class="article">
+<p>Den nya versionen av RoboCam har stöd för ett fysiskt tangentbord, så nu kan du styra en LEGO Mindstorms EV3-robot i förstaperson från en stationär dator eller bärbar dator. I den här artikeln beskriver jag hur du ställer in RoboCam för att använda den nya funktionen, och vad mer som är nytt i versionen.</p>
+ 
+<p><img src="img/articles/robot/robocam-56.png" loading="lazy" alt="RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Den här artikeln beskriver de nya funktionerna i version 1.2 av RoboCam. Alla artiklar om RoboCam finns <a href="hub-sv.html">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, eller från spegeln <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> om du vill ha en APK att installera manuellt.</p>
+<p>Alla ändringar i den nya versionen gäller bara robotinställningarna, så vi går direkt på vad som är nytt där. Uppdatera eller installera RoboCam, starta den och öppna inställningarna för någon robot. I artikeln använder jag inställningarna &laquo;EV3 Explorer&raquo;. Om du inte vet hur man öppnar en robots inställningar, läs den <a href="v1-0-sv.html">första artikeln om RoboCam</a>.</p>
+<p>Det första som märks är kryssrutan &laquo;<strong>Visa felsökningsinformation</strong>&raquo;. Om den är markerad visar klienten styrspakens koordinater medan den används, samt koderna för nedtryckta tangenter.</p>
+<p><img src="img/articles/robot/robocam-45.png" loading="lazy" alt="Kryssrutorna &quot;Visa felsökningsinformation&quot; och &quot;Dölj styrspakar vid tangentbordsanvändning&quot; i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Om &laquo;<strong>Dölj styrspakar vid tangentbordsanvändning</strong>&raquo; är markerad försvinner styrspakarna på klienten så fort någon tangent trycks ned på klienten, så att de inte är i vägen. Så fort du klickar på skärmen med musen visas styrspakarna igen.</p>
+<h3>Starta ett användarprogram automatiskt på EV3</h3>
+<p>Nästa inställning är användbar om ett användarprogram måste köras på EV3-enheten medan du styr roboten via RoboCam &mdash; till exempel ett som bevakar vissa brevlådor och styr motorerna. Om du markerar &laquo;<strong>Kör program</strong>&raquo; och skriver in programfilens fullständiga sökväg i fältet nedanför (till exempel &laquo;../prjs/MyProgram/MyProgram.rbf&raquo;) startar programmet på EV3 så fort RoboCam ansluter. När förarklienten kopplas från startas programmet om.</p>
+<p>Program du skapar med den officiella programvaran LEGO MINDSTORMS Education EV3 och laddar ner till EV3 hamnar i mappen för användarprojekt &laquo;../prjs&raquo;. Där skapas en mapp med projektets namn, och i den en fil med programmets namn och ändelsen &laquo;.rbf&raquo;. Vi tar ett exempel. Säg att du har skapat ett enkelt projekt som heter &laquo;MyProject&raquo; med ett program som heter &laquo;MyProgram&raquo;, se bilden nedan. Programmet visar texten &laquo;Hello!&raquo; på skärmen och fastnar i en oändlig slinga.</p>
+<p><img src="img/articles/robot/robocam-47.png" loading="lazy" alt="Ett EV3-program med en oändlig slinga för att testa RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Som du ser står det &laquo;MyProject&raquo; på den övre fliken &mdash; projektets namn &mdash; och &laquo;MyProgram&raquo; på fliken under &mdash; programmets namn. När programmet har laddats ner till EV3 är sökvägen till programfilen &laquo;../prjs/MyProject/MyProgram.rbf&raquo;. Det är den vi anger i RoboCams inställningar, se bilden nedan.</p>
+<p><img src="img/articles/robot/robocam-46.png" loading="lazy" alt="Ange den fullständiga sökvägen till EV3-programmet i robotinställningarna i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>När du nu ansluter RoboCam till EV3 startar programmet &laquo;MyProgram.rbf&raquo; direkt på EV3 och texten &laquo;Hello!&raquo; visas på skärmen. När RoboCam kopplas från EV3 stoppas programmet och menyn visas på EV3-skärmen igen.</p>
+<p><em>Observera att skiftläget spelar roll när du anger programmets fullständiga sökväg. Om du skriver en liten bokstav i stället för en stor startar inte programmet. Om du skriver även ett enda tecken fel i sökvägen startar programmet inte heller.</em></p>
+<p><em>Om något användarprogram redan körs när du ansluter till EV3 startas inte programmet som anges i RoboCams inställningar.</em></p>
+<h3>Styra roboten med ett fysiskt tangentbord</h3>
+<p>Förutom inställningarna ovan har RoboCam nu stöd för ett fysiskt tangentbord på klienten. Låt oss se hur EV3-roboten styrs med tangentbordet. Det fungerar så här. I RoboCams inställningar anger du de tangenter som roboten ska reagera på på något sätt. Klienten känner till dessa tangenter och kontrollerar hela tiden deras status, nedtryckt eller inte. Om en av de bevakade tangenterna trycks ned eller släpps skickas tangentens kod och dess nya status direkt till RoboCam-appen. Sedan, beroende på inställningarna, styr RoboCam antingen robotens motorer direkt eller skickar tangentkoderna till EV3-brevlådor.</p>
+<h3>Tangentgrupper</h3>
+<p>För att fördela funktionerna mellan olika tangenter använder RoboCam tangentgrupper. Antalet tangentgrupper är obegränsat. Varje tangentgrupp kan, precis som styrspakarna, antingen styra motorerna direkt, eller så skickas tangentkoderna bara till en brevlåda och du överlåter bearbetningen åt ett EV3-program.</p>
+<p>Bläddra ner i robotinställningarna till rubriken &laquo;Tangentgrupper&raquo;. Om du tittar på inställningarna &laquo;EV3 Explorer&raquo; har det troligen redan lagts till två tangentgrupper (bilden nedan visar tangentgrupp 1): en för att styra roboten (tangenterna W, A, S, D och piltangenterna) och en andra för att styra ramen som håller telefonen (tangenterna Y och H).</p>
+<p><img src="img/articles/robot/robocam-48.png" loading="lazy" alt="Tangentgrupper i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om du har uppdaterat RoboCam ser du inga tangentgrupper i inställningarna &laquo;EV3 Explorer&raquo;. Det beror på att inställningarna finns kvar från den tidigare versionen, som inte hade stöd för tangentgrupper. Om du vill att de färdiga tangentgrupperna ska dyka upp, ta bort inställningarna &laquo;EV3 Explorer&raquo;; efter att RoboCam startat om skapas de på nytt, och nu med tangentgrupper.</p>
+<p><em>Du kan ta bort inställningarna &laquo;EV3 Explorer&raquo; på något av följande sätt:</em></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li><em>Tryck på knappen &laquo;Ta bort&raquo; i listan över inställningar. För att det ska fungera får inställningarna inte vara de aktuella.</em></li>
+<li><em>Rensa all RoboCam-appdata i Androids apphanterare (alla dina andra inställningar försvinner då också, så om de är viktiga för dig, exportera dem först och importera dem igen efter ominstallationen! Hur man exporterar och importerar beskrivs i <a href="v1-1-sv.html">artikeln om inställningar</a>).</em></li>
+<li><em>Avinstallera RoboCam och installera den på nytt (alla dina andra inställningar försvinner då också, så om de är viktiga för dig, exportera dem först och importera dem igen efter ominstallationen! Hur man exporterar och importerar beskrivs i <a href="v1-1-sv.html">artikeln om inställningar</a>).</em></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Den första kryssrutan du ser i en tangentgrupps inställningar är &laquo;<strong>Aktiv</strong>&raquo;. Om du avmarkerar den blir tangentgruppen inaktiv, som om den inte fanns alls. Inställningarna döljs då, men försvinner inte.</p>
+<p><em>Tangenternas status kontrolleras hela tiden på klienten, även när tangentbordet inte används. Om du bara planerar att använda styrspakar rekommenderas därför att avaktivera alla tangentgrupper, så att klientens processor inte belastas och batteriet inte töms.</em></p>
+<p>Därefter kommer valet av tangentgruppstyp &mdash; inställningen &laquo;<strong>Typ</strong>&raquo;. Varje tangentgrupp kan vara av en av tre typer: &laquo;<strong>Oberoende motorer</strong>&raquo;, &laquo;<strong>Styrning</strong>&raquo; eller &laquo;<strong>Brevlåda</strong>&raquo;.</p>
+<p>För tangentgrupperna &laquo;Oberoende motorer&raquo; och &laquo;Styrning&raquo; kan du ange ett obegränsat antal tangenter &laquo;upp&raquo; och &laquo;ner&raquo; (vi kallar dem den vertikala axelns tangenter) och tangenter &laquo;höger&raquo; och &laquo;vänster&raquo; (den horisontella axelns tangenter). Hur du gör det ser du strax nedan.</p>
+<p>I en grupp &laquo;<strong>Oberoende motorer</strong>&raquo; kan den vertikala axelns tangenter styra en motor (nedan motor A) eller flera motorer, och den horisontella axelns tangenter en annan motor (nedan motor B) eller andra motorer. Motor A är inte beroende av den horisontella axelns tangenter, och motor B är inte beroende av den vertikala axelns tangenter. Därför kallas den här typen av tangentgrupp &laquo;Oberoende motorer&raquo;.</p>
+<p>För en grupp &laquo;Oberoende motorer&raquo; anges portarna för motorerna som styrs av den vertikala axelns tangenter och portarna för motorerna som styrs av den horisontella axelns tangenter var för sig. Med en sådan tangentgrupp kan du till exempel köra en bil där tangenterna &laquo;upp&raquo; och &laquo;ner&raquo; accelererar och stoppar motorn som driver bakhjulen, och tangenterna &laquo;vänster&raquo; och &laquo;höger&raquo; vrider motorn som styr.</p>
+<p>I en grupp &laquo;<strong>Styrning</strong>&raquo; är den vertikala och den horisontella axelns tangenter kopplade till varandra. Här anges portarna för vänster och höger motor, och när du trycker på en tangent snurrar båda motorerna. Om du till exempel trycker på &laquo;upp&raquo; snurrar båda motorerna så att roboten kör framåt; om du trycker på &laquo;vänster&raquo; snurrar också båda motorerna, men vänster hjul bakåt och höger hjul framåt, så att roboten svänger åt vänster.</p>
+<p>En tangentgrupp &laquo;<strong>Brevlåda</strong>&raquo; har också tangenter, men här styr de inte roboten utan skickas bara vidare till den angivna brevlådan på EV3. Tangenter som inte anges här når inte tangentgruppens brevlåda.</p>
+<p>Nu tittar vi närmare på inställningarna för tangentgrupperna &laquo;Oberoende motorer&raquo; och &laquo;Styrning&raquo;. Lite längre ner ser du parametrarna &laquo;<strong>Slut på tryckning (för vänster/höger-tangenter)</strong>&raquo; och &laquo;<strong>Slut på tryckning (för upp/ner-tangenter)</strong>&raquo;, som bestämmer vad som händer när användaren släpper en nedtryckt tangent. Precis som för styrspakarna finns två alternativ &mdash; &laquo;<strong>Återgå till noll</strong>&raquo; och &laquo;<strong>Behåll position</strong>&raquo;.</p>
+<p>Det fungerar så här. Säg att robotens två motorer snurrar och roboten kör framåt när du trycker på W. Om &laquo;Återgå till noll&raquo; är inställt går hastigheten tillbaka till noll när du släpper W, motorerna slutar snurra och roboten stannar. Om &laquo;Behåll position&raquo; hade varit inställt hade motorn fortsatt att snurra; hastigheten hålls alltså kvar efter att tangenten släppts.</p>
+<p>Ett annat exempel. Säg att tangenten Y ändrar medelmotorns vridningsvinkel så att ramen som håller telefonen lutar nedåt. Om &laquo;Återgå till noll&raquo; är inställt går medelmotorns vinkel tillbaka till noll när du släpper Y, och ramen vrids tillbaka och står lodrätt. Om &laquo;Behåll position&raquo; är inställt och du släpper Y, förblir motorn vriden i den vinkel den hade när Y släpptes, och ramen behåller sin position.</p>
+<p>Nästa parametrar för tangentgruppen styr den <strong>stegvisa ökningen eller minskningen av motorernas hastighet eller vridningsvinkel</strong>. En tangent har bara två tillstånd &mdash; nedtryckt eller släppt. Tänk dig att vi kör EV3 Explorer och trycker på Y och vinkeln ändras med 100 grader på en gång. Det sker så abrupt att telefonen som sitter på ramen kan lossna och flyga iväg. Eller en annan situation: du trycker på D och roboten börjar svänga häftigt åt höger; vi behövde bara svänga lite, men på grund av den höga hastigheten svängde vi för mycket.</p>
+<p>En robot som beter sig så är inte vad vi vill ha, så med stegvis ändring av hastighet och vinkel kan vi göra tangentbordsstyrningen bekvämare. Vi kan till exempel låta roboten accelerera gradvis när den kör och ramen röra sig i små steg. Precis så är inställningarna &laquo;EV3 Explorer&raquo; gjorda. Låt oss titta på parametrarna.</p>
+<p>Lite längre ner ser du sex fält för stegvis motorstyrning: &laquo;<strong>Ökning horisontellt</strong>&raquo;, &laquo;<strong>Ökning vertikalt</strong>&raquo;, &laquo;<strong>Minskning horisontellt</strong>&raquo;, &laquo;<strong>Minskning vertikalt</strong>&raquo;, &laquo;<strong>Paus mellan horisontella ökningar/minskningar</strong>&raquo; och &laquo;<strong>Paus mellan vertikala ökningar/minskningar</strong>&raquo;.</p>
+<p>&nbsp;</p>
+<center><img src="img/articles/robot/robocam-49.png" loading="lazy" alt="Inställningarna &quot;Ökning horisontellt&quot;, &quot;Ökning vertikalt&quot;, &quot;Minskning horisontellt&quot; och &quot;Minskning vertikalt&quot; i RoboCam" style="border: 1px solid #000000;" />&nbsp;<img src="img/articles/robot/robocam-50.png" loading="lazy" alt="Inställningarna &quot;Paus mellan horisontella ökningar/minskningar&quot; och &quot;Paus mellan vertikala ökningar/minskningar&quot; i RoboCam" style="border: 1px solid #000000;" /></center>
+<p>&nbsp;</p>
+<p>Som skrivet ovan har vi den vertikala axelns tangenter och den horisontella axelns tangenter. &laquo;Ökning horisontellt&raquo; och &laquo;Minskning horisontellt&raquo; anger med vilket steg hastigheten eller vinkeln för de anslutna motorerna ändras när den horisontella axelns tangenter används, och &laquo;Ökning vertikalt&raquo; och &laquo;Minskning vertikalt&raquo; gör detsamma för den vertikala axelns tangenter. <em>[Översättarens anmärkning: originaltexten säger &rdquo;den vertikala axelns tangenter&rdquo; för båda paren; det horisontella paret avser uppenbarligen den horisontella axeln.]</em> &laquo;Paus mellan horisontella ökningar/minskningar&raquo; och &laquo;Paus mellan vertikala ökningar/minskningar&raquo; anger intervallet i millisekunder mellan stegen.</p>
+<p>Vi går igenom ett exempel. Säg att W är tangenten &laquo;upp&raquo;, alltså en tangent på den vertikala axeln. Två stora motorer som driver hjulen är knutna till den. I våra inställningar är ökningen vertikalt 15 och minskningen 50. Det betyder att när vi trycker ned och håller W på klienten ökar de stora motorernas varvtal stegvis med 15 enheter var 100:e millisekund tills det når maxvärdet, 100 enheter. Roboten accelererar alltså mjukt. När vi släpper W börjar hastigheten sjunka stegvis med 50 enheter var 100:e millisekund tills den når noll. Roboten stannar alltså också mjukt, men mycket kärvare än den accelererade.</p>
+<p><em>Observera att en &rdquo;ökning&rdquo; här avser en ändring av hastighet eller vinkel från 0 till 100 och från 0 till -100, och en &rdquo;minskning&rdquo; en ändring från 100 till 0 och från -100 till 0.</em></p>
+<p><em>Stegvärdena kan ligga mellan 0 och 200; om du anger 0 eller 200 ändras hastigheten eller vinkeln abrupt i stället för stegvis.</em></p>
+<p><em>Pausvärdet kan inte vara mindre än 100 millisekunder. Tänk på att den verkliga pausen mellan stegen kan vara längre än den du anger, eftersom det kan uppstå fördröjningar när kommandon skickas till EV3.</em></p>
+<p>Med de följande fyra knapparna &mdash; &laquo;<strong>Upp-tangenter</strong>&raquo;, &laquo;<strong>Vänster-tangenter</strong>&raquo;, &laquo;<strong>Ner-tangenter</strong>&raquo; och &laquo;<strong>Höger-tangenter</strong>&raquo; &mdash; tilldelar du bestämda tangenter för att styra roboten. För att ange eller ändra de valda tangenterna, tryck på den knapp du behöver. Då öppnas en lista över tillgängliga tangenter. Välj de tangenter du vill ha och tryck på knappen &laquo;Klar&raquo;.</p>
+<p><img src="img/articles/robot/robocam-51.png" loading="lazy" alt="Välja tangenter i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om du ansluter ett fysiskt tangentbord till telefonen kan du välja tangenter med det, genom att trycka på önskad tangent medan listan är öppen. Alla tangenter går dock inte att välja på det sättet.</p>
+<p>Därnäst i tangentgruppens inställningar kommer portarna. Tangentgruppens portar ställs in på samma sätt som styrspakarnas, och det går jag inte in på i detalj här. Om portinställningar, läs artikeln &laquo;<a href="v1-0-sv.html">Styr en LEGO Mindstorms EV3-robot i förstaperson</a>&raquo;.</p>
+<p><img src="img/articles/robot/robocam-52.png" loading="lazy" alt="Ställa in EV3-portar i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Nu tittar vi separat på inställningarna för tangentgruppen &laquo;<strong>Brevlåda</strong>&raquo;. Om du byter typ till &laquo;Brevlåda&raquo; ser du att inställningarna för tangentgruppen ändras. Det finns bara &laquo;Brevlådenamn&raquo; och &laquo;Tangenter&raquo;. I fältet &laquo;<strong>Brevlådenamn</strong>&raquo; anger du namnet på den EV3-brevlåda som ska ta emot koderna för nedtryckta tangenter bland dem du listar nedan med knappen &laquo;<strong>Tangenter</strong>&raquo;. Koder för tangenter som inte listas här kommer inte till brevlådan.</p>
+<p><img src="img/articles/robot/robocam-53.png" loading="lazy" alt="Inställningarna för tangentgruppen &quot;Brevlåda&quot; i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Vi tar ett exempel på hur man får koderna för siffertangenterna 0&ndash;9 på EV3. Vi ger brevlådan namnet &laquo;test&raquo; och anger alla tangenter från 0 till 9.</p>
+<p><img src="img/articles/robot/robocam-54.png" loading="lazy" alt="Ett exempel på en konfigurerad tangentgrupp &quot;Brevlåda&quot; i RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Nu bygger vi om EV3-programmet vi gjorde ovan enligt följande, se bilden nedan. Här visar vi helt enkelt på skärmen tangentkoden som tas emot från brevlådan &laquo;test&raquo;. Ladda ner det färdiga programmet till EV3.</p>
+<p><img src="img/articles/robot/robocam-55.png" loading="lazy" alt="Ett EV3-program som läser tangentkoderna som skickas från RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><em>Tyvärr kan brevlådeblocket inte ta emot en matris av tal, så bara koden för den senast nedtryckta tangenten skickas till brevlådan, eller 0 om den senast nedtryckta tangenten släpptes. För att hantera flera tangenter oberoende av varandra behöver du därför flera brevlådor &mdash; en brevlåda per tangent.</em></p>
+<p>När programmet har laddats ner till EV3, glöm inte att markera &laquo;Kör program&raquo; och ange dess sökväg &laquo;../prjs/MyProject/MyProgram.rbf&raquo;.</p>
+<p><img src="img/articles/robot/robocam-46.png" loading="lazy" alt="Ange den fullständiga sökvägen till EV3-programmet i robotinställningarna i RoboCam" style="border-width: 1px; border-style: solid; border-color: #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>När du nu ansluter RoboCam till EV3 startar programmet MyProgram.rbf direkt på EV3 och siffran 0 visas på skärmen, vilket betyder att ingen tangent är nedtryckt. Starta nu RoboCam-servern, anslut till den med en webbläsare på din dator och prova att trycka på tangenter. Du ser att när du trycker på siffertangenterna visas koden för den senast nedtryckta tangenten på EV3-skärmen, och när du trycker på andra tangenter visas 0.</p>
+<p>Nu pratar vi om tangentkoder. Du kan använda de flesta tangenter; deras koder följer till stor del ASCII. Det finns dock så kallade snabbtangenter som webbläsaren reagerar på på ett särskilt sätt. Till exempel öppnar F1 webbläsarens hjälp och F5 uppdaterar den öppna sidan. Sådana tangenter är inte tillgängliga i RoboCam. Tabellen nedan visar alla tangenter du kan använda med RoboCam, och deras koder.</p>
+<table align="center">
+<tbody>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Kod</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Tangent</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Kod</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Tangent</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Kod</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Tangent</strong></td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">8</td>
+<td style="padding: 5px; border: 1px solid #000000;">Backspace</td>
+<td style="padding: 5px; border: 1px solid #000000;">57</td>
+<td style="padding: 5px; border: 1px solid #000000;">9</td>
+<td style="padding: 5px; border: 1px solid #000000;">99</td>
+<td style="padding: 5px; border: 1px solid #000000;">3 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">9</td>
+<td style="padding: 5px; border: 1px solid #000000;">Tab</td>
+<td style="padding: 5px; border: 1px solid #000000;">65</td>
+<td style="padding: 5px; border: 1px solid #000000;">A</td>
+<td style="padding: 5px; border: 1px solid #000000;">100</td>
+<td style="padding: 5px; border: 1px solid #000000;">4 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">12</td>
+<td style="padding: 5px; border: 1px solid #000000;">Clear</td>
+<td style="padding: 5px; border: 1px solid #000000;">66</td>
+<td style="padding: 5px; border: 1px solid #000000;">B</td>
+<td style="padding: 5px; border: 1px solid #000000;">101</td>
+<td style="padding: 5px; border: 1px solid #000000;">5 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">13</td>
+<td style="padding: 5px; border: 1px solid #000000;">Enter</td>
+<td style="padding: 5px; border: 1px solid #000000;">67</td>
+<td style="padding: 5px; border: 1px solid #000000;">C</td>
+<td style="padding: 5px; border: 1px solid #000000;">102</td>
+<td style="padding: 5px; border: 1px solid #000000;">6 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">16</td>
+<td style="padding: 5px; border: 1px solid #000000;">Shift</td>
+<td style="padding: 5px; border: 1px solid #000000;">68</td>
+<td style="padding: 5px; border: 1px solid #000000;">D</td>
+<td style="padding: 5px; border: 1px solid #000000;">103</td>
+<td style="padding: 5px; border: 1px solid #000000;">7 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">17</td>
+<td style="padding: 5px; border: 1px solid #000000;">Ctrl</td>
+<td style="padding: 5px; border: 1px solid #000000;">69</td>
+<td style="padding: 5px; border: 1px solid #000000;">E</td>
+<td style="padding: 5px; border: 1px solid #000000;">104</td>
+<td style="padding: 5px; border: 1px solid #000000;">8 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">18</td>
+<td style="padding: 5px; border: 1px solid #000000;">Alt</td>
+<td style="padding: 5px; border: 1px solid #000000;">70</td>
+<td style="padding: 5px; border: 1px solid #000000;">F</td>
+<td style="padding: 5px; border: 1px solid #000000;">105</td>
+<td style="padding: 5px; border: 1px solid #000000;">9 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">19</td>
+<td style="padding: 5px; border: 1px solid #000000;">Pause</td>
+<td style="padding: 5px; border: 1px solid #000000;">71</td>
+<td style="padding: 5px; border: 1px solid #000000;">G</td>
+<td style="padding: 5px; border: 1px solid #000000;">106</td>
+<td style="padding: 5px; border: 1px solid #000000;">(*) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">20</td>
+<td style="padding: 5px; border: 1px solid #000000;">Caps Lock</td>
+<td style="padding: 5px; border: 1px solid #000000;">72</td>
+<td style="padding: 5px; border: 1px solid #000000;">H</td>
+<td style="padding: 5px; border: 1px solid #000000;">107</td>
+<td style="padding: 5px; border: 1px solid #000000;">(+) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">27</td>
+<td style="padding: 5px; border: 1px solid #000000;">Esc</td>
+<td style="padding: 5px; border: 1px solid #000000;">73</td>
+<td style="padding: 5px; border: 1px solid #000000;">I</td>
+<td style="padding: 5px; border: 1px solid #000000;">109</td>
+<td style="padding: 5px; border: 1px solid #000000;">(-) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">32</td>
+<td style="padding: 5px; border: 1px solid #000000;">Space</td>
+<td style="padding: 5px; border: 1px solid #000000;">74</td>
+<td style="padding: 5px; border: 1px solid #000000;">J</td>
+<td style="padding: 5px; border: 1px solid #000000;">110</td>
+<td style="padding: 5px; border: 1px solid #000000;">(.) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">33</td>
+<td style="padding: 5px; border: 1px solid #000000;">Page Up</td>
+<td style="padding: 5px; border: 1px solid #000000;">75</td>
+<td style="padding: 5px; border: 1px solid #000000;">K</td>
+<td style="padding: 5px; border: 1px solid #000000;">113</td>
+<td style="padding: 5px; border: 1px solid #000000;">F2</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">34</td>
+<td style="padding: 5px; border: 1px solid #000000;">Page Down</td>
+<td style="padding: 5px; border: 1px solid #000000;">76</td>
+<td style="padding: 5px; border: 1px solid #000000;">L</td>
+<td style="padding: 5px; border: 1px solid #000000;">115</td>
+<td style="padding: 5px; border: 1px solid #000000;">F4</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">35</td>
+<td style="padding: 5px; border: 1px solid #000000;">End</td>
+<td style="padding: 5px; border: 1px solid #000000;">77</td>
+<td style="padding: 5px; border: 1px solid #000000;">M</td>
+<td style="padding: 5px; border: 1px solid #000000;">118</td>
+<td style="padding: 5px; border: 1px solid #000000;">F7</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">36</td>
+<td style="padding: 5px; border: 1px solid #000000;">Home</td>
+<td style="padding: 5px; border: 1px solid #000000;">78</td>
+<td style="padding: 5px; border: 1px solid #000000;">N</td>
+<td style="padding: 5px; border: 1px solid #000000;">119</td>
+<td style="padding: 5px; border: 1px solid #000000;">F8</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">37</td>
+<td style="padding: 5px; border: 1px solid #000000;">Left</td>
+<td style="padding: 5px; border: 1px solid #000000;">79</td>
+<td style="padding: 5px; border: 1px solid #000000;">O</td>
+<td style="padding: 5px; border: 1px solid #000000;">120</td>
+<td style="padding: 5px; border: 1px solid #000000;">F9</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">38</td>
+<td style="padding: 5px; border: 1px solid #000000;">Up</td>
+<td style="padding: 5px; border: 1px solid #000000;">80</td>
+<td style="padding: 5px; border: 1px solid #000000;">P</td>
+<td style="padding: 5px; border: 1px solid #000000;">121</td>
+<td style="padding: 5px; border: 1px solid #000000;">F10</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">39</td>
+<td style="padding: 5px; border: 1px solid #000000;">Right</td>
+<td style="padding: 5px; border: 1px solid #000000;">81</td>
+<td style="padding: 5px; border: 1px solid #000000;">Q</td>
+<td style="padding: 5px; border: 1px solid #000000;">144</td>
+<td style="padding: 5px; border: 1px solid #000000;">Num Lock</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">40</td>
+<td style="padding: 5px; border: 1px solid #000000;">Down</td>
+<td style="padding: 5px; border: 1px solid #000000;">82</td>
+<td style="padding: 5px; border: 1px solid #000000;">R</td>
+<td style="padding: 5px; border: 1px solid #000000;">145</td>
+<td style="padding: 5px; border: 1px solid #000000;">Scroll Lock</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">45</td>
+<td style="padding: 5px; border: 1px solid #000000;">Ins</td>
+<td style="padding: 5px; border: 1px solid #000000;">83</td>
+<td style="padding: 5px; border: 1px solid #000000;">S</td>
+<td style="padding: 5px; border: 1px solid #000000;">186</td>
+<td style="padding: 5px; border: 1px solid #000000;">(;)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">46</td>
+<td style="padding: 5px; border: 1px solid #000000;">Del</td>
+<td style="padding: 5px; border: 1px solid #000000;">84</td>
+<td style="padding: 5px; border: 1px solid #000000;">T</td>
+<td style="padding: 5px; border: 1px solid #000000;">188</td>
+<td style="padding: 5px; border: 1px solid #000000;">(,)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">48</td>
+<td style="padding: 5px; border: 1px solid #000000;">0</td>
+<td style="padding: 5px; border: 1px solid #000000;">85</td>
+<td style="padding: 5px; border: 1px solid #000000;">U</td>
+<td style="padding: 5px; border: 1px solid #000000;">189</td>
+<td style="padding: 5px; border: 1px solid #000000;">(-)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">49</td>
+<td style="padding: 5px; border: 1px solid #000000;">1</td>
+<td style="padding: 5px; border: 1px solid #000000;">86</td>
+<td style="padding: 5px; border: 1px solid #000000;">V</td>
+<td style="padding: 5px; border: 1px solid #000000;">190</td>
+<td style="padding: 5px; border: 1px solid #000000;">(.)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">50</td>
+<td style="padding: 5px; border: 1px solid #000000;">2</td>
+<td style="padding: 5px; border: 1px solid #000000;">87</td>
+<td style="padding: 5px; border: 1px solid #000000;">W</td>
+<td style="padding: 5px; border: 1px solid #000000;">191</td>
+<td style="padding: 5px; border: 1px solid #000000;">(/)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">51</td>
+<td style="padding: 5px; border: 1px solid #000000;">3</td>
+<td style="padding: 5px; border: 1px solid #000000;">88</td>
+<td style="padding: 5px; border: 1px solid #000000;">X</td>
+<td style="padding: 5px; border: 1px solid #000000;">192</td>
+<td style="padding: 5px; border: 1px solid #000000;">(`)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">52</td>
+<td style="padding: 5px; border: 1px solid #000000;">4</td>
+<td style="padding: 5px; border: 1px solid #000000;">89</td>
+<td style="padding: 5px; border: 1px solid #000000;">Y</td>
+<td style="padding: 5px; border: 1px solid #000000;">219</td>
+<td style="padding: 5px; border: 1px solid #000000;">([)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">53</td>
+<td style="padding: 5px; border: 1px solid #000000;">5</td>
+<td style="padding: 5px; border: 1px solid #000000;">90</td>
+<td style="padding: 5px; border: 1px solid #000000;">Z</td>
+<td style="padding: 5px; border: 1px solid #000000;">220</td>
+<td style="padding: 5px; border: 1px solid #000000;">(\)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">54</td>
+<td style="padding: 5px; border: 1px solid #000000;">6</td>
+<td style="padding: 5px; border: 1px solid #000000;">96</td>
+<td style="padding: 5px; border: 1px solid #000000;">0 (Numpad)</td>
+<td style="padding: 5px; border: 1px solid #000000;">221</td>
+<td style="padding: 5px; border: 1px solid #000000;">(])</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">55</td>
+<td style="padding: 5px; border: 1px solid #000000;">7</td>
+<td style="padding: 5px; border: 1px solid #000000;">97</td>
+<td style="padding: 5px; border: 1px solid #000000;">1 (Numpad)</td>
+<td style="padding: 5px; border: 1px solid #000000;">222</td>
+<td style="padding: 5px; border: 1px solid #000000;">(')</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">56</td>
+<td style="padding: 5px; border: 1px solid #000000;">8</td>
+<td style="padding: 5px; border: 1px solid #000000;">98</td>
+<td style="padding: 5px; border: 1px solid #000000;">2 (Numpad)</td>
+<td style="padding: 5px; border: 1px solid #000000;">&nbsp;</td>
+<td style="padding: 5px; border: 1px solid #000000;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Det var den nya funktionaliteten i RoboCam. Även de andra <a href="hub-sv.html">RoboCam-artiklarna</a> kan vara till nytta.</p>
+  </div>
+
+  <h2>Alla RoboCam-versioner</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-sv.html"><span class="ver">v1.4.2</span> Förvandla en smartphone till fjärrkontroll för roboten med RoboCam</a></li>
+      <li><a href="v1-3-1-sv.html"><span class="ver">v1.3.1</span> Bygg förstapersonsstyrning för en Arduino-robot</a></li>
+      <li><a href="v1-2-sv.html" aria-current="page"><span class="ver">v1.2</span> RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord<span class="here">du är här</span></a></li>
+      <li><a href="v1-1-sv.html"><span class="ver">v1.1</span> Importera, exportera, kopiera och skicka robotinställningar i RoboCam</a></li>
+      <li><a href="v1-0-sv.html"><span class="ver">v1.0</span> Styr en LEGO Mindstorms EV3-robot i förstaperson</a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-sv.html">Alla artiklar (samlingssida)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Översättning av en artikel av Alexej (ПрогХаус); RoboCam, dess skärmbilder och nedladdningar är upphovspersonens verk. De ursprungliga handledningarna finns samlade på <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Inofficiell referens, inte knuten till ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

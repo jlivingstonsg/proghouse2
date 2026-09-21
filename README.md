@@ -23,7 +23,14 @@ Pages redeploys within a minute.
 
 - `index.html` — the full bilingual field manual (built from `robocam.html` by `build-index.sh`).
 - `hub-en.html` / `hub-sv.html` — standalone English and Swedish translations of the
-  ProgHouse RoboCam hub page (<http://proghouse.ru/tags/robocam>): downloads plus the five
-  original tutorials with translated titles and summaries.
+  ProgHouse RoboCam hub page (<http://proghouse.ru/tags/robocam>): where to get the app plus
+  the five original tutorials.
+- `v1-0-*.html`, `v1-1-*.html`, `v1-2-*.html`, `v1-3-1-*.html`, `v1-4-2-*.html`
+  (`-en` / `-sv`) — full translated copies of the five tutorials, one per RoboCam version
+  (1.0, 1.1, 1.2, 1.3.1, 1.4.2). Screenshots are self-hosted in `img/`; they show the app's
+  original Russian interface.
+
+Every page links to the original hub (`proghouse.ru/tags/robocam`) exactly once, in its
+footer; all other links between these pages stay on this site.
 
 Unofficial reference, not affiliated with ПрогХаус.

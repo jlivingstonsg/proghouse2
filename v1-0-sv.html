@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="sv">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 21 september 2016. Styr en LEGO Mindstorms EV3-robot i förstaperson">
+<title>RoboCam 1.0 &ndash; Styr en LEGO Mindstorms EV3-robot i förstaperson</title>
+<link rel="alternate" hreflang="en" href="v1-0-en.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse-artiklar</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Språk">
+      <a href="v1-0-en.html" hreflang="en" lang="en">English</a>
+      <a href="v1-0-sv.html" hreflang="sv" lang="sv" aria-current="page">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Tema">
+      <button id="lt" aria-pressed="false">Ljust</button>
+      <button id="dk" aria-pressed="false">Mörkt</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.0 · översatt artikel</p>
+  <h1>Styr en LEGO Mindstorms EV3-robot i förstaperson</h1>
+  <p class="byline">Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 21 september 2016.</p>
+  <p class="shots">Skärmbilderna är från originalartikeln och visar appens ryska gränssnitt; texten beskriver varje skärm på svenska.</p>
+
+  <div class="article">
+<p>En robot byggd av LEGO Mindstorms EV3-satsen kan enkelt fjärrstyras i förstaperson. Du behöver då två smartphones till, med appen RoboCam installerad på den ena. Låt oss lära känna RoboCam närmare och lära oss använda den.</p>
+
+ 
+<p><img src="img/articles/robot/robocam-00.jpg" loading="lazy" alt="Styra en LEGO Mindstorms EV3-robot i förstaperson" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Den här artikeln beskriver den första versionen, 1.0, av RoboCam. Alla artiklar om RoboCam finns <a href="hub-sv.html">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, eller från spegeln <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> om du vill ha en APK att installera manuellt.</p>
+<p>Låt oss först titta på videon som visar den förstapersonsstyrda roboten jag kallar EV3 Explorer. Förutom att köra i alla riktningar kan roboten lyfta och sänka huvudet, det vill säga ramen som telefonen sitter fast på. Det betyder att du kan titta inte bara åt sidorna utan också uppåt och nedåt.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/KQgNk-JWrVY" id="robj1" height="315" width="560" scrolling="no" ></iframe></center>
+
+</p>
+<h3>Vad behöver du för experimentet?</h3>
+<p>För att upprepa experimentet i videon behöver du följande:</p>
+<ol>
+<li>En <strong>robot</strong> byggd av LEGO Mindstorms EV3-satsen.</li>
+<li>En <strong>Android-telefon</strong> med kamera och appen <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a> installerad. Android 2.3 och senare stöds. Telefonen måste ha minst en kamera, samt Bluetooth- och Wi-Fi-moduler.</li>
+<li>En <strong>telefon eller surfplatta</strong> med en modern webbläsare som stöder HTML5. Senaste versionerna av Google Chrome, Yandex Browser, Firefox och Opera fungerar bra och har testats. Operativsystemet kan i princip vara vilket som helst (Android, iOS eller Windows), men fullständiga tester gjordes bara på Android. Telefonen eller surfplattan måste ha minst en pekskärm (helst med stöd för minst 2 samtidiga beröringspunkter) och en Wi-Fi-modul.</li>
+</ol>
+<p>Längre fram i artikeln ger jag teorin och beskriver de steg du behöver ta för att upprepa experimentet.</p>
+<h3>Anslutningsschema</h3>
+<p>Först tittar vi på hur alla ovanstående enheter är anslutna till varandra. Bilden nedan illustrerar det bäst.</p>
+<p><img src="img/articles/robot/robocam-28.png" loading="lazy" alt="Standardanslutningen till RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Som du ser är RoboCam installerad på telefon 1. Den här telefonen är fäst på roboten och ansluten till den via Bluetooth. Kommandon som styr motorerna går från telefon 1 till EV3, och sensorinformation kommer tillbaka.</p>
+<p>Den andra telefonen eller surfplattan ansluter till telefon 1 via Wi-Fi. Telefon 1 och telefon eller surfplatta 2 måste vara anslutna till samma router. Joystickkoordinater går från telefon eller surfplatta 2 till telefon 1, och videoströmmen från kameran kommer tillbaka.</p>
+<h3>Så styrs EV3</h3>
+<p>För att bättre förstå hur EV3-roboten styrs, titta på följande schema.</p>
+<p><img src="img/articles/robot/robocam-06.png" loading="lazy" alt="Så styr RoboCam EV3" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>När du börjar röra vid styrspakarna A och B skickar telefon eller surfplatta 2 beröringskoordinaterna till telefon 1, som omvandlar dem till kommandon för EV3-motorerna. Hur koordinaterna omvandlas beror på RoboCams inställningar. Om inställningarna pratar vi mer nedan.</p>
+<h3>Bygga roboten</h3>
+<p>För att upprepa experimentet måste du först bygga roboten du ska styra. Det kan vara en enkel tvåhjulsrobot, en robotbil eller en robot med komplex drivning. Det spelar egentligen ingen roll hur din robot ser ut, eftersom RoboCam kan ställas in flexibelt och du kan styra en robot med vilken konstruktion som helst. Huvudsaken är att du kan fästa telefonen på roboten så att kameran pekar framåt, i färdriktningen.</p>
+<p>Jag rekommenderar att du börjar med en enkel modell. Om du har utbildningssatsen LEGO Mindstorms Education EV3 kan du bygga EV3 Explorer som syns på fotot och videon i början av artikeln. Här är bygganvisningen för EV3 Explorer:</p>
+<p>&nbsp;</p>
+<p><img src="img/articles/robot/researcher-600.png" loading="lazy" alt="EV3 Explorer" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><div style="background-color:#EFEFEF; padding:6px;">Filer:</div>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Bygganvisning för EV3 Explorer</b> Version: 2 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Anvisning för att bygga roboten EV3 Explorer av basutbildningssatsen LEGO Mindstorms Education EV3 (45544).</p>
+<p>I version 2 är ramen fastsatt stadigare och lossnar inte.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;04.06.2016   &nbsp;4.95 MB &nbsp;15561</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>&nbsp;</p>
+<h3>Förbereda Android-telefonen och appen RoboCam</h3>
+<p>RoboCam fungerar på telefoner eller surfplattor med Android 2.3 och senare. Enheten måste ha någon inbyggd kamera samt Bluetooth- och Wi-Fi-moduler. Appen är gratis; du kan installera den från Google Play eller ladda ner och installera den manuellt. Här är sidan för <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a>. För att installera trycker du på knappen &laquo;INSTALLERA&raquo; och godkänner de begärda behörigheterna genom att trycka på &laquo;GODKÄNN&raquo;.</p>
+<p>För en manuell installation kan du använda APK-filen från spegeln <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> av Play Store-utgåvan.</p>
+<p>Efter installationen öppnar du appen. På Android 6 och senare får du direkt en begäran om tillåtelse att använda kameran. Vi behöver definitivt kameran, så tryck på &laquo;TILLÅT&raquo;.</p>
+<p><img src="img/articles/robot/robocam-02.png" loading="lazy" alt="Tillstånd att slå på kameran i Android 6" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>När appen har öppnats ser du tre runda knappar för huvudåtgärderna, och kamerabilden i bakgrunden.</p>
+<p><img src="img/articles/robot/robocam-03.png" loading="lazy" alt="RoboCam vid första start" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Den gröna knappen till vänster startar och stoppar RoboCam-servern, som behövs för att ansluta telefon eller surfplatta 2, se schemat ovan. Knappen visar samtidigt om servern körs. På bilden är knappens bakgrund vit, vilket betyder att servern inte körs. Det säger också tipset högst upp. Du kan när som helst starta eller stoppa servern genom att trycka på knappen.</p>
+<p>Den mittersta lila knappen ansluter till EV3-roboten. Knappen visar samtidigt om telefonen är ansluten till roboten. På bilden är knappens bakgrund vit, vilket betyder att roboten inte är ansluten. Den här knappen har också ett tips, precis under knappen: den övre raden visar anslutningsstatus (på bilden texten &laquo;EV3 inte ansluten&raquo;) och den nedre raden visar namnet på de aktuella robotinställningarna (på bilden &laquo;EV3 Explorer&raquo;).</p>
+<p>Knappen till höger öppnar RoboCams inställningar. Om du använder min EV3 Explorer behöver du inte ställa in något mer, eftersom inställningarna &laquo;EV3 Explorer&raquo; är valda som standard direkt efter första starten. Om din robot är en annan får du först pyssla med inställningarna. Det tar vi nedan.</p>
+<h3>Starta RoboCam-servern och ansluta till den</h3>
+<p>Jag säger direkt att det inte spelar någon roll vad du gör först: starta RoboCam-servern eller ansluta telefonen till roboten. Du kan göra det i vilken ordning som helst.</p>
+<p>När appen är installerad på telefon 1 (se schemana ovan) och öppen kan du starta RoboCam-servern. Tryck på den gröna knappen till vänster; knappen börjar blinka och tipset säger &laquo;Initierar RoboCam-servern...&raquo;. Efter en stund, när servern har startat, blir knappens bakgrund grön och tipset säger &laquo;RoboCam-servern körs&raquo;.</p>
+<p><img src="img/articles/robot/robocam-07.png" loading="lazy" alt="Starta RoboCam-servern" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om telefonen ännu inte är ansluten till din Wi-Fi-router (som på vår bild) är det dags att göra det. Efter anslutningen visas adressen för anslutning till RoboCam-servern på andra raden i tipset högst upp. När du slår på servern spelar det ingen roll om du startar RoboCam-servern eller Wi-Fi först.</p>
+<p><img src="img/articles/robot/robocam-08.png" loading="lazy" alt="RoboCam-servern har nu en IP-adress" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Nu kan du ansluta till RoboCam-servern. Ta den andra telefonen eller surfplattan (jag använder en surfplatta), se till att den är ansluten till samma Wi-Fi-router, öppna en webbläsare och gå till sidan med adressen som visas i tipset i RoboCam (på bilden &laquo;http://192.168.1.153:8088&raquo;). Använd någon av webbläsarna som nämndes ovan. Om du gjort allt rätt laddas en sida för inloggning i webbläsaren. Ange ditt användarnamn och lösenord och tryck på &laquo;Logga in&raquo;. Om du inte har ändrat något i inställningarna efter installationen är standardanvändarnamnet &laquo;admin&raquo; och lösenordet &laquo;123&raquo;.</p>
+<p><img src="img/articles/robot/robocam-09.png" loading="lazy" alt="RoboCam-klienten &ndash; ange användarnamn och lösenord" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Därefter öppnas RoboCam-serverns huvudsida, som visar bilden från kameran på telefon 1 (se schemat ovan).</p>
+<p><img src="img/articles/robot/robocam-10.png" loading="lazy" alt="Webbläsaren är ansluten till RoboCam-servern" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Som du ser är telefon 1 i stående orientering och min surfplatta i liggande. Du kan vrida telefon 1 så att den också är i liggande orientering. Bilden på surfplattan ändras då automatiskt till liggande.</p>
+<p>Observera att orienteringen inte ändras om du har låst telefon 1.</p>
+<p><img src="img/articles/robot/robocam-11.png" loading="lazy" alt="Liggande bildorientering på RoboCam-klienten och -servern" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>För att få bilden att fylla skärmen, tryck på ikonen<img src="img/articles/robot/robocam-13.png" loading="lazy" alt="Ikonen som slår på helskärmsläge i RoboCam" />uppe till höger på sidan. Då försvinner alla knappar och webbläsarflikar vi inte behöver, och kamerabilden blir större.</p>
+<p><img src="img/articles/robot/robocam-12.png" loading="lazy" alt="RoboCam-klienten i helskärmsläge" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3>Ansluta RoboCam till EV3</h3>
+<p>Innan du ansluter RoboCam till EV3, se till att Bluetooth är påslaget både på din EV3-robot och på telefonen och att de är parkopplade. Se också till att motorerna är anslutna till exakt de portar som anges i robotinställningarna. Namnet på de aktuella inställningarna står i tipset på andra raden under mittenknappen; på bilden nedan är det &laquo;EV3 Explorer&raquo;. Om du byggt EV3 Explorer enligt min anvisning (se ovan) och inte ändrat inställningarna efter installationen av RoboCam kan du vara säker på att allt är rätt inställt. Inställningarna beskrivs i detalj nedan.</p>
+<p><img src="img/articles/robot/robocam-08.png" loading="lazy" alt="RoboCam-servern har nu en IP-adress" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om allt är klart trycker du alltså på den centrala lila knappen. Om Bluetooth visar sig vara avstängt på telefonen får du en begäran om att slå på det. Tryck på &laquo;Ja&raquo;.</p>
+<p><img src="img/articles/robot/robocam-14-2.png" loading="lazy" alt="Begäran om att slå på Bluetooth i Android" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Sedan ser du knappen börja blinka, och en lista över Bluetooth-parkopplade enheter visas i stället för tipset. Välj din EV3-robot här (på bilden heter den &laquo;EV3&raquo;, men din EV3 kan ha ett annat namn).</p>
+<p><img src="img/articles/robot/robocam-15.png" loading="lazy" alt="Välja EV3 bland Bluetooth-parkopplade enheter i RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Därefter ansluter appen till EV3.</p>
+<p><img src="img/articles/robot/robocam-16.png" loading="lazy" alt="RoboCam är ansluten till EV3" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Om klienten är ansluten till RoboCam-servern vid det här laget ser du styrspakarna dyka upp (den rektangulära och den runda styrspaken på bilden nedan). Därefter kan du styra roboten direkt.</p>
+<p><img src="img/articles/robot/robocam-17.png" loading="lazy" alt="Styrspakar på RoboCam-klienten för att styra EV3-roboten" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Med standardinställningarna för EV3 Explorer har du två styrspakar: en rund och en vertikal (se bilden ovan). Den vertikala styrspaken styr ramen som håller telefonen, och den runda styr robotens rörelser. Ikonen med en handflata uppe till höger byter plats på styrspakarna, så att du snabbt kan växla layouten för vänster- eller högerhänta. Mer om styrspakar nedan.</p>
+<h3>Stoppa RoboCam-servern och koppla från EV3</h3>
+<p>När du är klar med att styra roboten rekommenderas det att stoppa RoboCam-servern och koppla från EV3 från telefonen innan du stänger appen RoboCam. Du kan göra det i vilken ordning som helst. För att stoppa servern trycker du på den gröna knappen till vänster. Knappens bakgrund blir då vit och tipset visar &laquo;RoboCam-servern är avstängd&raquo;. För att koppla från EV3 trycker du på den centrala lila knappen. Knappens bakgrund blir då vit och den övre raden i tipset visar &laquo;EV3 inte ansluten&raquo;. Motorerna stannar eller går till utgångsläget, beroende på inställningarna.</p>
+<h3>RoboCams serverinställningar</h3>
+<p>För att öppna inställningarna trycker du på den grå knappen till höger.</p>
+<p><img src="img/articles/robot/robocam-03.png" loading="lazy" alt="RoboCam vid första start" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Inställningarna är uppdelade i 2 delar: serverinställningar och robotinställningar. Först tittar vi på vad som finns i serverinställningarna. Välj &laquo;Server&raquo;.</p>
+<p><img src="img/articles/robot/robocam-18.png" loading="lazy" alt="Inställningsgrupper i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Serverinställningarna är indelade i 2 grupper: kamerainställningar och säkerhetsinställningar. I kamerainställningarna kan du välja kamera (fram eller bak), bildstorlek och JPEG-kvalitet. Ju mindre bildstorlek du väljer, desto jämnare och snabbare når videon klienten, men bildkvaliteten försämras. JPEG-kvaliteten påverkar videon på samma sätt: ju bättre JPEG-kvalitet (90 procent eller mer), desto bättre bild men lägre hastighet; och ju sämre JPEG-kvalitet (40 procent eller mindre), desto högre hastighet men sämre bild. Välj det som passar dig bäst.</p>
+<p><img src="img/articles/robot/robocam-19.png" loading="lazy" alt="RoboCams serverinställningar" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>I säkerhetsinställningarna kan du ändra förarens namn och lösenord (som standard är namnet &laquo;admin&raquo; och lösenordet &laquo;123&raquo;). Observatörer är också påslagna som standard. Observatörer kan se kamerabilden parallellt med dig men kan inte styra roboten. Även för en observatör kan du ange namn och lösenord (som standard namnet &laquo;guest&raquo; och lösenordet &laquo;123&raquo;). För att stänga av observatörer avmarkerar du &laquo;Tillåt observatörer&raquo;.</p>
+<p><img src="img/articles/robot/robocam-20.png" loading="lazy" alt="Observatörsinställningar i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Antalet förare och observatörer är inte begränsat, men att ansluta fler än en förare kan orsaka konflikter vid samtidig styrning och videoöverföring. Det rekommenderas inte att ansluta fler än en förare till RoboCam-servern. Ett stort antal observatörer kan också försämra videoöverföringen. Det är bäst att minska observatörerna till ett minimum eller stänga av funktionen helt.</p>
+<p>Efter att du ändrat inställningarna kan du spara dem genom att trycka på knappen &laquo;SPARA&raquo; uppe till höger, eller lämna utan att spara genom att trycka på knappen &laquo;AVBRYT&raquo; eller pilen uppe till vänster. När serverinställningarna har sparats kan klienter kopplas från och måste ansluta igen.</p>
+<h3>Lista över robotinställningar</h3>
+<p>Den andra delen av RoboCams inställningar är robotinställningarna. Tryck på &laquo;Robot&raquo; för att gå till listan över robotinställningar.</p>
+<p><img src="img/articles/robot/robocam-18.png" loading="lazy" alt="Inställningsgrupper i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>I listan över robotinställningar ser du inställningarna för alla dina robotar. Du kan när som helst lägga till eller ta bort inställningar med knappen &laquo;LÄGG TILL&raquo; eller &laquo;TA BORT&raquo; uppe till höger. Precis under knapparna ser du de aktuella inställningarna. Med det här alternativet växlar du mellan inställningarna för dina robotar. Nu tittar vi på inställningarna för EV3 Explorer. Välj då &laquo;EV3 Explorer&raquo; i listan.</p>
+<p><img src="img/articles/robot/robocam-21.png" loading="lazy" alt="Lista över robotinställningar i RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Allra överst finns den allmänna informationen: robotens namn och beskrivning. Namn och beskrivning visas i listan så att du lätt hittar rätt inställningar. Namnet visas också på appens huvudskärm under den centrala knappen som du ansluter till EV3 med. Därefter kommer styrspaksinställningarna.</p>
+<p><img src="img/articles/robot/robocam-22.png" loading="lazy" alt="Allmän robotinformation i RoboCams inställningar" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Du kan ställa in upp till 4 styrspakar totalt, men bara ett par styrspakar, 1-2 eller 3-4, syns på klientens skärm åt gången. Även om du använder styrspakarna 1 och 3 syns de inte samtidigt, eftersom de hör till olika par; du ser antingen styrspak 1 eller styrspak 3. Varje styrspaks synlighet slås på med kryssrutan &laquo;<strong>Synlighet</strong>&raquo;. Om du har aktiverat 2 par styrspakar visas en knapp på klientskärmen<img src="img/articles/robot/robocam-23.png" loading="lazy" alt="Knappen som växlar styrspaksparet på RoboCam-klienten" />för att växla mellan paren.</p>
+<p>I inställningarna ser du alltså grupperna &laquo;Styrspak 1&raquo;, &laquo;Styrspak 2&raquo;, &laquo;Styrspak 3&raquo; och &laquo;Styrspak 4&raquo;. Var och en innehåller inställningarna för en styrspak. Vi tittar på inställningarna för &laquo;Styrspak 1&raquo;. Kryssrutan &laquo;Synlighet&raquo; visar eller döljer, som du förstått, styrspaken. Om kryssrutan inte är markerad döljs även inställningarna för den styrspaken.</p>
+<p>Lite längre ner, i listan &laquo;<strong>Form</strong>&raquo;, kan du välja styrspakens form, och med formen dess egenskaper. Följande former finns: vertikal, horisontell, rund, kvadratisk, pilar, vertikala pilar och horisontella pilar. Så här ser styrspakarna ut:</p>
+<p><img src="img/articles/robot/robocam-24.png" loading="lazy" alt="RoboCams styrspakar" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Den vertikala styrspaken känner bara av beröringens höjd, det vill säga det spelar ingen roll om du rör vid den längre åt vänster eller höger, bara på vilken höjd. Beröringskoordinaten går för den från -100 längst ner till 100 längst upp, med 0 i mitten.</p>
+<p>Den horisontella styrspaken fungerar likadant, men horisontellt. Det spelar ingen roll på vilken höjd beröringen sker, bara om den är till vänster eller höger. Här beräknas beröringskoordinaten horisontellt från -100 längst till vänster till 100 längst till höger, med 0 i mitten.</p>
+<p>Den runda och den kvadratiska styrspaken liknar varandra. De bestämmer beröringskoordinaterna på både horisontell och vertikal axel, också från -100 till 100 med 0 i mitten. Men i den runda styrspaken kan beröringar inte hamna utanför cirkeln. Om beröringspunkten ligger utanför cirkeln tas alltså den punkt där linjen från beröringspunkten till cirkelns mitt korsar cirkelns omkrets. Det syns tydligare på bilden nedan.</p>
+<p><img src="img/articles/robot/robocam-25.png" loading="lazy" alt="Beräkning av beröringspunktens koordinater för RoboCams runda styrspak" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Pilstyrspakarna är inte känsliga för beröringspunkten; det som räknas är vilken pil du rör vid. Om du rör vid uppåtpilen anses styrspakens vertikala koordinat vara 100 och den horisontella 0. För nedåtpilen är den horisontella koordinaten också 0 och den vertikala blir -100. På samma sätt för vänster- och högerpilarna: den vertikala koordinaten är 0 och den horisontella är -100 respektive 100.</p>
+<p>Direkt under formen väljer du styrspakens typ i listan &laquo;<strong>Typ</strong>&raquo;. Du kan välja ett av följande värden: &laquo;Oberoende motorer&raquo;, &laquo;Styrning 1&raquo;, &laquo;Styrning 2&raquo; och &laquo;Brevlåda&raquo;.</p>
+<p>Styrspakar av typen &laquo;<strong>Styrning 1</strong>&raquo; och &laquo;<strong>Styrning 2</strong>&raquo; låter dig styra en robot med två oberoende drivhjul, som EV3 Explorer. Beröringskoordinaterna på sådana styrspakar omvandlas automatiskt till motorkommandon. För styrspaken behöver du bara välja vilken port som har vänster hjul och vilken som har höger. Det beskrivs lite längre ner.</p>
+<p>&laquo;Styrning 1&raquo; låter dig köra en tvåhjulig robot som en bil. Du kan inte vända roboten på stället med den. Ju närmare mitten beröringen ligger vertikalt, desto lägre hastighet. &laquo;Styrning 2&raquo; låter roboten snurra på stället.</p>
+<p>En styrspak av typen &laquo;<strong>Oberoende motorer</strong>&raquo; omvandlar den horisontella beröringskoordinaten till motorkommandon oberoende av den vertikala koordinaten. För styrspaken måste du ange vilken motor som styrs när den horisontella koordinaten ändras och vilken när den vertikala koordinaten ändras. Den här typen av styrspak kan användas för att köra en bil där en motor styr och en andra motor driver drivhjulen. I så fall ställs ändringen av den horisontella koordinaten in på att vrida den första motorn och ändringen av den vertikala koordinaten på att vrida den andra motorn.</p>
+<p>En styrspak av typen &laquo;<strong>Brevlåda</strong>&raquo; skickar bara vidare beröringskoordinaterna till EV3-brevlådor. För att din robot ska väckas till liv måste du skriva ett EV3-program som bearbetar koordinaterna. Med den här typen av styrspak kan du bygga mer komplexa styrmodeller för roboten, eftersom du kan implementera din egen algoritm för att omvandla koordinaterna från styrspaken till motorkommandon. Du kan till exempel bygga styrning för EV3 Gyro Boy. Styrspak 1 skickar koordinater till brevlådor med namnen x och y, styrspak 2 till brevlådorna w och z, styrspak 3 till brevlådorna a och b och styrspak 4 till brevlådorna c och d.</p>
+<p>De nästa två inställningarna, &laquo;<strong>Slut på beröring (för horisontell axel)</strong>&raquo; och &laquo;<strong>Slut på beröring (för vertikal axel)</strong>&raquo;, bestämmer vad som händer när du slutar röra vid styrspaken. Du kan välja ett av två alternativ: &laquo;Återgå till noll&raquo; eller &laquo;Behåll position&raquo;. Att återgå till noll är lämpligt i de flesta situationer; om du till exempel vill att roboten ska stanna när du slutar röra vid styrspaken är &laquo;Återgå till noll&raquo; rätt val. Att behålla positionen är användbart när den senaste beröringskoordinaten ska kommas ihåg. Det används till exempel för att luta EV3 Explorers ram. Inställningen finns för alla styrspaksformer utom pilstyrspakar.</p>
+<p>Om du använder styrspakstypen &laquo;Oberoende motorer&raquo;, &laquo;Styrning 1&raquo; eller &laquo;Styrning 2&raquo; hittar du portinställningarna för den styrspaken nedanför. De portar styrspaken styr kan läggas till och tas bort med knapparna &laquo;LÄGG TILL&raquo; och &laquo;TA BORT&raquo;. Antalet portar är inte begränsat. Den första bilden nedan visar inställningarna för en styrspak av typen &laquo;Oberoende motorer&raquo;, och den andra för en styrspak av typen &laquo;Styrning 1&raquo; och &laquo;Styrning 2&raquo;. Som du ser finns en liten skillnad.</p>
+<center><img src="img/articles/robot/robocam-26.png" loading="lazy" alt="Styrspakens portinställningar i RoboCam" style="border: 1px solid #000000;" />&nbsp;<img src="img/articles/robot/robocam-27.png" loading="lazy" alt="Styrspakens portinställningar i RoboCam" style="border: 1px solid #000000;" /></center>
+<p>Vi går igenom portinställningarna. Inställningen &laquo;<strong>Styrspakens axel</strong>&raquo; finns bara för en styrspak av typen &laquo;Oberoende motorer&raquo;. Det finns två alternativ: &laquo;Horisontell&raquo; och &laquo;Vertikal&raquo;. Om du väljer &laquo;Horisontell&raquo; reagerar motorn bara på ändringar av beröringskoordinaten på den horisontella axeln, och om du väljer &laquo;Vertikal&raquo; reagerar den på beröringar på den vertikala axeln.</p>
+<p>Inställningen &laquo;<strong>Motor</strong>&raquo; finns bara för en styrspak av typen &laquo;Styrning 1&raquo; eller &laquo;Styrning 2&raquo;. Här väljer du mellan &laquo;Vänster&raquo; och &laquo;Höger&raquo;.</p>
+<p>Inställningen &laquo;<strong>EV3-enhet</strong>&raquo; behövs om du byggt en robot med flera EV3-enheter kopplade i en &laquo;seriekoppling&raquo;. Här kan du välja ett enhetsnummer från 1 till 4. Om du bara använder en EV3-enhet ska det alltid vara 1.</p>
+<p>Med inställningen &laquo;<strong>Portnummer</strong>&raquo; väljer du motorport, A till D.</p>
+<p>Inställningen &laquo;<strong>Ändrat värde</strong>&raquo; finns bara för en styrspak av typen &laquo;Oberoende motorer&raquo;. Det finns två alternativ: &laquo;Motoreffekt&raquo; och &laquo;Motorns vridningsvinkel&raquo;. Om du väljer &laquo;<strong>Motoreffekt</strong>&raquo; påverkar styrspaken motorns effekt, det vill säga ju längre från styrspakens mitt du rör vid, desto snabbare snurrar motorn. Om du väljer &laquo;<strong>Motorns vridningsvinkel</strong>&raquo; påverkar styrspaken motorns vridningsvinkel, det vill säga ju längre från mitten du rör vid, desto större vinkel vrids motorn. I så fall ställs motorns effekt in med inställningen &laquo;<strong>Effekt</strong>&raquo;. Ju större det här talet är, desto snabbare reagerar motorn på en ändring av beröringskoordinaten och desto bättre håller den vinkeln.</p>
+<p>Genom att markera &laquo;<strong>Invertera</strong>&raquo; inverteras den beräknade effekten eller vinkeln, och &laquo;<strong>Koefficient</strong>&raquo; ökar eller minskar det beräknade värdet.</p>
+<p>När &laquo;<strong>Bromsa</strong>&raquo; är markerad stannar motorerna snabbt, det vill säga de bromsar. När den är avmarkerad fortsätter motorerna att snurra en stund av tröghet tills de stannar helt.</p>
+<p>Det var i princip alla inställningar som finns i RoboCam.</p>
+<h3>Ansluta utan router</h3>
+<p>Nu några knep som kan göra RoboCam lite bekvämare att använda. Om det inte finns någon router i närheten, till exempel om du är utomhus, kan du ordna en anslutning mellan telefon 1 och telefon eller surfplatta 2 direkt. För det slår du på hotspot på telefon 1 (hotspot slås i Android vanligtvis på i inställningarna för nätverksanslutningar). När den är påslagen blir telefon 1 en Wi-Fi-router och du kan utan problem ansluta surfplatta eller telefon 2 till den. Så här ser anslutningen ut schematiskt.</p>
+<p><img src="img/articles/robot/robocam-05.png" loading="lazy" alt="Anslutning i RoboCam utan router" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>RoboCam-serverns adress får du reda på på samma sätt, från knappens tips. I de flesta fall är adressen för en sådan hotspot alltid http://192.168.43.1:8088.</p>
+<p><img src="img/articles/robot/robocam-29.png" loading="lazy" alt="Starta RoboCam-servern och en hotspot på en Android-telefon" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3>Använda telefon 1 som styrspak</h3>
+<p>Det finns ytterligare ett knep du kan göra med RoboCam. Starta servern på telefon 1 (den där RoboCam är installerad), anslut till roboten, starta sedan en webbläsare på samma telefon (naturligtvis en som stöder HTML5) och gå till adressen http://localhost:8088. Du ser sidan för inloggning. Logga in som förare. Efter inloggningen ser du styrspakarna och kan styra roboten. I det här fallet överförs dock ingen kamerabild. Wi-Fi kan stängas av.</p>
+<p><img src="img/articles/robot/robocam-30.png" loading="lazy" alt="Använda en telefon med RoboCam som styrspak för att styra en EV3-robot" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3>Sammanfattning</h3>
+<p>Jag hoppas att jag har gett tillräckligt med information om hur man kan använda RoboCam. Om du har frågor om appen eller förslag kan du lämna dem i <a href="https://goo.gl/JIcs9F" target="_blank">RoboCam-gruppen</a>.</p>
+  </div>
+
+  <h2>Alla RoboCam-versioner</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-sv.html"><span class="ver">v1.4.2</span> Förvandla en smartphone till fjärrkontroll för roboten med RoboCam</a></li>
+      <li><a href="v1-3-1-sv.html"><span class="ver">v1.3.1</span> Bygg förstapersonsstyrning för en Arduino-robot</a></li>
+      <li><a href="v1-2-sv.html"><span class="ver">v1.2</span> RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord</a></li>
+      <li><a href="v1-1-sv.html"><span class="ver">v1.1</span> Importera, exportera, kopiera och skicka robotinställningar i RoboCam</a></li>
+      <li><a href="v1-0-sv.html" aria-current="page"><span class="ver">v1.0</span> Styr en LEGO Mindstorms EV3-robot i förstaperson<span class="here">du är här</span></a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-sv.html">Alla artiklar (samlingssida)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Översättning av en artikel av Alexej (ПрогХаус); RoboCam, dess skärmbilder och nedladdningar är upphovspersonens verk. De ursprungliga handledningarna finns samlade på <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Inofficiell referens, inte knuten till ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

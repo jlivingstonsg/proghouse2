@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="sv">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 6 oktober 2017. Bygg förstapersonsstyrning för en Arduino-robot">
+<title>RoboCam 1.3.1 &ndash; Bygg förstapersonsstyrning för en Arduino-robot</title>
+<link rel="alternate" hreflang="en" href="v1-3-1-en.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse-artiklar</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Språk">
+      <a href="v1-3-1-en.html" hreflang="en" lang="en">English</a>
+      <a href="v1-3-1-sv.html" hreflang="sv" lang="sv" aria-current="page">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Tema">
+      <button id="lt" aria-pressed="false">Ljust</button>
+      <button id="dk" aria-pressed="false">Mörkt</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.3.1 · översatt artikel</p>
+  <h1>Bygg förstapersonsstyrning för en Arduino-robot</h1>
+  <p class="byline">Översatt från den ryska originalartikeln av Alexej (ПрогХаус), publicerad 6 oktober 2017.</p>
+  <p class="shots">Skärmbilderna är från originalartikeln och visar appens ryska gränssnitt; texten beskriver varje skärm på svenska.</p>
+
+  <div class="article">
+<p>Den senaste versionen av RoboCam kan styra inte bara EV3-robotar utan även robotar byggda på plattformar som Arduino, Raspberry Pi och liknande, där man kan arbeta direkt med data som tas emot och skickas via Bluetooth. Nu kan du hantera RoboCams kommandon precis som du vill.</p>
+ 
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_01.jpg" loading="lazy" alt="Bygg förstapersonsstyrning för en Arduino-robot" /></p>
+<p>Den här artikeln beskriver de nya funktionerna i <strong>RoboCam</strong> version <strong>1.3.1</strong>. Alla artiklar om RoboCam finns <a href="hub-sv.html">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank" rel="nofollow">Google Play</a>, eller från spegeln <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> om du vill ha en APK att installera manuellt.</p>
+<p>Allt som gjordes för EV3 i de tidigare versionerna är oförändrat. Den nya versionen lägger bara till en drivrutin och inställningar för att arbeta med robotar som kan ta emot kommandon direkt från RoboCam via Bluetooth, bearbeta dem och skicka svar. Sådana robotar kan byggas på olika plattformar <strong>(Arduino, Raspberry Pi</strong>, <strong>PC)</strong> och köra olika firmware och operativsystem (standardfirmware för <strong>Arduino, Windows, Linux, Android</strong> med flera). Programmet som pratar med RoboCam kan också skrivas i olika programmeringsspråk.</p>
+<p>Eftersom robotens firmware eller operativsystem kan variera beskriver jag nedan bara protokollet för kommunikation med RoboCam och de nya inställningarna, och ger ett exempelprogram för att styra en hjulrobot med styrbar telefonhållare på Arduino-plattformen.</p>
+<p>Robotarna som beskrivs ovan kallas i den här artikeln och i inställningarna icke-standardrobotar.</p>
+<p>Här är en video där en Arduino-robot styrs i förstaperson med RoboCam. Längre ner i artikeln beskrivs hur och med vad man bygger en sådan robot.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/yMQ7Wfyk0r4?start=222" id="robj1" height="315" width="560" scrolling="no" ></iframe></center>
+</p>
+<h3>Så kommunicerar RoboCam och roboten</h3>
+<p>Det första som behövs för att RoboCam och roboten ska börja kommunicera är att i programvaran ansluta till Bluetooth-modulen och vänta tills data börjar komma från den. Det görs olika på alla system och kan inte beskrivas i en enda artikel. Därför ger jag exempel bara för Arduino-plattformen, och specifikt för konfigurationen <strong>Arduino Uno + Bluetooth-modul HC-06</strong>. Jag utgår från att HC-06 har standardinställningar (9600 baud) och är ansluten på standardsättet (modulens RX-stift till Arduino Unos TX-stift, och modulens TX-stift till Arduino Unos RX-stift). Vid standardanslutning går allt Bluetooth-arbete på Arduino via serieporten med 9600. I kod ser initieringen av porten ut så här:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #993333;">void</span> setup<span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span>
+<span style="color: #66cc66;">&#123;</span>
+    Serial.<span style="color: #202020;">begin</span><span style="color: #66cc66;">&#40;</span><span style="color: #cc66cc;">9600</span><span style="color: #66cc66;">&#41;</span>;
+<span style="color: #66cc66;">&#125;</span></pre></div></p>
+<p>Som du ser är det enkelt. Därefter kan du läsa och skicka data via Bluetooth. På Arduino görs det med metoderna i klassen Serial, som read(), write(), available() med flera.</p>
+<p>När RoboCam-appen ansluter till ditt program tar den direkt initiativet: RoboCam skickar meddelanden med kommandon, och ditt program bearbetar kommandona och skickar tillbaka meddelanden med svar. Alla kommandon och svar går i sekvens: först kommer ett kommandomeddelande från RoboCam, sedan måste ett svarsmeddelande gå tillbaka, varefter RoboCam skickar nästa kommando, som återigen måste besvaras, och så vidare.<br /> <br />Ditt program bör svara på varje kommandomeddelande så snabbt det kan. Ju längre ditt program tar på sig att svara, desto sämre blir i slutändan robotens respons på användarens handlingar.</p>
+<p>Ett svar på varje meddelande förväntas inom en sekund. RoboCam behandlar ett svar som fördröjs mer än en sekund som ett fel.</p>
+<p>Varje meddelande är en viss uppsättning byte. De första två byten innehåller ett tal som anger meddelandets storlek i byte. Dessa två första byte räknas inte som en del av meddelandet. Om de första två byten alltså anger 5 följer ytterligare 5 byte, och det är själva meddelandet. Ett meddelande läses därför så här: först läser du de första 2 byten och omvandlar dem till ett teckenlöst tvåbytes heltal, sedan läser du lika många byte till som talet anger. Här är ett exempel på hur man läser meddelandets storlek på en Arduino:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//I variabeln messageSize lagrar vi meddelandets storlek.</span>
+<span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> messageSize = <span style="color: #cc66cc;">0</span>;
+<span style="color: #808080; font-style: italic;">//Kontrollera om två byte kan läsas från serieporten.</span>
+<span style="color: #b1b100;">if</span> <span style="color: #66cc66;">&#40;</span>Serial.<span style="color: #202020;">available</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> &gt; <span style="color: #cc66cc;">1</span><span style="color: #66cc66;">&#41;</span>
+    <span style="color: #808080; font-style: italic;">//Läs in meddelandets storlek i variabeln messageSize.</span>
+    messageSize = Serial.<span style="color: #202020;">read</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> + <span style="color: #66cc66;">&#40;</span>Serial.<span style="color: #202020;">read</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> &lt;&lt; <span style="color: #cc66cc;">8</span><span style="color: #66cc66;">&#41;</span>;</pre></div></p>
+<p>Därefter kan du läsa hela meddelandet till en matris, till exempel så här:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//Variabeln readMessageBytes används som räknare för lästa byte.</span>
+<span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> readMessageBytes = <span style="color: #cc66cc;">0</span>;
+<span style="color: #808080; font-style: italic;">//Kontrollera om alla byte i meddelandet har lästs och om det finns data i serieporten.</span>
+<span style="color: #b1b100;">while</span> <span style="color: #66cc66;">&#40;</span>readMessageBytes &lt; messageSize &amp;amp;&amp;amp; Serial.<span style="color: #202020;">available</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> &gt; <span style="color: #cc66cc;">0</span><span style="color: #66cc66;">&#41;</span>
+<span style="color: #66cc66;">&#123;</span>
+    <span style="color: #808080; font-style: italic;">//Läs en byte.</span>
+    message<span style="color: #66cc66;">&#91;</span>readMessageBytes<span style="color: #66cc66;">&#93;</span> = Serial.<span style="color: #202020;">read</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span>;
+    <span style="color: #808080; font-style: italic;">//Öka räknaren för lästa byte med 1.</span>
+    readMessageBytes++;
+<span style="color: #66cc66;">&#125;</span></pre></div></p>
+<p>I exemplet ovan lämnas slingan om det inte finns någon data att läsa i serieporten. Vi väntar alltså inte på att meddelandet ska läsas helt. Med det tillvägagångssättet läser vi meddelandet allteftersom data kommer och gör samtidigt något annat i den oändliga slingan i vår Arduino-skiss, i funktionen loop().</p>
+<p>När meddelandet har lästs (i exemplet ovan sker det när värdet på readMessageBytes blir lika med värdet på messageSize) kan det tolkas, och efter tolkning och sändning av svaret läser du nästa meddelande, och så vidare.</p>
+<p>Ett svarsmeddelande skickas så här: först bygger du meddelandet, till exempel genom att lägga det i en bytematris, sedan räknar du ut storleken på det resulterande meddelandet och skickar den som de första två byten, följt av själva meddelandet, det vill säga den förberedda bytematrisen. Ett exempel på att skicka ett svarsmeddelande på Arduino ser ut så här:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//Säg att variabeln replySize innehåller svarsmeddelandets storlek.</span>
+<span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> replySize = <span style="color: #cc66cc;">0</span>;
+<span style="color: #808080; font-style: italic;">//Och matrisen reply innehåller svarets byte.</span>
+byte reply<span style="color: #66cc66;">&#91;</span><span style="color: #cc66cc;">20</span><span style="color: #66cc66;">&#93;</span>; 
+<span style="color: #808080; font-style: italic;">//Bygg svaret och lägg det i matrisen reply.</span>
+<span style="color: #808080; font-style: italic;">//Räkna samtidigt ut svarets storlek i byte och lägg den i variabeln replySize.</span>
+...
+<span style="color: #808080; font-style: italic;">//Skicka först meddelandets storlek.</span>
+Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&#40;</span>replySize &amp;amp; 0xFF<span style="color: #66cc66;">&#41;</span>;
+Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#40;</span>replySize &gt;&gt; <span style="color: #cc66cc;">8</span><span style="color: #66cc66;">&#41;</span> &amp;amp; 0xFF<span style="color: #66cc66;">&#41;</span>;
+<span style="color: #808080; font-style: italic;">//Skicka sedan det förberedda meddelandet.</span>
+Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&#40;</span>reply, replySize<span style="color: #66cc66;">&#41;</span>;</pre></div></p>
+<h3>Meddelandenas innehåll</h3>
+<p>När ditt program har läst ett meddelande till en matris kan meddelandet läsas. Meddelandets första byte innehåller kommandokoden. Alla övriga byte beror på kommandot. Kommandona är:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>0 &ndash; kommandot &laquo;Start&raquo;;</li>
+<li>1 &ndash; kommandot &laquo;Anropssignal&raquo;;</li>
+<li>2 &ndash; kommandot &laquo;Kontroller&raquo;;</li>
+<li>3 &ndash; kommandot &laquo;Test&raquo;;</li>
+<li>255 &ndash; kommandot &laquo;Stopp&raquo;.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>För enkelhets skull är det bäst att direkt deklarera konstanter för kommandona i ditt program (längre fram i artikeln använder jag namnen på konstanterna för bekvämlighets skull):</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #993333;">const</span> byte CMD_START = <span style="color: #cc66cc;">0</span>; 
+<span style="color: #993333;">const</span> byte CMD_CALLSIGN = <span style="color: #cc66cc;">1</span>;
+<span style="color: #993333;">const</span> byte CMD_CTRL = <span style="color: #cc66cc;">2</span>;
+<span style="color: #993333;">const</span> byte CMD_TEST = <span style="color: #cc66cc;">3</span>;
+<span style="color: #993333;">const</span> byte CMD_STOP = <span style="color: #cc66cc;">255</span>;</pre></div></p>
+<p>Roboten måste svara på varje kommando den tar emot. Som skrivet ovan är svaret också ett meddelande. Meddelandets första byte (naturligtvis efter de två byten med meddelandets storlek) är resultatkoden. Om fler byte följer, och vad de innehåller, beror på kommandot som besvaras.</p>
+<p>Resultatbyten kan bara ha två värden:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>0 &ndash; kommandot utfördes framgångsrikt;</li>
+<li>1 &ndash; ett fel uppstod när kommandot utfördes, eller kommandot stöds inte.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Nu tittar vi närmare på kommandona och svaren på dem.</p>
+<h3>Kommandot &laquo;Start&raquo; (CMD_START)</h3>
+<p>Med det här kommandot börjar samtalet mellan roboten och RoboCam (det sker efter att du tryckt på den mittersta lila knappen i RoboCam och valt en robot i listan). Som svar på kommandot måste roboten returnera ett korrekt svar. Om RoboCam får ett felaktigt svar på kommandot, eller inget svar inom en sekund, bryter RoboCam anslutningen och visar ett fel.</p>
+<p>Så här ser byten ut i ett meddelande med kommandot <strong>CMD_START</strong>:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #3366ff;">T</span><span style="color: #ff9900;">V</span></strong></p>
+<p>Här står en bokstav för en byte:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>De första två byten <span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek, det vill säga antalet byte som följer efter dessa två byte i meddelandet.</li>
+<li>Sedan kommer byten <span style="color: #ff0000;"><strong>C</strong></span> som innehåller kommandokoden. I vårt fall är den 0, det vill säga kommandot CMD_START.</li>
+<li>Nästa byte <span style="color: #3366ff;"><strong>T</strong></span> är en kontrollbyte. Dess värde är olika varje gång, i intervallet 0 till 254. Vad man ska göra med värdet står lite längre ner.</li>
+<li>Allra sist kommer byten<span style="color: #ff9900;"> <strong>V</strong></span> med numret på den högsta version av kommunikationsprotokollet som RoboCam stöder. För närvarande är det 1.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Här är ett exempel på ett meddelande med kommandot CMD_START i oktal form:</p>
+<p><strong><span style="color: #339966;">0300</span><span style="color: #ff0000;">00</span><span style="color: #3366ff;">D1</span><span style="color: #ff9900;">01</span></strong></p>
+<p>När din robot tar emot kommandot måste den svara inom 1 sekund. Svaret är också en bytematris och ska se ut så här:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span><span style="color: #3366ff;">T</span><span style="color: #ff9900;">V</span><span style="color: #cc99ff;">C</span></strong></p>
+<p>Även här har jag markerat en byte med en bokstav. Så här ser det ut i byten:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>De första två byten <span style="color: #339966;"><strong>SS</strong></span> är meddelandets storlek. Svaret är också ett meddelande, så även här innehåller de första två byten storleken på matrisen som följer efter dessa två byte.</li>
+<li>Nästa byte <span style="color: #ff0000;"><strong>R</strong></span> är resultattypen. 0 &ndash; roboten utförde kommandot framgångsrikt, 1 &ndash; fel. Om du anger 1 här (det vill säga ett fel) behöver de återstående byten i meddelandet inte skickas.</li>
+<li>Byten <span style="color: #3366ff;"><strong>T</strong></span> är svaret på kontrollbyten. Den ska innehålla ett tal som är 1 större än det du fick med kommandot CMD_START. I exemplet ovan anges talet <strong><span style="color: #3366ff;">D1</span></strong> (209 decimalt), så som svar ska du skicka talet <strong><span style="color: #3366ff;">D2</span> </strong>(210).</li>
+<li>Nästa byte<span style="color: #ff9900;"> <strong>V</strong></span> är den version av kommunikationsprotokollet som roboten kommer att använda. Versionsnumret här får inte vara högre än den version du fick med kommandot CMD_START, annars vägrar RoboCam att arbeta med roboten och visar ett fel. För närvarande ska du ange 1 här.</li>
+<li>Den sista byten <span style="color: #cc99ff;"><strong>C</strong></span> är den teckenkodning som strängar överförs i. Det finns bara två alternativ: 0 &ndash; US-ASCII (inga ryska bokstäver) och 1 &ndash; UTF-8. US-ASCII används på Arduino.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Här är ett exempel på ett svar på kommandot CMD_START:</p>
+<p><strong><span style="color: #339966;">0400</span><span style="color: #ff0000;">00</span><span style="color: #3366ff;">D2</span><span style="color: #ff9900;">01</span><span style="color: #cc99ff;">00</span></strong></p>
+<h3>Kommandot &laquo;Anropssignal&raquo; (CMD_CALLSIGN)</h3>
+<p>När RoboCam får ett felfritt svar på kommandot CMD_START, med kontrollbyten, protokollversionen och teckenkodningen rätt angivna, börjar den fortsatta kommunikationen mellan roboten och RoboCam. Direkt därefter får roboten kommandot <strong>CMD_CALLSIGN</strong>. Det sker dock bara om en anropssignal och ett svar på den är angivna i RoboCams inställningar. Om ingen anropssignal eller inget svar är angivet skickas inte kommandot. På bilden nedan är till exempel anropssignalen <strong>&laquo;RoboCam&raquo;</strong> och svaret <strong>&laquo;Researcher&raquo;</strong> angivna i inställningarna.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_02.png" loading="lazy" alt="Ange anropssignal och svar för roboten" style="border: 1px solid #000000;" /></p>
+<p>Ett meddelande med kommandot CMD_CALLSIGN ser ut så här:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #993300;">AAA…0</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>De första två byten <span style="color: #339966;"><strong>SS</strong> </span>innehåller meddelandets storlek, som för de övriga kommandona.</li>
+<li>Nästa byte <span style="color: #ff0000;"><strong>C</strong></span> är kommandokoden. För kommandot CMD_CALLSIGN är den 1.</li>
+<li>De återstående byten <span style="color: #993300;"><strong>AAA…0</strong></span> är en sträng avslutad med 0, som innehåller anropssignalen du angav i inställningarna. Strängens teckenkodning motsvarar den du angav i svaret på kommandot CMD_START.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Ett exempel på ett CMD_CALLSIGN-kommando med anropssignalen &laquo;RoboCam&raquo; i teckenkodningen US-ASCII ser ut så här:</p>
+<p><strong><span style="color: #339966;">0900</span><span style="color: #ff0000;">01</span><span style="color: #993300;">526F626F43616D00</span></strong></p>
+<p>Som svar på kommandot ska du skicka strängen med svaret på anropssignalen som är angiven i RoboCams inställningar. Om någon annan sträng kommer tillbaka bryter RoboCam anslutningen. Svarsmeddelandet ser ut så här:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span><span style="color: #993300;">AAA…0</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>De första två byten <span style="color: #339966;"><strong>SS</strong> </span>är, som för de övriga svaren, meddelandets storlek.</li>
+<li>Nästa byte <span style="color: #ff0000;"><strong>R</strong></span> är resultattypen: 0 &ndash; anropssignalen godtogs, 1 &ndash; fel. Om du returnerar 1 här behöver de återstående byten i meddelandet inte skickas.</li>
+<li>De återstående byten <span style="color: #993300;"><strong>AAA…0</strong></span> är en sträng avslutad med 0, som innehåller svaret på anropssignalen. Strängens teckenkodning motsvarar den du angav i svaret på kommandot CMD_START.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Ett exempel med svaret &laquo;Researcher&raquo; på anropssignalen ser ut så här:</p>
+<p><strong><span style="color: #339966;">0C00</span><span style="color: #ff0000;">00</span><span style="color: #993300;">5265736561726368657200</span></strong></p>
+<h3>Kommandot &laquo;Kontroller&raquo; (CMD_CTRL)</h3>
+<p>När RoboCam har anslutit till ditt program, och efter kommandona CMD_START och CMD_CALLSIGN, börjar <strong>CMD_CTRL</strong>-kommandon komma. Det är kommandon från kontrollerna som användaren styr roboten med, det vill säga styrspakarna och tangentbordet. Kommandon kommer varje gång koordinaten för punkten där användarens finger rör vid en styrspak ändras, eller en tangents status (nedtryckt/inte nedtryckt) ändras, det vill säga när användaren styr roboten. Kommandon kommer bara om koordinaterna har ändrats eller en tangent på tangentbordet har tryckts ned eller släppts.</p>
+<p>Ett meddelande med kommandot CMD_CTRL ser ut så här:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #3366ff;">JVJVJV…</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>De första två byten <span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek.</li>
+<li>Byten <span style="color: #ff0000;"><strong>C</strong></span> är kommandot. För kommandot CMD_CTRL är den 2.</li>
+<li>De följande byten <span style="color: #3366ff;"><strong>JVJVJV…</strong></span> är information om ändringar i kontrollernas tillstånd. Det kan vara ett eller flera bytepar. Så här tolkas byten i ett par:<ul style="list-style-type: circle;">
+<li>Byten <span style="color: #3366ff;"><strong>J</strong></span> är kontrollerns identifierare. Det här är värdena byten kan ha och vad de betyder:<ul style="list-style-type: square;">
+<li>0 &ndash; X-axeln (horisontell axel för styrspak 1);</li>
+<li>1 &ndash; Y-axeln (vertikal axel för styrspak 1);</li>
+<li>2 &ndash; W-axeln (horisontell axel för styrspak 2);</li>
+<li>3 &ndash; Z-axeln (vertikal axel för styrspak 2);</li>
+<li>4 &ndash; A-axeln (horisontell axel för styrspak 3);</li>
+<li>5 &ndash; B-axeln (vertikal axel för styrspak 3);</li>
+<li>6 &ndash; C-axeln (horisontell axel för styrspak 4);</li>
+<li>7 &ndash; D-axeln (vertikal axel för styrspak 4);</li>
+<li>255 &ndash; en tangent nedtryckt;</li>
+<li>254 &ndash; en tangent inte nedtryckt.</li>
+</ul>
+</li>
+<li>Byten <span style="color: #3366ff;"><strong>V</strong></span> får ett värde beroende på byten <span style="color: #3366ff;"><strong>J</strong></span>:<ul style="list-style-type: square;">
+<li>För en styrspaksaxel (om <span style="color: #3366ff;"><strong>J</strong></span> är från 0 till 7) innehåller byten <span style="color: #3366ff;"><strong>V</strong></span> koordinaten för punkten där användaren rör vid styrspaken, i intervallet -100 till 100.</li>
+<li>För en tangent (om <span style="color: #3366ff;"><strong>J</strong></span> är 255 eller 254) är det tangentkoden. De möjliga tangentkoderna finns i tabellen i slutet av artikeln &laquo;<a href="v1-2-sv.html">RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord</a>&raquo;.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Ett exempel på ett CMD_CTRL-kommando (kommandot betyder att X-axelns koordinat fick värdet 90, Y-axelns värdet -100 och tangenten med koden 89, det vill säga tangenten Y, trycktes ned):</p>
+<p><strong><span style="color: #339966;">0600</span><span style="color: #ff0000;">02</span><span style="color: #3366ff;">005A019CFF59</span></strong></p>
+<p>För enkelhets skull är det bäst att direkt definiera konstanter för kontrollernas identifierare i koden:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//Styrspakarnas axlar.</span>
+<span style="color: #993333;">const</span> byte AXIS_X = <span style="color: #cc66cc;">0</span>;
+<span style="color: #993333;">const</span> byte AXIS_Y = <span style="color: #cc66cc;">1</span>;
+<span style="color: #993333;">const</span> byte AXIS_W = <span style="color: #cc66cc;">2</span>;
+<span style="color: #993333;">const</span> byte AXIS_Z = <span style="color: #cc66cc;">3</span>;
+<span style="color: #993333;">const</span> byte AXIS_A = <span style="color: #cc66cc;">4</span>;
+<span style="color: #993333;">const</span> byte AXIS_B = <span style="color: #cc66cc;">5</span>;
+<span style="color: #993333;">const</span> byte AXIS_C = <span style="color: #cc66cc;">6</span>;
+<span style="color: #993333;">const</span> byte AXIS_D = <span style="color: #cc66cc;">7</span>;
+&nbsp;
+<span style="color: #808080; font-style: italic;">//Tangentens tillstånd.</span>
+<span style="color: #993333;">const</span> byte KEY_PRESSED = <span style="color: #cc66cc;">255</span>; <span style="color: #808080; font-style: italic;">//Tangent nedtryckt.</span>
+<span style="color: #993333;">const</span> byte KEY_RELEASED = <span style="color: #cc66cc;">254</span>; <span style="color: #808080; font-style: italic;">//Tangent inte nedtryckt.</span></pre></div></p>
+<p>När ditt program tar emot ett CMD_CTRL-kommando får du direkt veta vad som har hänt med styrspakarna och tangenterna. Du kan då genast ändra robotens färdriktning, vrida en servo till rätt vinkel och så vidare. När du har bearbetat kommandot måste du skicka ett svar; det här är byten:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li><span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek. Här är den alltid 1, eftersom svaret alltid är en enda byte.</li>
+<li><span style="color: #ff0000;"><strong>R</strong></span> är resultatet: 0 &ndash; inget fel, 1 &ndash; fel. Egentligen ignorerar kommandot CMD_CTRL resultatet men väntar ändå på ett svarsmeddelande. Trots det rekommenderas det att alltid returnera 0 här.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Svaret ser ut så här:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
+<h3>Kommandot &laquo;Test&raquo; (CMD_TEST)</h3>
+<p>Kommandot <strong>CMD_TEST</strong> skickas ungefär en gång i sekunden för att kontrollera anslutningen. Om roboten inte svarar på kommandot anser RoboCam att förbindelsen med roboten har brutits. Så här ser ett meddelande med kommandot CMD_TEST ut:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>Byten <span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek. För kommandot CMD_TEST är storleken alltid 1.</li>
+<li>Byten <span style="color: #ff0000;"><strong>C</strong></span> är kommandokoden, i det här fallet 3.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Här är ett exempel på ett meddelande med kommandot CMD_TEST:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">03</span></strong></p>
+<p>Du måste svara på kommandot CMD_TEST inom 1 sekund, annars anser RoboCam att förbindelsen med roboten har brutits. Svarsformatet ska vara följande:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>Byten <span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek.</li>
+<li>Byten <span style="color: #ff0000;"><strong>R</strong></span> är resultatet: 0 &ndash; kommandot bearbetades framgångsrikt, 1 &ndash; fel. Om du returnerar 1 här anser RoboCam att anslutningen har brutits.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Här är ett exempel på ett svar på kommandot CMD_TEST:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
+<h3>Kommandot &laquo;Stopp&raquo; (CMD_STOP)</h3>
+<p>Kommandot <strong>CMD_STOP</strong> skickas till roboten när roboten ska stoppas och återgå till utgångsläget. Det skickas om förbindelsen mellan telefonen med styrspakarna och RoboCam bryts, eller om du bryter anslutningen genom att trycka på den mittersta lila knappen i RoboCam. Vid det här kommandot ska roboten sluta röra sig och återställa servomotorerna till utgångsläget. Kommandots format är följande:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>Byten <span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek. För kommandot CMD_STOP är storleken alltid 1.</li>
+<li>Byten<span style="color: #ff0000;"> <strong>C</strong></span> är kommandokoden, i det här fallet 255.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Här är ett exempel på ett meddelande med kommandot CMD_STOP:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">FF</span></strong></p>
+<p>Svaret som förväntas på kommandot är följande:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>Byten <span style="color: #339966;"><strong>SS</strong> </span>är meddelandets storlek.</li>
+<li>Byten <span style="color: #ff0000;"><strong>R</strong></span> är resultatet: 0 &ndash; kommandot bearbetades framgångsrikt, 1 &ndash; fel. Resultatet av svaret på det här kommandot ignoreras men förväntas. Det rekommenderas att alltid returnera 0 här.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Här är ett exempel på ett svar på kommandot CMD_STOP:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
+<h3>Robotinställningar</h3>
+<p>Nu när vi har gått igenom kommunikationsprotokollet kan vi titta på de inställningar som tillkommit för icke-standardrobotar. Öppna inställningarna i RoboCam (den grå runda knappen till höger),</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_03.png" loading="lazy" alt="Inställningsknappen i RoboCam" style="border: 1px solid #000000;" /></p>
+<p>välj sedan &laquo;Robot&raquo;.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_04.png" loading="lazy" alt="Robotinställningar i appen RoboCam" style="border: 1px solid #000000;" /></p>
+<p>Robotinställningarna öppnas. Som du ser visar listan nu både inställningar för EV3-robotar och för icke-standardrobotar.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_06.png" loading="lazy" alt="Listan över RoboCams robotinställningar" style="border: 1px solid #000000;" /></p>
+<p>För att ändra inställningar du skapat tidigare väljer du dem helt enkelt i listan; för att lägga till nya inställningar för en icke-standardrobot trycker du på knappen &laquo;Lägg till&raquo; och väljer menyalternativet &laquo;Icke-standardrobot&raquo;.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_05.png" loading="lazy" alt="Menyalternativet &quot;Icke-standardrobot&quot; i RoboCam" style="border: 1px solid #000000;" /></p>
+<p>Om du bestämmer dig för att skapa nya inställningar får du en tom inställningsskärm.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_07.png" loading="lazy" alt="Tomma inställningar för icke-standardrobot i RoboCam" style="border: 1px solid #000000;" /></p>
+<p>I artikeln beskriver jag inställningarna med utgångspunkt i inställningar jag skapat tidigare för att styra roboten du såg i videon högst upp i artikeln. Allra först anges robotens namn, som syns i listan över inställningar och på RoboCams huvudskärm om inställningarna är de aktuella. Därefter kommer en beskrivning, som bara syns i listan över inställningar.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_08.png" loading="lazy" alt="Arduino-robotens inställningar i RoboCam" style="border: 1px solid #000000;" /></p>
+<p>Om &laquo;<strong>Visa felsökningsinformation</strong>&raquo; är markerad visar klienten styrspakens koordinater medan den används, samt koderna för nedtryckta tangenter.</p>
+<p>Om &laquo;<strong>Dölj styrspakar vid tangentbordsanvändning</strong>&raquo; är markerad försvinner styrspakarna på klienten, som i EV3-inställningarna, så fort någon tangent trycks ned på klienten. Så fort du klickar på skärmen med musen visas styrspakarna igen.</p>
+<p>Därefter kommer inställningarna för anropssignal och svar. Texten som anges här används för kommandot CMD_CALLSIGN som beskrevs ovan.</p>
+<p>Nedanför finns inställningarna för RoboCams 4 styrspakar. Inställningarna är desamma för alla styrspakar, så vi tittar på dem med den första styrspaken som exempel. Den första kryssrutan, &laquo;<strong>Synlighet</strong>&raquo;, styr styrspakens synlighet; om den är avmarkerad visas styrspaken inte på klienten och fungerar inte.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_09.png" loading="lazy" alt="Styrspaksinställningar i appen RoboCam" style="border: 1px solid #000000;" /></p>
+<p>I listan &laquo;<strong>Form</strong>&raquo; kan du välja styrspakens form. Formerna är: vertikal, horisontell, rund, kvadratisk, pilar, vertikala pilar och horisontella pilar. Så här ser styrspakar av de beskrivna formerna ut:</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-24.png" loading="lazy" alt="RoboCams styrspakar" /></p>
+<p>Hur styrspakarna fungerar beror på formen och beskrivs redan i artikeln &laquo;<a href="v1-0-sv.html">Styra en LEGO Mindstorms EV3-robot i förstaperson</a>&raquo;.</p>
+<p>De följande två listorna väljer hur styrspakarna beter sig när du slutar röra vid dem. Det finns bara två alternativ: &laquo;Återgå till noll&raquo; och &laquo;Behåll position&raquo;. I det första fallet återgår styrspaken till utgångsläget, det vill säga till noll, när du &laquo;släpper&raquo; den; i det andra stannar den där den är. Beteendet kan anges separat för styrspakens vertikala och horisontella axel.</p>
+<p>Allra längst ner ställs tangenterna in. Kryssrutan &laquo;<strong>Aktiv</strong>&raquo; slår på eller av RoboCam-klientens känslighet för tangenttryckningar. Om du inte planerar att styra med tangentbordet rekommenderas det att avmarkera den för att spara batteri på klientenheten.</p>
+<p>Lite längre ner kan du, om du trycker på inställningen &laquo;<strong>Tangenter</strong>&raquo;, välja de tangenter vars tillstånd du tänker följa.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_10.png" loading="lazy" alt="Ställa in tangenter för en icke-standardrobot i RoboCam" style="border: 1px solid #000000;" /></p>
+<p>Sammantaget finns det mycket färre inställningar för en icke-standardrobot än för en EV3-robot, men de som finns fungerar som för EV3-roboten, så läs de tidigare <a href="hub-sv.html">artiklarna om RoboCam</a> för mer detaljer.</p>
+<h3>Bygga Arduino-roboten</h3>
+<p>För att göra Arduino-roboten som styrs i förstaperson med RoboCam, som du ser i videon nedan, använde jag utbildningssatsen från Amperka samt ytterligare komponenter och delar: en Bluetooth-modul HC-06, extra plastdistanser, muttrar och brickor, två 3D-utskrivna delar för att hålla servomotorn, ett gem och två gummiband (sådana som används för sedlar).</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/yMQ7Wfyk0r4" id="robj2" height="315" width="560" scrolling="no" ></iframe></center>
+
+</p>
+<p>Byggprocessen visas i snabbspolning i videon. Det är inget komplicerat med den. Om du bygger en sådan robot av Amperkas utbildningssats följer en bok med som beskriver hur man ansluter motorerna och hur man bygger en robot som följer en linje. Min robot är likadan som den i boken, men utan linjesensorer.</p>
+<p>Jag bestämde mig för att fästa telefonen på enklaste sätt: nedtill är två distanser med skruvar fastskruvade och telefonen hålls mot dem med ett gummiband. Upptill hålls telefonen mot en skena, som den återigen är fäst vid med ett gummiband. Skenans andra ände är fäst vid en servo. I videon syns att telefonen lutar små vinklar, men genom att förlänga hävarmen kan du, om du vill, öka telefonens lutningsvinklar.</p>
+<p>De färdiga modellerna för 3D-utskrift av servohållaren och skenan finns listade nedan:</p>
+<p><div style="background-color:#EFEFEF; padding:6px;">Filer:</div>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Servohållare (3D-modell)</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Servohållare (3D-modell) för en robot byggd av Amperkas utbildningssats.</p>
+<p><img src="img/articles/robot/robocam-arduino_11.jpg" loading="lazy" alt="Servohållare" /></p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;06.10.2017   &nbsp;76.41 KB &nbsp;2615</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Skena (3D-modell)</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Skena (3D-modell) för en robot byggd av Amperkas utbildningssats.</p>
+<p><img src="img/articles/robot/robocam-arduino_12.jpg" loading="lazy" alt="Skena för en robot byggd av Amperkas utbildningssats" /></p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;06.10.2017   &nbsp;56.08 KB &nbsp;2211</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>Om din robotplattform är en annan blir din telefonhållare också en annan. I så fall är det inget problem att tillverka en egen hållare om du kan 3D-skriva ut. Mina egna 3D-modeller av servohållaren och skenan skapade jag i den molnbaserade 3D-editorn <a href="https://www.tinkercad.com/" target="_blank" rel="nofollow">Tinkercad</a>. Jag har redan beskrivit hur man arbetar med den i artikeln &laquo;Tinkercad &ndash; ett enkelt webbverktyg för 3D-konstruktion och 3D-utskrift&raquo; (på ryska).</p>
+<p>För att upprepa mitt experiment behöver du också Arduino-skissen och RoboCam-inställningarna:</p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Arduino Explorer</b> Version: från 10.09.2017 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>En skiss för att styra en hjulburen Arduino-robot med styrbar telefonhållare med hjälp av RoboCam.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;10.09.2017   &nbsp;15.07 KB &nbsp;2738</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>RoboCam-inställningar för att styra Arduino Explorer</b> Version: från 10.09.2017 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>RoboCam-inställningar för att styra Arduino Explorer.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;11.09.2017   &nbsp;448 B &nbsp;2659</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+  </div>
+
+  <h2>Alla RoboCam-versioner</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-sv.html"><span class="ver">v1.4.2</span> Förvandla en smartphone till fjärrkontroll för roboten med RoboCam</a></li>
+      <li><a href="v1-3-1-sv.html" aria-current="page"><span class="ver">v1.3.1</span> Bygg förstapersonsstyrning för en Arduino-robot<span class="here">du är här</span></a></li>
+      <li><a href="v1-2-sv.html"><span class="ver">v1.2</span> RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord</a></li>
+      <li><a href="v1-1-sv.html"><span class="ver">v1.1</span> Importera, exportera, kopiera och skicka robotinställningar i RoboCam</a></li>
+      <li><a href="v1-0-sv.html"><span class="ver">v1.0</span> Styr en LEGO Mindstorms EV3-robot i förstaperson</a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-sv.html">Alla artiklar (samlingssida)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Översättning av en artikel av Alexej (ПрогХаус); RoboCam, dess skärmbilder och nedladdningar är upphovspersonens verk. De ursprungliga handledningarna finns samlade på <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Inofficiell referens, inte knuten till ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

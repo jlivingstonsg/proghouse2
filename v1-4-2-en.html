@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Translated from the Russian original by Alexey (ПрогХаус), published 7 November 2017. Turning a smartphone into a robot remote control with RoboCam">
+<title>RoboCam 1.4.2 &ndash; Turning a smartphone into a robot remote control with RoboCam</title>
+<link rel="alternate" hreflang="sv" href="v1-4-2-sv.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse articles</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Language">
+      <a href="v1-4-2-en.html" hreflang="en" lang="en" aria-current="page">English</a>
+      <a href="v1-4-2-sv.html" hreflang="sv" lang="sv">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="lt" aria-pressed="false">Light</button>
+      <button id="dk" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.4.2 · translated article</p>
+  <h1>Turning a smartphone into a robot remote control with RoboCam</h1>
+  <p class="byline">Translated from the Russian original by Alexey (ПрогХаус), published 7 November 2017.</p>
+  <p class="shots">The screenshots are from the original article and show the app's Russian interface; the text describes each screen in English.</p>
+
+  <div class="article">
+<p>In all the earlier articles about the RoboCam app I described how to use it to control a robot in first person. But sometimes first-person control isn't needed &mdash; you only want to turn the smartphone into a remote control. The latest version of RoboCam adds exactly that.</p>
+ 
+<p style="text-align: center;"><img src="img/articles/programs/robocam_1_4_00.jpg" loading="lazy" alt="Local control of a robot with the RoboCam app" /></p>
+<p>This article describes the new features in RoboCam version <strong>1.4.2</strong>. All the articles about RoboCam can be found <a href="hub-en.html">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank" rel="nofollow">Google Play</a>, or from the <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror if you want an APK to install manually.</p>
+<p>Everything from the previous versions of the app is unchanged. Version 1.4.2 only adds local controls. They are off by default and everything works as before. To turn local controls on, open the server settings and tick &laquo;<strong>Use local controls</strong>&raquo;. All the other server settings then disappear. Press the &laquo;Save&raquo; button. If you don't know where to find the server settings, read the <a href="v1-0-en.html">first article</a> about RoboCam first.</p>
+<p><img src="img/articles/programs/robocam_1_4_01.png" loading="lazy" alt="Turning on local controls in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Then go back to the main screen and you will see that the left green button has changed. It now shows a joystick. You will also see that the camera is now off.</p>
+<p style="text-align: center;"><img src="img/articles/programs/robocam_1_4_02.png" loading="lazy" alt="The RoboCam main screen after local controls are turned on" /></p>
+<p>Press the middle purple button to connect to the robot. How to connect to a robot and configure it is described in detail in the <a href="v1-0-en.html">first article</a> about RoboCam. Then press the left green button to open the screen with the local controls, i.e. the joysticks.</p>
+<p style="text-align: center;"><img src="img/articles/programs/robocam_1_4_03.png" loading="lazy" alt="Connecting to the robot to use the local controls" /></p>
+<p>As you can see, the joysticks look the same as in the browser when you control the robot in first person with RoboCam.</p>
+<p style="text-align: center;"><img src="img/articles/programs/robocam_1_4_04.png" loading="lazy" alt="RoboCam local joysticks" /></p>
+<p>But small joysticks are awkward to use on a phone with a small screen, so go back to the server settings, tick &laquo;<strong>Maximise joysticks</strong>&raquo; and press the &laquo;Save&raquo; button.</p>
+<p><img src="img/articles/programs/robocam_1_4_05.png" loading="lazy" alt="Turning on the maximum joystick size in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Now, when you open the screen with the local controls, you will see that the joysticks have become larger.</p>
+<p style="text-align: center;"><img src="img/articles/programs/robocam_1_4_06.png" loading="lazy" alt="Large local joysticks in RoboCam" /></p>
+<p>By the way, if you connect a keyboard to the smartphone you can control the robot from it. However, for the keyboard to work the RoboCam app must be active and the phone must be unlocked. Read more about keyboard control in the <a href="v1-2-en.html">third article</a> about RoboCam.</p>
+  </div>
+
+  <h2>All RoboCam versions</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-en.html" aria-current="page"><span class="ver">v1.4.2</span> Turning a smartphone into a robot remote control with RoboCam<span class="here">you are here</span></a></li>
+      <li><a href="v1-3-1-en.html"><span class="ver">v1.3.1</span> Building first-person control for an Arduino robot</a></li>
+      <li><a href="v1-2-en.html"><span class="ver">v1.2</span> RoboCam &ndash; controlling a robot in first person from a computer keyboard</a></li>
+      <li><a href="v1-1-en.html"><span class="ver">v1.1</span> Importing, exporting, copying and sending robot settings in RoboCam</a></li>
+      <li><a href="v1-0-en.html"><span class="ver">v1.0</span> Controlling a LEGO Mindstorms EV3 robot in first person</a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-en.html">All articles (hub)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Translation of an article by Alexey (ПрогХаус); RoboCam, its screenshots and downloads are the work of their author. The original tutorials are collected at <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Unofficial reference, not affiliated with ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

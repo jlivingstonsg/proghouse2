@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Translated from the Russian original by Alexey (ПрогХаус), published 6 October 2017. Building first-person control for an Arduino robot">
+<title>RoboCam 1.3.1 &ndash; Building first-person control for an Arduino robot</title>
+<link rel="alternate" hreflang="sv" href="v1-3-1-sv.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse articles</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Language">
+      <a href="v1-3-1-en.html" hreflang="en" lang="en" aria-current="page">English</a>
+      <a href="v1-3-1-sv.html" hreflang="sv" lang="sv">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="lt" aria-pressed="false">Light</button>
+      <button id="dk" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.3.1 · translated article</p>
+  <h1>Building first-person control for an Arduino robot</h1>
+  <p class="byline">Translated from the Russian original by Alexey (ПрогХаус), published 6 October 2017.</p>
+  <p class="shots">The screenshots are from the original article and show the app's Russian interface; the text describes each screen in English.</p>
+
+  <div class="article">
+<p>The latest version of RoboCam can control not only EV3 robots but also robots built on platforms such as Arduino, Raspberry Pi and similar, where you can work directly with the data received and sent over Bluetooth. Now you can process RoboCam's commands however you like.</p>
+ 
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_01.jpg" loading="lazy" alt="Building first-person control for an Arduino robot" /></p>
+<p>This article describes the new features in <strong>RoboCam</strong> version <strong>1.3.1</strong>. All the articles about RoboCam can be found <a href="hub-en.html">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank" rel="nofollow">Google Play</a>, or from the <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror if you want an APK to install manually.</p>
+<p>Everything done for the EV3 in the previous versions is unchanged. The new version only adds a driver and settings for working with robots that can receive commands from RoboCam directly over Bluetooth, process them and send replies. Such robots can be built on various platforms <strong>(Arduino, Raspberry Pi</strong>, <strong>PC)</strong> and run various firmware and operating systems (standard <strong>Arduino</strong> firmware, <strong>Windows, Linux, Android</strong> and so on). The program that talks to RoboCam can also be written in various programming languages.</p>
+<p>Since the robot's firmware or operating system can vary, below I describe only the protocol for talking to RoboCam and the new settings, and give an example program for controlling a wheeled robot with a controllable smartphone holder on the Arduino platform.</p>
+<p>The robots described above will be called non-standard robots in this article and in the settings.</p>
+<p>Here is a video in which an Arduino robot is controlled in first person with RoboCam. Further down the article describes how, and with what, to build such a robot.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/yMQ7Wfyk0r4?start=222" id="robj1" height="315" width="560" scrolling="no" ></iframe></center>
+</p>
+<h3>How RoboCam and the robot communicate</h3>
+<p>The first thing to do for RoboCam and the robot to start communicating is to connect to the Bluetooth module in software and wait until data starts arriving from it. This is done differently on every system and can't be covered in one article. So I will give examples only for the Arduino platform, and specifically for an <strong>Arduino Uno + HC-06 Bluetooth module</strong> configuration. I assume the HC-06 has its default settings (9600 baud) and is connected the standard way (the module's RX pin to the Arduino Uno's TX pin, and the module's TX pin to the Arduino Uno's RX pin). With the standard connection, all Bluetooth work on the Arduino goes through the serial port at 9600. In code, initialising the port looks like this:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #993333;">void</span> setup<span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span>
+<span style="color: #66cc66;">&#123;</span>
+    Serial.<span style="color: #202020;">begin</span><span style="color: #66cc66;">&#40;</span><span style="color: #cc66cc;">9600</span><span style="color: #66cc66;">&#41;</span>;
+<span style="color: #66cc66;">&#125;</span></pre></div></p>
+<p>As you can see, it's simple. After that you can read and send data over Bluetooth. On the Arduino this is done with the methods of the Serial class, such as read(), write(), available() and others.</p>
+<p>Once the RoboCam app connects to your program, it immediately takes the initiative: RoboCam sends messages with commands, and your program processes those commands and sends messages with replies back. All commands and replies go in sequence: first a command message arrives from RoboCam, then a reply message must go back, after which RoboCam sends the next command, which again must be answered, and so on.<br /> <br />Your program should answer each command message as fast as it can. The longer your program takes to reply, the worse your robot's response to the user's actions will ultimately be.</p>
+<p>A reply to each message is expected within one second. RoboCam treats a reply delayed by more than a second as an error.</p>
+<p>Each message is a certain set of bytes. The first two bytes contain a number giving the size of the message in bytes. These first two bytes are not counted as part of the message. So if the first two bytes say 5, then 5 more bytes follow, and those are the message itself. So a message is read like this: first you read the first 2 bytes and convert them to an unsigned two-byte integer, then you read as many more bytes as that number says. Here is an example of reading the message size on an Arduino:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//We store the message size in the variable messageSize.</span>
+<span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> messageSize = <span style="color: #cc66cc;">0</span>;
+<span style="color: #808080; font-style: italic;">//Check whether two bytes can be read from the serial port.</span>
+<span style="color: #b1b100;">if</span> <span style="color: #66cc66;">&#40;</span>Serial.<span style="color: #202020;">available</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> &gt; <span style="color: #cc66cc;">1</span><span style="color: #66cc66;">&#41;</span>
+    <span style="color: #808080; font-style: italic;">//Read the message size into the variable messageSize.</span>
+    messageSize = Serial.<span style="color: #202020;">read</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> + <span style="color: #66cc66;">&#40;</span>Serial.<span style="color: #202020;">read</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> &lt;&lt; <span style="color: #cc66cc;">8</span><span style="color: #66cc66;">&#41;</span>;</pre></div></p>
+<p>After that you can read the whole message into an array, for example like this:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//The variable readMessageBytes is used as a counter of bytes read.</span>
+<span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> readMessageBytes = <span style="color: #cc66cc;">0</span>;
+<span style="color: #808080; font-style: italic;">//Check whether all bytes of the message have been read and whether there is data in the serial port.</span>
+<span style="color: #b1b100;">while</span> <span style="color: #66cc66;">&#40;</span>readMessageBytes &lt; messageSize &amp;amp;&amp;amp; Serial.<span style="color: #202020;">available</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> &gt; <span style="color: #cc66cc;">0</span><span style="color: #66cc66;">&#41;</span>
+<span style="color: #66cc66;">&#123;</span>
+    <span style="color: #808080; font-style: italic;">//Read one byte.</span>
+    message<span style="color: #66cc66;">&#91;</span>readMessageBytes<span style="color: #66cc66;">&#93;</span> = Serial.<span style="color: #202020;">read</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span>;
+    <span style="color: #808080; font-style: italic;">//Increase the counter of bytes read by 1.</span>
+    readMessageBytes++;
+<span style="color: #66cc66;">&#125;</span></pre></div></p>
+<p>In the example above the loop is exited if there is no data available to read in the serial port. That is, we don't wait for the message to be read in full. With this approach we read the message as data arrives and do something else in parallel in the endless loop of our Arduino sketch, in the loop() function.</p>
+<p>Once the message has been read (in the example above that happens when the value of readMessageBytes becomes equal to the value of messageSize) it can be parsed, and after parsing and sending the reply you read the next message, and so on.</p>
+<p>A reply message is sent like this: first you build the message, for example by putting it in a byte array, then you calculate the size of the resulting message and send it as the first two bytes, followed by the message itself, i.e. the prepared byte array. An example of sending a reply message on an Arduino looks like this:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//Say the variable replySize holds the size of the reply message.</span>
+<span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> replySize = <span style="color: #cc66cc;">0</span>;
+<span style="color: #808080; font-style: italic;">//And the array reply holds the bytes of the reply.</span>
+byte reply<span style="color: #66cc66;">&#91;</span><span style="color: #cc66cc;">20</span><span style="color: #66cc66;">&#93;</span>; 
+<span style="color: #808080; font-style: italic;">//Build the reply and put it in the array reply.</span>
+<span style="color: #808080; font-style: italic;">//At the same time count the size of the reply in bytes and put it in the variable replySize.</span>
+...
+<span style="color: #808080; font-style: italic;">//First send the message size.</span>
+Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&#40;</span>replySize &amp;amp; 0xFF<span style="color: #66cc66;">&#41;</span>;
+Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#40;</span>replySize &gt;&gt; <span style="color: #cc66cc;">8</span><span style="color: #66cc66;">&#41;</span> &amp;amp; 0xFF<span style="color: #66cc66;">&#41;</span>;
+<span style="color: #808080; font-style: italic;">//Then send the prepared message.</span>
+Serial.<span style="color: #202020;">write</span><span style="color: #66cc66;">&#40;</span>reply, replySize<span style="color: #66cc66;">&#41;</span>;</pre></div></p>
+<h3>Message contents</h3>
+<p>Once your program has read a message into an array, the message can be read. The first byte of the message holds the command code. All the other bytes depend on the command. The commands are:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>0 &ndash; the &laquo;Start&raquo; command;</li>
+<li>1 &ndash; the &laquo;Callsign&raquo; command;</li>
+<li>2 &ndash; the &laquo;Controllers&raquo; command;</li>
+<li>3 &ndash; the &laquo;Test&raquo; command;</li>
+<li>255 &ndash; the &laquo;Stop&raquo; command.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>For convenience it is best to declare constants for the commands right away in your program (further on in the article I use the names of these constants for convenience):</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #993333;">const</span> byte CMD_START = <span style="color: #cc66cc;">0</span>; 
+<span style="color: #993333;">const</span> byte CMD_CALLSIGN = <span style="color: #cc66cc;">1</span>;
+<span style="color: #993333;">const</span> byte CMD_CTRL = <span style="color: #cc66cc;">2</span>;
+<span style="color: #993333;">const</span> byte CMD_TEST = <span style="color: #cc66cc;">3</span>;
+<span style="color: #993333;">const</span> byte CMD_STOP = <span style="color: #cc66cc;">255</span>;</pre></div></p>
+<p>The robot must answer every command it receives. As written above, the reply is also a message. The first byte of the message (of course after the two bytes with the message size) is the result code. Whether more bytes follow, and what they contain, depends on the command being answered.</p>
+<p>The result byte can take only two values:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>0 &ndash; the command was executed successfully;</li>
+<li>1 &ndash; an error occurred while executing the command, or the command is not supported.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Now let's look at the commands and their replies in more detail.</p>
+<h3>The &laquo;Start&raquo; command (CMD_START)</h3>
+<p>This command starts the conversation between the robot and RoboCam (it happens after you press the middle purple button in RoboCam and choose a robot from the list). In reply to this command the robot must return a correct reply. If RoboCam gets a wrong reply to this command, or no reply within a second, RoboCam breaks the connection and reports an error.</p>
+<p>So here are the bytes that arrive in a message with the <strong>CMD_START</strong> command:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #3366ff;">T</span><span style="color: #ff9900;">V</span></strong></p>
+<p>Here one letter stands for one byte:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The first two bytes <span style="color: #339966;"><strong>SS</strong> </span>are the size of the message, i.e. the number of bytes that follow these two bytes in the message.</li>
+<li>Then comes the byte <span style="color: #ff0000;"><strong>C</strong></span> containing the command code. In our case it is 0, i.e. the CMD_START command.</li>
+<li>The next byte <span style="color: #3366ff;"><strong>T</strong></span> is a check byte. Its value is different each time, in the range 0 to 254. What to do with this value is written a little further down.</li>
+<li>At the very end comes the byte<span style="color: #ff9900;"> <strong>V</strong></span> with the number of the highest version of the communication protocol that RoboCam supports. At the moment that is 1.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here is an example of a message with the CMD_START command in octal:</p>
+<p><strong><span style="color: #339966;">0300</span><span style="color: #ff0000;">00</span><span style="color: #3366ff;">D1</span><span style="color: #ff9900;">01</span></strong></p>
+<p>On receiving this command your robot must reply within 1 second. The reply is also a byte array and must look like this:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span><span style="color: #3366ff;">T</span><span style="color: #ff9900;">V</span><span style="color: #cc99ff;">C</span></strong></p>
+<p>Here too I have marked one byte with one letter. This is what is transmitted in the bytes:</p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The first two bytes <span style="color: #339966;"><strong>SS</strong></span> are the size of the message. The reply is also a message, so here too the first two bytes contain the size of the array that follows these two bytes.</li>
+<li>The next byte <span style="color: #ff0000;"><strong>R</strong></span> is the result type. 0 &ndash; the robot executed the command successfully, 1 &ndash; error. If you put 1 here (i.e. an error), the remaining bytes of the message need not be sent.</li>
+<li>The byte <span style="color: #3366ff;"><strong>T</strong></span> is the reply to the check byte. It must hold a number 1 greater than the one you received with the CMD_START command. In the example above the number <strong><span style="color: #3366ff;">D1</span></strong> (209 in decimal) is given, so in reply you must send the number <strong><span style="color: #3366ff;">D2</span> </strong>(210).</li>
+<li>The next byte<span style="color: #ff9900;"> <strong>V</strong></span> is the version of the communication protocol the robot will use. The version number here must not be higher than the version you received with the CMD_START command, otherwise RoboCam refuses to work with the robot and reports an error. At the moment you should put 1 here.</li>
+<li>The last byte <span style="color: #cc99ff;"><strong>C</strong></span> is the encoding in which strings will be transmitted. There are only two options: 0 &ndash; US-ASCII (no Russian letters) and 1 &ndash; UTF-8. US-ASCII is what the Arduino uses.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here is an example of a reply to the CMD_START command:</p>
+<p><strong><span style="color: #339966;">0400</span><span style="color: #ff0000;">00</span><span style="color: #3366ff;">D2</span><span style="color: #ff9900;">01</span><span style="color: #cc99ff;">00</span></strong></p>
+<h3>The &laquo;Callsign&raquo; command (CMD_CALLSIGN)</h3>
+<p>After RoboCam gets an error-free reply to the CMD_START command, with the check byte, protocol version number and encoding all correctly given, further communication between the robot and RoboCam begins. Right after that the robot receives the <strong>CMD_CALLSIGN</strong> command. This only happens, though, if a callsign and a reply to it are set in the RoboCam settings. If no callsign or reply is set, this command is not sent. In the picture below, for example, the callsign <strong>&laquo;RoboCam&raquo;</strong> and the reply <strong>&laquo;Researcher&raquo;</strong> are set in the settings.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_02.png" loading="lazy" alt="Setting the callsign and reply for the robot" style="border: 1px solid #000000;" /></p>
+<p>A message with the CMD_CALLSIGN command looks like this:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #993300;">AAA…0</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The first two bytes <span style="color: #339966;"><strong>SS</strong> </span>contain the size of the message, as for the other commands.</li>
+<li>The next byte <span style="color: #ff0000;"><strong>C</strong></span> is the command code. For the CMD_CALLSIGN command it is 1.</li>
+<li>The remaining bytes <span style="color: #993300;"><strong>AAA…0</strong></span> are a string terminated with 0, containing the callsign you set in the settings. The string's encoding matches the one you gave in your reply to the CMD_START command.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>An example of a CMD_CALLSIGN command with the callsign &laquo;RoboCam&raquo; in US-ASCII encoding looks like this:</p>
+<p><strong><span style="color: #339966;">0900</span><span style="color: #ff0000;">01</span><span style="color: #993300;">526F626F43616D00</span></strong></p>
+<p>In reply to this command you must send the string with the reply to the callsign that is set in the RoboCam settings. If any other string comes back, RoboCam breaks the connection. The reply message looks like this:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span><span style="color: #993300;">AAA…0</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The first two bytes <span style="color: #339966;"><strong>SS</strong> </span>are, as for the other replies, the size of the message.</li>
+<li>The next byte <span style="color: #ff0000;"><strong>R</strong></span> is the result type: 0 &ndash; callsign accepted, 1 &ndash; error. If you return 1 here, the remaining bytes of the message need not be sent.</li>
+<li>The remaining bytes <span style="color: #993300;"><strong>AAA…0</strong></span> are a string terminated with 0, containing the reply to the callsign. The string's encoding matches the one you gave in your reply to the CMD_START command.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>An example with the reply &laquo;Researcher&raquo; to the callsign looks like this:</p>
+<p><strong><span style="color: #339966;">0C00</span><span style="color: #ff0000;">00</span><span style="color: #993300;">5265736561726368657200</span></strong></p>
+<h3>The &laquo;Controllers&raquo; command (CMD_CTRL)</h3>
+<p>After RoboCam has connected to your program, and after the CMD_START and CMD_CALLSIGN commands, <strong>CMD_CTRL</strong> commands start arriving. These are commands from the controllers the user drives the robot with, i.e. the joysticks and the keyboard. Commands arrive every time the coordinate of the point where the user's finger touches a joystick changes, or a key's status (pressed/not pressed) changes, i.e. when the user is driving the robot. Commands arrive only if the coordinates have changed or a key on the keyboard has been pressed or released.</p>
+<p>A message with the CMD_CTRL command looks like this:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span><span style="color: #3366ff;">JVJVJV…</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The first two bytes <span style="color: #339966;"><strong>SS</strong> </span>are the size of the message.</li>
+<li>The byte <span style="color: #ff0000;"><strong>C</strong></span> is the command. For the CMD_CTRL command it is 2.</li>
+<li>The following bytes <span style="color: #3366ff;"><strong>JVJVJV…</strong></span> are information about changes in the state of the controllers. There can be one or more pairs of bytes. This is what the bytes in a pair mean:<ul style="list-style-type: circle;">
+<li>The byte <span style="color: #3366ff;"><strong>J</strong></span> is the controller identifier. These are the values this byte can take and what they mean:<ul style="list-style-type: square;">
+<li>0 &ndash; the X axis (horizontal axis of joystick 1);</li>
+<li>1 &ndash; the Y axis (vertical axis of joystick 1);</li>
+<li>2 &ndash; the W axis (horizontal axis of joystick 2);</li>
+<li>3 &ndash; the Z axis (vertical axis of joystick 2);</li>
+<li>4 &ndash; the A axis (horizontal axis of joystick 3);</li>
+<li>5 &ndash; the B axis (vertical axis of joystick 3);</li>
+<li>6 &ndash; the C axis (horizontal axis of joystick 4);</li>
+<li>7 &ndash; the D axis (vertical axis of joystick 4);</li>
+<li>255 &ndash; a key pressed;</li>
+<li>254 &ndash; a key not pressed.</li>
+</ul>
+</li>
+<li>The byte <span style="color: #3366ff;"><strong>V</strong></span> takes a value depending on the byte <span style="color: #3366ff;"><strong>J</strong></span>:<ul style="list-style-type: square;">
+<li>For a joystick axis (if <span style="color: #3366ff;"><strong>J</strong></span> is from 0 to 7) the byte <span style="color: #3366ff;"><strong>V</strong></span> holds the coordinate of the point where the user touches the joystick, in the range -100 to 100.</li>
+<li>For a key (if <span style="color: #3366ff;"><strong>J</strong></span> is 255 or 254) it is the key code. For the possible key codes see the table at the end of the article &laquo;<a href="v1-2-en.html">RoboCam &ndash; controlling a robot in first person from a computer keyboard</a>&raquo;.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>An example of a CMD_CTRL command (the command means that the X axis coordinate took the value 90, the Y axis the value -100, and the key with code 89, i.e. the Y key, was pressed):</p>
+<p><strong><span style="color: #339966;">0600</span><span style="color: #ff0000;">02</span><span style="color: #3366ff;">005A019CFF59</span></strong></p>
+<p>For convenience it is best to define constants for the controller identifiers in your code right away:</p>
+<p><div style="position: relative; word-wrap: break-word; overflow: hidden;"><pre class="c" style="font-family: 'Monaco','Consolas','Courier New';line-height:22px;border-width: 1px; border-style: solid; border-color: #ccc;"><span style="color: #808080; font-style: italic;">//Joystick axes.</span>
+<span style="color: #993333;">const</span> byte AXIS_X = <span style="color: #cc66cc;">0</span>;
+<span style="color: #993333;">const</span> byte AXIS_Y = <span style="color: #cc66cc;">1</span>;
+<span style="color: #993333;">const</span> byte AXIS_W = <span style="color: #cc66cc;">2</span>;
+<span style="color: #993333;">const</span> byte AXIS_Z = <span style="color: #cc66cc;">3</span>;
+<span style="color: #993333;">const</span> byte AXIS_A = <span style="color: #cc66cc;">4</span>;
+<span style="color: #993333;">const</span> byte AXIS_B = <span style="color: #cc66cc;">5</span>;
+<span style="color: #993333;">const</span> byte AXIS_C = <span style="color: #cc66cc;">6</span>;
+<span style="color: #993333;">const</span> byte AXIS_D = <span style="color: #cc66cc;">7</span>;
+&nbsp;
+<span style="color: #808080; font-style: italic;">//Key state.</span>
+<span style="color: #993333;">const</span> byte KEY_PRESSED = <span style="color: #cc66cc;">255</span>; <span style="color: #808080; font-style: italic;">//Key pressed.</span>
+<span style="color: #993333;">const</span> byte KEY_RELEASED = <span style="color: #cc66cc;">254</span>; <span style="color: #808080; font-style: italic;">//Key not pressed.</span></pre></div></p>
+<p>When your program receives a CMD_CTRL command you immediately learn what has happened with the joysticks and keys. You can then change the robot's direction of travel straight away, turn a servo to the required angle, and so on. After processing the command you must send a reply; these are the bytes:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li><span style="color: #339966;"><strong>SS</strong> </span>is the size of the message. It is always 1 here, because the reply is always a single byte.</li>
+<li><span style="color: #ff0000;"><strong>R</strong></span> is the result: 0 &ndash; no error, 1 &ndash; error. In fact the CMD_CTRL command ignores the result but still waits for a reply message. Even so, it is recommended to always return 0 here.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The reply will look like this:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
+<h3>The &laquo;Test&raquo; command (CMD_TEST)</h3>
+<p>The <strong>CMD_TEST</strong> command is sent about once a second, to check the connection. If the robot does not answer this command, RoboCam considers the link with the robot lost. This is what a message with the CMD_TEST command looks like:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The bytes <span style="color: #339966;"><strong>SS</strong> </span>are the size of the message. For the CMD_TEST command the size is always 1.</li>
+<li>The byte <span style="color: #ff0000;"><strong>C</strong></span> is the command code, in this case 3.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here is an example of a message with the CMD_TEST command:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">03</span></strong></p>
+<p>You must answer the CMD_TEST command within 1 second, otherwise RoboCam considers the link with the robot lost. The reply format must be as follows:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The bytes <span style="color: #339966;"><strong>SS</strong> </span>are the size of the message.</li>
+<li>The byte <span style="color: #ff0000;"><strong>R</strong></span> is the result: 0 &ndash; command processed successfully, 1 &ndash; error. If you return 1 here, RoboCam considers the connection broken.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here is an example of a reply to the CMD_TEST command:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
+<h3>The &laquo;Stop&raquo; command (CMD_STOP)</h3>
+<p>The <strong>CMD_STOP</strong> command is sent to the robot when the robot needs to be stopped and returned to its initial position. It is sent if the connection between the smartphone with the joysticks and RoboCam is lost, or if you break the connection by pressing the middle purple button in RoboCam. On this command the robot must stop moving and return its servo motors to the initial position. The command format is as follows:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">C</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The bytes <span style="color: #339966;"><strong>SS</strong> </span>are the size of the message. For the CMD_STOP command the size is always 1.</li>
+<li>The byte<span style="color: #ff0000;"> <strong>C</strong></span> is the command code, in this case 255.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here is an example of a message with the CMD_STOP command:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">FF</span></strong></p>
+<p>The reply expected to this command is as follows:</p>
+<p><strong><span style="color: #339966;">SS</span><span style="color: #ff0000;">R</span></strong></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>The bytes <span style="color: #339966;"><strong>SS</strong> </span>are the size of the message.</li>
+<li>The byte <span style="color: #ff0000;"><strong>R</strong></span> is the result: 0 &ndash; command processed successfully, 1 &ndash; error. The result of the reply to this command is ignored but expected. It is recommended to always return 0 here.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here is an example of a reply to the CMD_STOP command:</p>
+<p><strong><span style="color: #339966;">0100</span><span style="color: #ff0000;">00</span></strong></p>
+<h3>Robot settings</h3>
+<p>Now that we have dealt with the communication protocol, we can look at the settings that have appeared for non-standard robots. In RoboCam open the settings (the grey round button on the right),</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_03.png" loading="lazy" alt="The RoboCam settings button" style="border: 1px solid #000000;" /></p>
+<p>then choose &laquo;Robot&raquo;.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_04.png" loading="lazy" alt="Robot settings in the RoboCam app" style="border: 1px solid #000000;" /></p>
+<p>The robot settings open. As you can see, the list now shows both settings for EV3 robots and for non-standard robots.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_06.png" loading="lazy" alt="The list of RoboCam robot settings" style="border: 1px solid #000000;" /></p>
+<p>To change settings you created earlier, simply choose them from the list; to add new settings for a non-standard robot, press the &laquo;Add&raquo; button and choose the menu item &laquo;Non-standard robot&raquo;.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_05.png" loading="lazy" alt="The &quot;Non-standard robot&quot; menu item in RoboCam" style="border: 1px solid #000000;" /></p>
+<p>If you decide to create new settings, you get an empty settings screen.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_07.png" loading="lazy" alt="Empty non-standard robot settings in RoboCam" style="border: 1px solid #000000;" /></p>
+<p>In the article I will describe the settings using, as an example, settings I created earlier for controlling the robot you saw in the video at the top of the article. At the very start the robot's name is given; it will be visible in the list of settings and on RoboCam's main screen if the settings are the current ones. Next comes a description, which is visible only in the list of settings.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_08.png" loading="lazy" alt="Arduino robot settings in RoboCam" style="border: 1px solid #000000;" /></p>
+<p>If &laquo;<strong>Show debug information</strong>&raquo; is ticked, the client shows the joystick coordinates while a joystick is in use, and the codes of the keys pressed.</p>
+<p>If &laquo;<strong>Hide joysticks when using the keyboard</strong>&raquo; is ticked, then, as with the EV3 settings, the joysticks on the client disappear as soon as any key is pressed on the client. As soon as you click the screen with the mouse, the joysticks appear again.</p>
+<p>Next come the callsign and reply settings. The text given here is used for the CMD_CALLSIGN command described above.</p>
+<p>Below are the settings for RoboCam's 4 joysticks. The settings are the same for all joysticks, so let's look at them using the first joystick as an example. The first checkbox, &laquo;<strong>Visibility</strong>&raquo;, controls the joystick's visibility; if it is unticked, the joystick is not shown on the client and does not work.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_09.png" loading="lazy" alt="Joystick settings in the RoboCam app" style="border: 1px solid #000000;" /></p>
+<p>From the &laquo;<strong>Shape</strong>&raquo; list you can choose the joystick's shape. The shapes are: vertical, horizontal, round, square, arrows, vertical arrows and horizontal arrows. This is what joysticks of the described shapes look like:</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-24.png" loading="lazy" alt="RoboCam joysticks" /></p>
+<p>How the joysticks work depends on the shape and is already described in the article &laquo;<a href="v1-0-en.html">Controlling a LEGO Mindstorms EV3 robot in first person</a>&raquo;.</p>
+<p>The next two lists choose how the joysticks behave when you stop touching them. There are only two options: &laquo;Return to zero&raquo; and &laquo;Keep position&raquo;. In the first case, if you &laquo;let go&raquo; of the joystick it returns to its initial state, i.e. to zero; in the second it stays where it is. The behaviour can be set separately for the joystick's vertical axis and horizontal axis.</p>
+<p>At the very bottom the keys are configured. The &laquo;<strong>Active</strong>&raquo; checkbox turns RoboCam's client sensitivity to key presses on or off. If you don't plan to use the keyboard for control, it is recommended to untick it to save battery on the client device.</p>
+<p>A little lower, if you press the &laquo;<strong>Keys</strong>&raquo; setting, you can choose the keys whose state you intend to track.</p>
+<p style="text-align: center;"><img src="img/articles/robot/robocam-arduino_10.png" loading="lazy" alt="Configuring keys for a RoboCam non-standard robot" style="border: 1px solid #000000;" /></p>
+<p>All in all there are far fewer settings for a non-standard robot than for an EV3 robot, but the ones there are work like the EV3 robot's, so read the earlier <a href="hub-en.html">articles about RoboCam</a> for more detail.</p>
+<h3>Building the Arduino robot</h3>
+<p>To make the Arduino robot controlled in first person with RoboCam, which you can see in the video below, I used the Amperka educational kit plus additional components and parts: an HC-06 Bluetooth module, extra plastic standoffs, nuts and washers, two parts 3D-printed to hold the servo motor, a paper clip and two rubber bands (the kind used for banknotes).</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/yMQ7Wfyk0r4" id="robj2" height="315" width="560" scrolling="no" ></iframe></center>
+
+</p>
+<p>The assembly process is shown in fast-forward in the video. There is nothing complicated about it. If you build a robot like this from the Amperka educational kit, it comes with a book describing how to connect the motors and how to build a line-following robot. My robot is the same as the one in this book, but without the line sensors.</p>
+<p>I decided to fix the smartphone in the simplest way: two standoffs with screws are screwed on at the bottom, and the smartphone is held to them with a rubber band. At the top the smartphone is held to a rail, again attached with a rubber band. The other end of the rail is attached to a servo. The video shows the smartphone tilting through small angles, but by lengthening the lever you can increase the tilt angles if you wish.</p>
+<p>The ready-made 3D-print models of the servo holder and the rail are listed below:</p>
+<p><div style="background-color:#EFEFEF; padding:6px;">Files:</div>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Servo holder (3D model)</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Servo holder (3D model) for a robot built from the Amperka educational kit.</p>
+<p><img src="img/articles/robot/robocam-arduino_11.jpg" loading="lazy" alt="Servo holder" /></p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;06.10.2017   &nbsp;76.41 KB &nbsp;2615</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Rail (3D model)</b> 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Rail (3D model) for a robot built from the Amperka educational kit.</p>
+<p><img src="img/articles/robot/robocam-arduino_12.jpg" loading="lazy" alt="Rail for a robot built from the Amperka educational kit" /></p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;06.10.2017   &nbsp;56.08 KB &nbsp;2211</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>If your robot platform is different, your smartphone holder will be different too. In that case, if you can 3D-print, making your own holder is no problem. I created my own 3D models of the servo holder and the rail in the cloud 3D editor <a href="https://www.tinkercad.com/" target="_blank" rel="nofollow">Tinkercad</a>. I have already described how to work with it in the article &laquo;Tinkercad &ndash; a simple web tool for 3D design and 3D printing&raquo; (Russian).</p>
+<p>To repeat my experiment you will also need the Arduino sketch and the RoboCam settings:</p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>Arduino Explorer</b> Version: from 10.09.2017 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>A sketch for controlling a wheeled Arduino robot with a controllable smartphone holder using RoboCam.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;10.09.2017   &nbsp;15.07 KB &nbsp;2738</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>RoboCam settings for controlling the Arduino Explorer</b> Version: from 10.09.2017 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>RoboCam settings for controlling the Arduino Explorer.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;11.09.2017   &nbsp;448 B &nbsp;2659</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+  </div>
+
+  <h2>All RoboCam versions</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-en.html"><span class="ver">v1.4.2</span> Turning a smartphone into a robot remote control with RoboCam</a></li>
+      <li><a href="v1-3-1-en.html" aria-current="page"><span class="ver">v1.3.1</span> Building first-person control for an Arduino robot<span class="here">you are here</span></a></li>
+      <li><a href="v1-2-en.html"><span class="ver">v1.2</span> RoboCam &ndash; controlling a robot in first person from a computer keyboard</a></li>
+      <li><a href="v1-1-en.html"><span class="ver">v1.1</span> Importing, exporting, copying and sending robot settings in RoboCam</a></li>
+      <li><a href="v1-0-en.html"><span class="ver">v1.0</span> Controlling a LEGO Mindstorms EV3 robot in first person</a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-en.html">All articles (hub)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Translation of an article by Alexey (ПрогХаус); RoboCam, its screenshots and downloads are the work of their author. The original tutorials are collected at <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Unofficial reference, not affiliated with ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

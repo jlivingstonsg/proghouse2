@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Translated from the Russian original by Alexey (ПрогХаус), published 21 September 2016. Controlling a LEGO Mindstorms EV3 robot in first person">
+<title>RoboCam 1.0 &ndash; Controlling a LEGO Mindstorms EV3 robot in first person</title>
+<link rel="alternate" hreflang="sv" href="v1-0-sv.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse articles</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Language">
+      <a href="v1-0-en.html" hreflang="en" lang="en" aria-current="page">English</a>
+      <a href="v1-0-sv.html" hreflang="sv" lang="sv">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="lt" aria-pressed="false">Light</button>
+      <button id="dk" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.0 · translated article</p>
+  <h1>Controlling a LEGO Mindstorms EV3 robot in first person</h1>
+  <p class="byline">Translated from the Russian original by Alexey (ПрогХаус), published 21 September 2016.</p>
+  <p class="shots">The screenshots are from the original article and show the app's Russian interface; the text describes each screen in English.</p>
+
+  <div class="article">
+<p>A robot built from the LEGO Mindstorms EV3 kit can easily be controlled remotely in first person. For this you additionally need two smartphones, with the RoboCam app installed on one of them. Let's get to know RoboCam in more detail and learn how to use it.</p>
+
+ 
+<p><img src="img/articles/robot/robocam-00.jpg" loading="lazy" alt="Controlling a LEGO Mindstorms EV3 robot in first person" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>This article describes the first version, 1.0, of RoboCam. All the articles about RoboCam can be found <a href="hub-en.html">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, or from the <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror if you want an APK to install manually.</p>
+<p>First let's watch the video showing the first-person-controlled robot I call the EV3 Explorer. Besides driving in any direction, the robot can raise and lower its head, i.e. the frame the smartphone is attached to. That means you can look not only to the sides but also up and down.</p>
+<p>
+<center><iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="https://www.youtube.com/embed/KQgNk-JWrVY" id="robj1" height="315" width="560" scrolling="no" ></iframe></center>
+
+</p>
+<h3>What do you need for the experiment?</h3>
+<p>To repeat the experiment you see in the video you need the following:</p>
+<ol>
+<li>A <strong>robot</strong> built from the LEGO Mindstorms EV3 kit.</li>
+<li>An <strong>Android smartphone</strong> with a camera and the <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a> app installed. Android 2.3 and later is supported. The phone must have at least one camera, plus Bluetooth and Wi-Fi modules.</li>
+<li>A <strong>smartphone or tablet</strong> with a modern browser that supports HTML5. Recent versions of Google Chrome, Yandex Browser, Firefox and Opera work well and have been tested. The operating system can in principle be anything (Android, iOS or Windows), but full tests were done only on Android. The smartphone or tablet needs at least a touch screen (preferably recognising at least 2 touch points) and a Wi-Fi module.</li>
+</ol>
+<p>Further on in the article I give the theory and describe the steps you need to take to repeat the experiment.</p>
+<h3>Connection diagram</h3>
+<p>First, let's see how all the devices listed above are connected to each other. The picture below illustrates it best.</p>
+<p><img src="img/articles/robot/robocam-28.png" loading="lazy" alt="The standard connection to RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>As you can see, RoboCam is installed on smartphone 1. This smartphone is attached to the robot and connected to it over Bluetooth. Commands controlling the motors go from smartphone 1 to the EV3, and sensor information comes back.</p>
+<p>The 2nd smartphone or tablet connects to smartphone 1 over Wi-Fi. Smartphone 1 and smartphone or tablet 2 must be connected to the same router. Joystick coordinates go from smartphone or tablet 2 to smartphone 1, and the video stream from the camera comes back.</p>
+<h3>How the EV3 is controlled</h3>
+<p>To better understand how the EV3 robot is controlled, look at the following diagram.</p>
+<p><img src="img/articles/robot/robocam-06.png" loading="lazy" alt="How RoboCam controls the EV3" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>When you start touching joysticks A and B, smartphone or tablet 2 sends the touch coordinates to smartphone 1, which turns them into commands for the EV3 motors. How the coordinates are converted depends on the RoboCam settings. We will talk about the settings in more detail below.</p>
+<h3>Building the robot</h3>
+<p>To repeat the experiment you first need to build the robot you will control. It can be a simple two-wheeled robot, a robot car, or a robot with a complex drive mechanism. It really doesn't matter what your robot is like, because RoboCam is flexibly configurable and you can control a robot of any design with it. The main thing is that you can fix the smartphone to your robot so that the camera points forward, in the direction of travel.</p>
+<p>I recommend starting with a simple model. If you have the LEGO Mindstorms Education EV3 set, you can build the EV3 Explorer you see in the photo and video at the start of the article. Here is the EV3 Explorer build plan:</p>
+<p>&nbsp;</p>
+<p><img src="img/articles/robot/researcher-600.png" loading="lazy" alt="EV3 Explorer" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><div style="background-color:#EFEFEF; padding:6px;">Files:</div>
+
+<table width="100%" border="0" cellpadding="5" cellspacing="5" style="background:#F8F8F8;border-bottom:1px solid #cccccc;">
+     <tr valign="top">
+        <td width="90%" valign="top"><b>EV3 Explorer build instructions</b> Version: 2 
+        </td>
+     </tr>
+     <tr valign="top">
+        <td valign="top" class="jd_body" width="90%"><p>Instructions for building the EV3 Explorer robot from the base LEGO Mindstorms Education EV3 set (45544).</p>
+<p>In version 2 the frame is fixed more firmly and doesn't fall off.</p></td>
+     </tr>
+     <tr>
+        <td valign="top" width="10%" align="center"></td>
+     </tr>
+     <tr>
+        <td style="background:#F8F8F8; padding:5px;" valign="top" width="91%"><small>   &nbsp;04.06.2016   &nbsp;4.95 MB &nbsp;15561</small></td>
+        <td valign="top" width="9%" align="center">
+            
+        </td>
+     </tr>
+</table></p>
+<p>&nbsp;</p>
+<h3>Preparing the Android smartphone and the RoboCam app</h3>
+<p>RoboCam runs on smartphones or tablets with Android 2.3 and later. The device must have some built-in camera and Bluetooth and Wi-Fi modules. The app is free; you can install it from Google Play or download and install it manually. Here is the <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a> page. To install, press the &laquo;INSTALL&raquo; button and accept the required permissions by pressing &laquo;ACCEPT&raquo;.</p>
+<p>For a manual install you can use the APK from the <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror of the Play Store release.</p>
+<p>After installing, open the app. On Android 6 and later you immediately see a request for permission to use the camera. We definitely need the camera, so press &laquo;ALLOW&raquo;.</p>
+<p><img src="img/articles/robot/robocam-02.png" loading="lazy" alt="Permission to turn on the camera in Android 6" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Once the app opens you see three round buttons for the main actions, and the camera image in the background.</p>
+<p><img src="img/articles/robot/robocam-03.png" loading="lazy" alt="RoboCam on first launch" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>The green button on the left starts and stops the RoboCam server, which is needed for connecting smartphone or tablet 2, see the diagram above. The button also shows whether the server is running. In the picture the button background is white, which means the server is not running. The hint at the top says the same. You can start or stop the server at any time by pressing this button.</p>
+<p>The middle purple button connects to the EV3 robot. The button also shows whether the smartphone is connected to the robot. In the picture the button background is white, which means the robot is not connected. This button has a hint too, right under the button: the top line shows the connection state (in the picture the text &laquo;EV3 not connected&raquo;) and the bottom line shows the name of the current robot settings (in the picture &laquo;EV3 Explorer&raquo;).</p>
+<p>The button on the right opens the RoboCam settings. If you use my EV3 Explorer you don't need to configure anything else, because right after the first launch the settings named &laquo;EV3 Explorer&raquo; are selected by default. If your robot is different you will first have to dig around in the settings. We'll talk about that below.</p>
+<h3>Starting the RoboCam server and connecting to it</h3>
+<p>Let me say straight away that it doesn't matter which you do first: start the RoboCam server or connect the smartphone to the robot. You can do it in either order.</p>
+<p>So, once the app is installed on smartphone 1 (see the diagrams above) and open, you can start the RoboCam server. Press the green button on the left; the button starts blinking and the hint says &laquo;Initialising RoboCam server...&raquo;. After a while, once the server has started, the button background turns green and the hint says &laquo;RoboCam server is running&raquo;.</p>
+<p><img src="img/articles/robot/robocam-07.png" loading="lazy" alt="Starting the RoboCam server" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>If the smartphone is not yet connected to your Wi-Fi router (as in our picture), it is time to do that. Once it is connected, the second line of the hint at the top shows the address for connecting to the RoboCam server. When turning the server on it makes no difference whether you start the RoboCam server or Wi-Fi first.</p>
+<p><img src="img/articles/robot/robocam-08.png" loading="lazy" alt="The RoboCam server now has an IP address" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Now you can connect to the RoboCam server. Take the second smartphone or tablet (I will use a tablet), make sure it is connected to the same Wi-Fi router, open a browser and go to the page at the address shown in the hint in RoboCam (in the picture &laquo;http://192.168.1.153:8088&raquo;). Use one of the browsers mentioned above. If you did everything right, a page for entering a login and password loads in the browser. Enter your login and password and press &laquo;Log in&raquo;. If you haven't changed anything in the settings since installing, the default login is &laquo;admin&raquo; and the password &laquo;123&raquo;.</p>
+<p><img src="img/articles/robot/robocam-09.png" loading="lazy" alt="RoboCam client &ndash; entering the login and password" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>The main page of the RoboCam server then opens, showing the picture from the camera of smartphone 1 (see the diagram above).</p>
+<p><img src="img/articles/robot/robocam-10.png" loading="lazy" alt="The browser is connected to the RoboCam server" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>As you can see, smartphone 1 is in portrait orientation and my tablet in landscape. You can turn smartphone 1 so that it is also in landscape orientation. The picture on the tablet then changes to landscape automatically.</p>
+<p>Note that the orientation does not change if you have locked smartphone 1.</p>
+<p><img src="img/articles/robot/robocam-11.png" loading="lazy" alt="Landscape image orientation on the RoboCam client and server" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>To make the image fill the screen, press the icon<img src="img/articles/robot/robocam-13.png" loading="lazy" alt="The icon that turns on full-screen mode in RoboCam" />at the top right of the page. This removes all the buttons and browser tabs we don't need, and the camera image becomes larger.</p>
+<p><img src="img/articles/robot/robocam-12.png" loading="lazy" alt="RoboCam client in full-screen mode" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3>Connecting RoboCam to the EV3</h3>
+<p>Before connecting RoboCam to the EV3, make sure Bluetooth is on for both your EV3 robot and the smartphone and that they are paired. Also make sure the motors are connected to exactly the ports given in the robot settings. The name of the current settings is written in the hint on the second line under the middle button; in the picture below it is &laquo;EV3 Explorer&raquo;. If you built the EV3 Explorer to my plan (see above) and haven't changed the settings after installing RoboCam, you can be sure everything is set up correctly. The settings are described in detail below.</p>
+<p><img src="img/articles/robot/robocam-08.png" loading="lazy" alt="The RoboCam server now has an IP address" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>So, if everything is ready, press the central purple button. If Bluetooth turns out to be off on your phone you will see a request to turn it on. Press &laquo;Yes&raquo;.</p>
+<p><img src="img/articles/robot/robocam-14-2.png" loading="lazy" alt="Request to turn on Bluetooth in Android" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Next you will see the button start blinking, and a list of Bluetooth-paired devices appears in place of the hint. Choose your EV3 robot here (in the picture it is &laquo;EV3&raquo;, but your EV3 may have a different name set).</p>
+<p><img src="img/articles/robot/robocam-15.png" loading="lazy" alt="Choosing the EV3 among Bluetooth-paired devices in RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>The app then connects to the EV3.</p>
+<p><img src="img/articles/robot/robocam-16.png" loading="lazy" alt="RoboCam is connected to the EV3" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>If the client is connected to the RoboCam server at this moment, you will see the joysticks appear (the rectangular and round joysticks in the picture below). After that you can control the robot straight away.</p>
+<p><img src="img/articles/robot/robocam-17.png" loading="lazy" alt="Joysticks on the RoboCam client for controlling the EV3 robot" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>With the default EV3 Explorer settings you have two joysticks: a round one and a vertical one (see the picture above). The vertical joystick controls the frame that holds the smartphone, and the round one controls the robot's movement. The palm icon at the top right swaps the joysticks around, so you can quickly switch the layout for left- or right-handed use. More about joysticks below.</p>
+<h3>Stopping the RoboCam server and disconnecting the EV3</h3>
+<p>When you have finished controlling the robot, it is recommended to stop the RoboCam server and disconnect the EV3 from the smartphone before closing the RoboCam app. You can do this in either order. To stop the server press the green button on the left. The button background then turns white and the hint shows &laquo;RoboCam server is off&raquo;. To disconnect the EV3 press the central purple button. The button background then turns white and the top line of the hint shows &laquo;EV3 not connected&raquo;. The motors stop or return to their initial position, depending on the settings.</p>
+<h3>RoboCam server settings</h3>
+<p>To open the settings, press the grey button on the right.</p>
+<p><img src="img/articles/robot/robocam-03.png" loading="lazy" alt="RoboCam on first launch" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>The settings are split into 2 parts: server settings and robot settings. First let's see what is in the server settings. Choose &laquo;Server&raquo;.</p>
+<p><img src="img/articles/robot/robocam-18.png" loading="lazy" alt="RoboCam settings groups" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>The server settings fall into 2 groups: camera settings and security settings. In the camera settings you can choose the camera (front or rear), the image size and the JPEG quality. The smaller you set the image size, the smoother and faster the video reaches the client, but the picture quality gets worse. JPEG quality affects the video in the same way: the better the JPEG quality (90 percent or more), the better the picture but the slower the speed; and the worse the JPEG quality (40 percent or less), the faster the speed but the worse the picture. Choose what is best for you.</p>
+<p><img src="img/articles/robot/robocam-19.png" loading="lazy" alt="RoboCam server settings" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>In the security settings you can change the driver's name and password (by default the name is &laquo;admin&raquo; and the password &laquo;123&raquo;). Observers are also enabled by default. Observers can see the camera image alongside you but cannot control the robot. For an observer you can also set a name and password (by default the name &laquo;guest&raquo; and password &laquo;123&raquo;). To turn observers off, untick &laquo;Allow observers&raquo;.</p>
+<p><img src="img/articles/robot/robocam-20.png" loading="lazy" alt="Observer settings in RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>The number of drivers and observers is not limited, but connecting more than one driver can cause conflicts in simultaneous control and video streaming. It is not recommended to connect more than one driver to the RoboCam server. A large number of observers can also hurt video transmission. It is best to reduce observers to a minimum or turn the feature off altogether.</p>
+<p>After changing the settings you can save them by pressing the &laquo;SAVE&raquo; button at the top right, or leave without saving by pressing the &laquo;CANCEL&raquo; button or the arrow at the top left. After the server settings are saved, clients may be disconnected and will need to connect again.</p>
+<h3>List of robot settings</h3>
+<p>The second part of the RoboCam settings is the robot settings. Press &laquo;Robot&raquo; to go to the list of robot settings.</p>
+<p><img src="img/articles/robot/robocam-18.png" loading="lazy" alt="RoboCam settings groups" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>In the list of robot settings you can see the settings for all your robots. You can add or delete settings at any time with the &laquo;ADD&raquo; or &laquo;DELETE&raquo; button at the top right. Right under the buttons you see the current settings. This item is how you switch between the settings for your robots. Now let's look at the EV3 Explorer settings. To do that, choose &laquo;EV3 Explorer&raquo; in the list.</p>
+<p><img src="img/articles/robot/robocam-21.png" loading="lazy" alt="List of robot settings in RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>At the very top is the general information: the robot's name and description. The name and description are shown in the list so you can easily find the settings you need. The name is also shown on the app's main screen under the central button you use to connect to the EV3. The joystick settings come next.</p>
+<p><img src="img/articles/robot/robocam-22.png" loading="lazy" alt="General robot information in the RoboCam settings" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>You can configure up to 4 joysticks in total, but only one pair of joysticks, 1-2 or 3-4, is visible on the client's screen at a time. Even if you use joysticks 1 and 3 they will not be visible at the same time, because they belong to different pairs; you will see either joystick 1 or joystick 3. Each joystick's visibility is switched on with the &laquo;<strong>Visibility</strong>&raquo; checkbox. If you have enabled 2 pairs of joysticks, a button appears on the client screen<img src="img/articles/robot/robocam-23.png" loading="lazy" alt="The button that switches the joystick pair on the RoboCam client" />for switching between the pairs.</p>
+<p>So in the settings you can see the groups &laquo;Joystick 1&raquo;, &laquo;Joystick 2&raquo;, &laquo;Joystick 3&raquo; and &laquo;Joystick 4&raquo;. Each holds the settings for one joystick. Let's look at the settings for &laquo;Joystick 1&raquo;. The &laquo;Visibility&raquo; checkbox, as you have understood, shows or hides the joystick. If the checkbox is not ticked, the settings for that joystick are hidden too.</p>
+<p>A little lower, in the drop-down list &laquo;<strong>Shape</strong>&raquo;, you can choose the joystick's shape, and with the shape its characteristics. The following joystick shapes are available: vertical, horizontal, round, square, arrows, vertical arrows and horizontal arrows. Here is what these joysticks look like:</p>
+<p><img src="img/articles/robot/robocam-24.png" loading="lazy" alt="RoboCam joysticks" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>The vertical joystick only senses the height of the touch, i.e. it doesn't matter whether you touch it further left or right, only at what height. The touch coordinate for it ranges from -100 at the very bottom to 100 at the very top, with 0 in the middle.</p>
+<p>The horizontal joystick works the same way, but horizontally. It doesn't matter at what height the touch happens, only whether it is to the left or right. Here the touch coordinate is calculated horizontally from -100 at the far left to 100 at the far right, with 0 in the middle.</p>
+<p>The round and square joysticks are similar. They determine the touch coordinates on both the horizontal and vertical axes, again from -100 to 100 with 0 at the centre. But in the round joystick, touches cannot go outside the circle. That is, if the touch point is outside the circle, the point taken is where the line from the touch point to the centre of the circle crosses the circumference. This is easier to see in the picture below.</p>
+<p><img src="img/articles/robot/robocam-25.png" loading="lazy" alt="Calculating the touch point coordinates of the RoboCam round joystick" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>The arrow joysticks are not sensitive to the touch point; what matters is which arrow you touch. If you touch the up arrow, the joystick's vertical coordinate is taken to be 100 and the horizontal one 0. For the down arrow the horizontal coordinate is also 0 and the vertical one becomes -100. Likewise for the left and right arrows: the vertical coordinate is 0 and the horizontal one is -100 and 100 respectively.</p>
+<p>Right under the shape you choose the joystick type in the drop-down list &laquo;<strong>Type</strong>&raquo;. You can choose one of these values: &laquo;Independent motors&raquo;, &laquo;Steering 1&raquo;, &laquo;Steering 2&raquo; and &laquo;Mailbox&raquo;.</p>
+<p>Joysticks of type &laquo;<strong>Steering 1</strong>&raquo; and &laquo;<strong>Steering 2</strong>&raquo; let you control a robot with two independent drive wheels, such as the EV3 Explorer. The touch coordinates on these joysticks are converted automatically into motor commands. For the joystick you only have to choose which port has the left wheel and which the right one. That is described a little further down.</p>
+<p>&laquo;Steering 1&raquo; lets you drive a two-wheeled robot like a car. You cannot turn the robot on the spot with it. The closer the touch is to the centre vertically, the lower the speed. &laquo;Steering 2&raquo; lets the robot spin on the spot.</p>
+<p>A joystick of type &laquo;<strong>Independent motors</strong>&raquo; converts the horizontal touch coordinate into motor commands independently of the vertical coordinate. For the joystick you have to specify which motor is controlled when the horizontal coordinate changes and which when the vertical coordinate changes. This type of joystick can be used to drive a car in which one motor steers and a second motor turns the drive wheels. In that case the change of the horizontal coordinate is set to turn the first motor and the change of the vertical coordinate to turn the second motor.</p>
+<p>A joystick of type &laquo;<strong>Mailbox</strong>&raquo; simply passes the touch coordinates to EV3 mailboxes. To bring your robot to life you will have to write an EV3 program that processes these coordinates. With this type of joystick you can build more complex robot control models, because you can implement your own algorithm for converting the coordinates taken from the joystick into motor commands. For example, you could build control for the EV3 Gyro Boy. Joystick 1 passes coordinates to mailboxes named x and y, joystick 2 to mailboxes w and z, joystick 3 to mailboxes a and b and joystick 4 to mailboxes c and d.</p>
+<p>The next two settings, &laquo;<strong>End of touch (for horizontal axis)</strong>&raquo; and &laquo;<strong>End of touch (for vertical axis)</strong>&raquo;, determine what happens when you stop touching the joystick. You can choose one of two options: &laquo;Return to zero&raquo; or &laquo;Keep position&raquo;. Returning to zero makes sense in most situations; for example, if you want the robot to stop when you stop touching the joystick, &laquo;Return to zero&raquo; is the right choice. Keeping the position is useful when you need to remember the last touch coordinate. It is used, for example, for tilting the EV3 Explorer's frame. This setting is available for all joystick shapes except arrow joysticks.</p>
+<p>If you use the joystick type &laquo;Independent motors&raquo;, &laquo;Steering 1&raquo; or &laquo;Steering 2&raquo;, you will find the port settings for that joystick below. The ports the joystick controls can be added and removed with the &laquo;ADD&raquo; and &laquo;DELETE&raquo; buttons. The number of ports is not limited. The first picture below shows the settings for a joystick of type &laquo;Independent motors&raquo;, and the second for a joystick of type &laquo;Steering 1&raquo; and &laquo;Steering 2&raquo;. As you can see, there is a small difference.</p>
+<center><img src="img/articles/robot/robocam-26.png" loading="lazy" alt="Joystick port settings in RoboCam" style="border: 1px solid #000000;" />&nbsp;<img src="img/articles/robot/robocam-27.png" loading="lazy" alt="Joystick port settings in RoboCam" style="border: 1px solid #000000;" /></center>
+<p>Let's run through the port settings. The &laquo;<strong>Joystick axis</strong>&raquo; setting appears only for a joystick of type &laquo;Independent motors&raquo;. There are two options: &laquo;Horizontal&raquo; and &laquo;Vertical&raquo;. If you choose &laquo;Horizontal&raquo; the motor reacts only to changes of the touch coordinate on the horizontal axis, and if you choose &laquo;Vertical&raquo; it reacts to touches on the vertical axis.</p>
+<p>The &laquo;<strong>Motor</strong>&raquo; setting appears only for a joystick of type &laquo;Steering 1&raquo; or &laquo;Steering 2&raquo;. Here you choose between &laquo;Left&raquo; and &laquo;Right&raquo;.</p>
+<p>The &laquo;<strong>EV3 brick</strong>&raquo; setting is needed if you built a robot using several EV3 bricks connected in a &laquo;daisy chain&raquo;. You can choose a brick number from 1 to 4 here. If you only use one EV3 brick, this must always be 1.</p>
+<p>With the &laquo;<strong>Port number</strong>&raquo; setting you choose the motor port, A to D.</p>
+<p>The &laquo;<strong>Changed value</strong>&raquo; setting appears only for a joystick of type &laquo;Independent motors&raquo;. There are two options: &laquo;Motor power&raquo; and &laquo;Motor rotation angle&raquo;. If you choose &laquo;<strong>Motor power</strong>&raquo;, the joystick affects the motor's power, i.e. the further from the joystick's centre you touch, the faster the motor turns. If you choose &laquo;<strong>Motor rotation angle</strong>&raquo;, the joystick affects the motor's rotation angle, i.e. the further from the centre you touch, the larger the angle the motor turns through. In that case the motor's power is set with the &laquo;<strong>Power</strong>&raquo; setting. The larger this number, the faster the motor reacts to a change of the touch coordinate and the better it holds the angle.</p>
+<p>Ticking &laquo;<strong>Invert</strong>&raquo; inverts the calculated power or angle, and &laquo;<strong>Coefficient</strong>&raquo; increases or decreases the calculated value.</p>
+<p>With &laquo;<strong>Brake</strong>&raquo; ticked the motors stop quickly, i.e. they brake. With it unticked the motors keep turning for a while by inertia until they stop completely.</p>
+<p>Those are, in fact, all the settings in RoboCam.</p>
+<h3>Connecting without a router</h3>
+<p>Now a few tricks that can make RoboCam a little more convenient to use. If there is no router nearby, for example if you are outdoors, you can set up a connection between smartphone 1 and smartphone or tablet 2 directly. To do this, turn on the hotspot on smartphone 1 (in Android the hotspot is usually turned on in the network connection settings). Once it is on, smartphone 1 becomes a Wi-Fi router and you can connect tablet or smartphone 2 to it without any problem. This is what the connection looks like schematically.</p>
+<p><img src="img/articles/robot/robocam-05.png" loading="lazy" alt="Connection in RoboCam without a router" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>You find out the RoboCam server address the same way, from the button's hint. In most cases, for such a hotspot the address is always http://192.168.43.1:8088.</p>
+<p><img src="img/articles/robot/robocam-29.png" loading="lazy" alt="Starting the RoboCam server and a hotspot on an Android smartphone" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3>Using smartphone 1 as a joystick</h3>
+<p>There is one more trick you can do with RoboCam. On smartphone 1 (the one with RoboCam installed) start the server, connect to the robot, and then start a browser on the same smartphone (naturally one that supports HTML5) and go to the address http://localhost:8088. You will see the page for entering a login and password. Log in as a driver. After logging in you see the joysticks and can control the robot. In this case, though, the camera image is not transmitted. Wi-Fi can be turned off.</p>
+<p><img src="img/articles/robot/robocam-30.png" loading="lazy" alt="Using a smartphone with RoboCam as a joystick for controlling an EV3 robot" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3>Summary</h3>
+<p>I hope I have given enough information on how to use RoboCam. If you have questions about the app or suggestions, you can leave them in the RoboCam <a href="https://goo.gl/JIcs9F" target="_blank">community</a>.</p>
+  </div>
+
+  <h2>All RoboCam versions</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-en.html"><span class="ver">v1.4.2</span> Turning a smartphone into a robot remote control with RoboCam</a></li>
+      <li><a href="v1-3-1-en.html"><span class="ver">v1.3.1</span> Building first-person control for an Arduino robot</a></li>
+      <li><a href="v1-2-en.html"><span class="ver">v1.2</span> RoboCam &ndash; controlling a robot in first person from a computer keyboard</a></li>
+      <li><a href="v1-1-en.html"><span class="ver">v1.1</span> Importing, exporting, copying and sending robot settings in RoboCam</a></li>
+      <li><a href="v1-0-en.html" aria-current="page"><span class="ver">v1.0</span> Controlling a LEGO Mindstorms EV3 robot in first person<span class="here">you are here</span></a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-en.html">All articles (hub)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Translation of an article by Alexey (ПрогХаус); RoboCam, its screenshots and downloads are the work of their author. The original tutorials are collected at <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Unofficial reference, not affiliated with ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>

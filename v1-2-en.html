@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Translated from the Russian original by Alexey (ПрогХаус), published 19 December 2016. RoboCam &amp;ndash; controlling a robot in first person from a computer keyboard">
+<title>RoboCam 1.2 &ndash; RoboCam &ndash; controlling a robot in first person from a computer keyboard</title>
+<link rel="alternate" hreflang="sv" href="v1-2-sv.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+
+  .article{margin-top:22px}
+  .article p{margin:0 0 14px}
+  .article img{max-width:100%;height:auto;border-radius:4px}
+  .article p>img{display:block;margin:6px auto}
+  .article h3{font-size:1.2rem;margin:30px 0 8px;letter-spacing:-.01em}
+  .article ul,.article ol{padding-left:1.3em;margin:0 0 14px}
+  .article li{margin:3px 0}
+  .article iframe{max-width:100%}
+  .article pre{overflow:auto;background:var(--surface)!important;color:var(--ink);border-radius:8px;padding:12px 14px;font-size:.85rem;line-height:1.5!important}
+  .article table{max-width:100%;border-collapse:collapse}
+  .article table[style]{background:var(--surface-2)!important;border-color:var(--border)!important}
+  .article td,.article th{padding:6px 8px;vertical-align:top}
+  .article table.data td,.article table.data th{border:1px solid var(--border)}
+  .article center{display:block}
+  .byline{color:var(--ink-faint);font-size:.92rem;margin:0 0 8px}
+  .shots{font-size:.88rem;color:var(--ink-faint);border-left:3px solid var(--border-strong);padding:2px 0 2px 12px;margin:14px 0 0}
+  .versions{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+  .versions a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+  .versions a:hover{border-color:var(--accent-line)}
+  .versions a[aria-current="page"]{border-color:var(--accent-line);background:var(--surface-2)}
+  .versions .ver{flex:none}
+  .versions .here{margin-left:auto;font-size:.78rem;color:var(--ink-faint)}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse articles</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Language">
+      <a href="v1-2-en.html" hreflang="en" lang="en" aria-current="page">English</a>
+      <a href="v1-2-sv.html" hreflang="sv" lang="sv">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="lt" aria-pressed="false">Light</button>
+      <button id="dk" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Version 1.2 · translated article</p>
+  <h1>RoboCam &ndash; controlling a robot in first person from a computer keyboard</h1>
+  <p class="byline">Translated from the Russian original by Alexey (ПрогХаус), published 19 December 2016.</p>
+  <p class="shots">The screenshots are from the original article and show the app's Russian interface; the text describes each screen in English.</p>
+
+  <div class="article">
+<p>The new version of RoboCam adds support for a physical keyboard, so you can now control a LEGO Mindstorms EV3 robot in first person from a desktop computer or laptop. In this article I describe how to set up RoboCam to use the new feature, and also what else is new in this version.</p>
+ 
+<p><img src="img/articles/robot/robocam-56.png" loading="lazy" alt="RoboCam &ndash; controlling a robot in first person from a computer keyboard" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>This article describes the new features in version 1.2 of RoboCam. All the articles about RoboCam can be found <a href="hub-en.html">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, or from the <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror if you want an APK to install manually.</p>
+<p>All the changes in the new version concern only the robot settings, so let's go straight to what is new there. Update or install RoboCam, start it and open the settings of any robot. In this article I use the &laquo;EV3 Explorer&raquo; settings. If you don't know how to open a robot's settings, read the <a href="v1-0-en.html">first article about RoboCam</a>.</p>
+<p>The first thing that catches the eye is the checkbox &laquo;<strong>Show debug information</strong>&raquo;. If it is ticked, the client shows the joystick coordinates while a joystick is in use, and the codes of the keys pressed.</p>
+<p><img src="img/articles/robot/robocam-45.png" loading="lazy" alt="The &quot;Show debug information&quot; and &quot;Hide joysticks when using the keyboard&quot; checkboxes in RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>If &laquo;<strong>Hide joysticks when using the keyboard</strong>&raquo; is ticked, the joysticks on the client disappear as soon as any key is pressed on the client, so that they don't get in your way. As soon as you click the screen with the mouse, the joysticks appear again.</p>
+<h3>Automatically running a user program on the EV3</h3>
+<p>The next setting is useful if, while you control the robot through RoboCam, a user program must run on the EV3 brick &mdash; for example one that watches certain mailboxes and drives the motors. If you tick &laquo;<strong>Run program</strong>&raquo; and enter the full path of the program file in the field below (for example &laquo;../prjs/MyProgram/MyProgram.rbf&raquo;), that program starts on the EV3 as soon as RoboCam connects. When the driver client disconnects, the program is restarted.</p>
+<p>Programs you create with the official LEGO MINDSTORMS Education EV3 software and download to the EV3 end up in the user projects folder &laquo;../prjs&raquo;. A folder named after the project is created there, and in it a file named after the program with the extension &laquo;.rbf&raquo;. Let's take an example. Say you created a simple project called &laquo;MyProject&raquo; with a program called &laquo;MyProgram&raquo;, see the picture below. The program shows the text &laquo;Hello!&raquo; on the screen and hangs in an endless loop.</p>
+<p><img src="img/articles/robot/robocam-47.png" loading="lazy" alt="An EV3 program with an endless loop for testing RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>As you can see, the upper tab says &laquo;MyProject&raquo; &mdash; the project name &mdash; and the tab below says &laquo;MyProgram&raquo; &mdash; the program name. After the program is downloaded to the EV3, the path to the program file is &laquo;../prjs/MyProject/MyProgram.rbf&raquo;. That is what we enter in the RoboCam settings, see the picture below.</p>
+<p><img src="img/articles/robot/robocam-46.png" loading="lazy" alt="Entering the full path of the EV3 program in the robot settings in RoboCam" style="display: block; margin-left: auto; margin-right: auto; border: 1px solid #000000;" /></p>
+<p>Now, when you connect RoboCam to the EV3, the program &laquo;MyProgram.rbf&raquo; starts on the EV3 straight away and the text &laquo;Hello!&raquo; appears on the screen. When RoboCam disconnects from the EV3, the program stops and the menu appears on the EV3 screen again.</p>
+<p><em>Note that the case matters when you enter the full path to the program. If you write a lower-case letter instead of a capital, the program will not start. If you get even one character of the path wrong, the program will not start either.</em></p>
+<p><em>If some user program is already running when you connect to the EV3, the program given in the RoboCam settings will not be started.</em></p>
+<h3>Controlling the robot with a physical keyboard</h3>
+<p>Besides the settings mentioned above, RoboCam now supports a physical keyboard on the client. Let's see how EV3 robot control from the keyboard works. It works like this. In the RoboCam settings you specify the keys the robot should react to in some way. The client knows about these keys and constantly checks their status, pressed or not. If one of the watched keys is pressed or released, the key's code and its new status are immediately passed to the RoboCam app. Then, depending on the settings, RoboCam either drives the robot's motors directly or sends the key codes to EV3 mailboxes.</p>
+<h3>Key groups</h3>
+<p>To divide up the functions given to particular keys, RoboCam uses key groups. The number of key groups is unlimited. To each key group, just as with joysticks, you can entrust either direct control of the motors, or the key codes are simply passed to a mailbox and you leave their processing to an EV3 program.</p>
+<p>Scroll the robot settings down to the heading &laquo;Key groups&raquo;. If you are looking at the &laquo;EV3 Explorer&raquo; settings, two key groups have most likely been added already (the picture below shows key group 1): one for steering the robot (keys W, A, S, D and the arrow keys) and a second for controlling the frame that holds the smartphone (keys Y and H).</p>
+<p><img src="img/articles/robot/robocam-48.png" loading="lazy" alt="Key groups in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>If you updated RoboCam, you won't see the key groups in the &laquo;EV3 Explorer&raquo; settings. This is because the settings are left over from the previous version, which had no key group support. If you want the configured key groups to appear, delete the &laquo;EV3 Explorer&raquo; settings; after RoboCam restarts they are created again, this time with the key groups.</p>
+<p><em>You can delete the &laquo;EV3 Explorer&raquo; settings in one of the following ways:</em></p>
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li><em>Press the &laquo;Delete&raquo; button in the list of settings. For this to work the settings must not be the current ones.</em></li>
+<li><em>Clear all RoboCam app data in the Android app manager (all your other settings will be lost too, so if they matter to you, export them first and import them again after reinstalling! For how to export and import see the <a href="v1-1-en.html">settings article</a>).</em></li>
+<li><em>Uninstall RoboCam and install it again (all your other settings will be lost too, so if they matter to you, export them first and import them again after reinstalling! For how to export and import see the <a href="v1-1-en.html">settings article</a>).</em></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The first checkbox you see in a key group's settings is &laquo;<strong>Active</strong>&raquo;. If you untick it, the key group becomes inactive, as if it were not there at all. Its settings are hidden in that case, but they are not lost.</p>
+<p><em>Key statuses are checked on the client all the time, even when the keyboard is not being used. So if you plan to use only joysticks, it is recommended to deactivate all key groups so as not to load the client's processor and drain its battery.</em></p>
+<p>Next comes the choice of key group type &mdash; the &laquo;<strong>Type</strong>&raquo; setting. Each key group can be one of three types: &laquo;<strong>Independent motors</strong>&raquo;, &laquo;<strong>Steering</strong>&raquo; or &laquo;<strong>Mailbox</strong>&raquo;.</p>
+<p>For the &laquo;Independent motors&raquo; and &laquo;Steering&raquo; key groups you can set an unlimited number of &laquo;up&raquo; and &laquo;down&raquo; keys (let's call them the vertical-axis keys) and &laquo;right&raquo; and &laquo;left&raquo; keys (the horizontal-axis keys). You will see how just below.</p>
+<p>In an &laquo;<strong>Independent motors</strong>&raquo; group the vertical-axis keys can control one motor (motor A below) or several motors, and the horizontal-axis keys another motor (motor B below) or other motors. Motor A does not depend on the horizontal-axis keys, and motor B does not depend on the vertical-axis keys. That is why this type of key group is called &laquo;Independent motors&raquo;.</p>
+<p>For an &laquo;Independent motors&raquo; group, the ports whose motors the vertical-axis keys control and the ports whose motors the horizontal-axis keys control are set separately. With such a key group you can drive, for example, a car where the &laquo;up&raquo; and &laquo;down&raquo; keys accelerate and stop the motor that turns the rear wheels, and the &laquo;left&raquo; and &laquo;right&raquo; keys turn the motor that steers.</p>
+<p>In a &laquo;<strong>Steering</strong>&raquo; group the vertical-axis and horizontal-axis keys are linked. Here the ports of the left and right motor are set, and pressing one of the keys turns both motors. For example, if you press &laquo;up&raquo;, both motors turn so that the robot drives forward; if you press &laquo;left&raquo;, both motors turn again, but the left wheel backwards and the right wheel forwards, so the robot turns left.</p>
+<p>A &laquo;<strong>Mailbox</strong>&raquo; key group also has keys set, but here they do not drive the robot; they are simply passed to the specified mailbox on the EV3. Keys not listed here do not reach the key group's mailbox.</p>
+<p>Now let's look more closely at the settings of the &laquo;Independent motors&raquo; and &laquo;Steering&raquo; key groups. A little lower you will see the parameters &laquo;<strong>End of press (for left/right keys)</strong>&raquo; and &laquo;<strong>End of press (for up/down keys)</strong>&raquo;, which determine what happens when the user releases a pressed key. As with joysticks there are two options &mdash; &laquo;<strong>Return to zero</strong>&raquo; and &laquo;<strong>Keep position</strong>&raquo;.</p>
+<p>It works like this. Say that pressing the W key makes two motors of your robot turn and the robot drives forward. If &laquo;Return to zero&raquo; is set, then when you release the W key the speed returns to zero, the motors stop turning and the robot stops. If &laquo;Keep position&raquo; were set, the motor would keep turning; that is, after the key is released the speed is kept.</p>
+<p>Another example. Say pressing the Y key changes the rotation angle of the medium motor and the frame that holds the smartphone tilts down. In that case, if &laquo;Return to zero&raquo; is set, when you release the Y key the medium motor's angle returns to zero and the frame turns back to vertical. If &laquo;Keep position&raquo; is set and you release the Y key, the motor stays turned at the angle it had at the moment the Y key was released, and the frame keeps its position.</p>
+<p>The next key group parameters are responsible for the <strong>stepwise increase or decrease of motor speed or rotation angle</strong>. A key has only two states &mdash; pressed or released. Imagine we are driving the EV3 Explorer and press the Y key, and the angle changes by 100 degrees at once. It happens so abruptly that the smartphone attached to the frame could come off and fly away. Or another situation: you press the D key and the robot starts turning right sharply; we only needed to turn a little, but because of the high speed we turned too much.</p>
+<p>A robot that behaves like this is not what we want, so with stepwise change of speed and angle we can make keyboard control more comfortable. For example, we can make the robot accelerate gradually while driving and the frame move in small steps. That is exactly how the &laquo;EV3 Explorer&raquo; settings are made. Let's look at these parameters.</p>
+<p>A little lower you will see six fields for stepwise motor control: &laquo;<strong>Increase horizontally</strong>&raquo;, &laquo;<strong>Increase vertically</strong>&raquo;, &laquo;<strong>Decrease horizontally</strong>&raquo;, &laquo;<strong>Decrease vertically</strong>&raquo;, &laquo;<strong>Pause between horizontal increases/decreases</strong>&raquo; and &laquo;<strong>Pause between vertical increases/decreases</strong>&raquo;.</p>
+<p>&nbsp;</p>
+<center><img src="img/articles/robot/robocam-49.png" loading="lazy" alt="The &quot;Increase horizontally&quot;, &quot;Increase vertically&quot;, &quot;Decrease horizontally&quot; and &quot;Decrease vertically&quot; settings in RoboCam" style="border: 1px solid #000000;" />&nbsp;<img src="img/articles/robot/robocam-50.png" loading="lazy" alt="The &quot;Pause between horizontal increases/decreases&quot; and &quot;Pause between vertical increases/decreases&quot; settings in RoboCam" style="border: 1px solid #000000;" /></center>
+<p>&nbsp;</p>
+<p>As written above, we have vertical-axis keys and horizontal-axis keys. &laquo;Increase horizontally&raquo; and &laquo;Decrease horizontally&raquo; show the step by which the speed or angle of the connected motors changes when the horizontal-axis keys are used, and &laquo;Increase vertically&raquo; and &laquo;Decrease vertically&raquo; do the same for the vertical-axis keys. <em>[Translator's note: the original text says &ldquo;vertical-axis keys&rdquo; for both pairs; the horizontal pair is clearly meant for the horizontal axis.]</em> &laquo;Pause between horizontal increases/decreases&raquo; and &laquo;Pause between vertical increases/decreases&raquo; give the interval in milliseconds between these steps.</p>
+<p>Let's work through an example. Say the W key is the &laquo;up&raquo; key, i.e. a vertical-axis key. Two large motors that turn the wheels are tied to it. In our settings the vertical increase is 15 and the decrease is 50. This means that when we press and hold W on the client, the speed of the large motors increases step by step by 15 units every 100 milliseconds until it reaches the maximum value, 100 units. So the robot accelerates smoothly. When we release W, the speed starts dropping step by step by 50 units every 100 milliseconds until it reaches zero. So the robot also stops smoothly, but much more sharply than it accelerated.</p>
+<p><em>Note that an &ldquo;increase&rdquo; here means a change of speed or angle from 0 to 100 and from 0 to -100, and a &ldquo;decrease&rdquo; means a change from 100 to 0 and from -100 to 0.</em></p>
+<p><em>The step values can range from 0 to 200; if you set 0 or 200 the speed or angle changes abruptly rather than step by step.</em></p>
+<p><em>The pause value cannot be less than 100 milliseconds. Keep in mind that the real pause between steps may be longer than what you set, because there can be delays when commands are sent to the EV3.</em></p>
+<p>With the next four buttons &mdash; &laquo;<strong>Up keys</strong>&raquo;, &laquo;<strong>Left keys</strong>&raquo;, &laquo;<strong>Down keys</strong>&raquo; and &laquo;<strong>Right keys</strong>&raquo; &mdash; you assign specific keys to control the robot. To set or change the chosen keys, press the button you need. A list of available keys then opens. Choose the keys you want and press the &laquo;Done&raquo; button.</p>
+<p><img src="img/articles/robot/robocam-51.png" loading="lazy" alt="Choosing keys in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>If you connect a physical keyboard to your smartphone you can pick keys with it, by pressing the key you want while this list is open. Not all keys can be chosen this way, though.</p>
+<p>Next in the key group settings come the ports. Key group ports are configured the same way as joystick ports, and I won't go into it in detail here. For port settings read the article &laquo;<a href="v1-0-en.html">Controlling a LEGO Mindstorms EV3 robot in first person</a>&raquo;.</p>
+<p><img src="img/articles/robot/robocam-52.png" loading="lazy" alt="Configuring EV3 ports in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Now let's look separately at the settings for the &laquo;<strong>Mailbox</strong>&raquo; key group. If you switch the type to &laquo;Mailbox&raquo; you will see the settings for this key group change. There will only be &laquo;Mailbox name&raquo; and &laquo;Keys&raquo;. In the &laquo;<strong>Mailbox name</strong>&raquo; field you enter the name of the EV3 mailbox that receives the codes of the pressed keys among those you list below with the &laquo;<strong>Keys</strong>&raquo; button. Codes of keys not listed here will not arrive in the mailbox.</p>
+<p><img src="img/articles/robot/robocam-53.png" loading="lazy" alt="The settings of the &quot;Mailbox&quot; key group in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Let's take an example of how to get the codes of the digit keys 0&ndash;9 on the EV3. We name the mailbox &laquo;test&raquo; and specify all the keys from 0 to 9.</p>
+<p><img src="img/articles/robot/robocam-54.png" loading="lazy" alt="An example of a configured &quot;Mailbox&quot; key group in RoboCam" style="border: 1px solid #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Now let's rework the EV3 program we made above as follows, see the picture below. Here we simply show on the screen the key code received from the &laquo;test&raquo; mailbox. Download the finished program to the EV3.</p>
+<p><img src="img/articles/robot/robocam-55.png" loading="lazy" alt="An EV3 program that reads the key codes sent from RoboCam" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><em>Unfortunately the mailbox block cannot receive an array of numbers, so only the code of the last pressed key is sent to the mailbox, or 0 if the last pressed key was released. So to process several keys independently you need several mailboxes &mdash; one mailbox per key.</em></p>
+<p>Once the program is downloaded to the EV3, don't forget to tick &laquo;Run program&raquo; and enter its path &laquo;../prjs/MyProject/MyProgram.rbf&raquo;.</p>
+<p><img src="img/articles/robot/robocam-46.png" loading="lazy" alt="Entering the full path of the EV3 program in the robot settings in RoboCam" style="border-width: 1px; border-style: solid; border-color: #000000; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>Now, when you connect RoboCam to the EV3, the program MyProgram.rbf starts on the EV3 straight away and the digit 0 appears on the screen, meaning that no key is pressed. Now start the RoboCam server, connect to it with a browser on your computer and try pressing keys. You will see that when you press the digit keys, the code of the last pressed key is shown on the EV3 screen, and when you press other keys 0 is shown.</p>
+<p>Now let's talk about key codes. You can use most keys; their codes mostly follow ASCII. However, there are so-called hotkeys that the browser reacts to in a special way. For example the F1 key opens the browser's help and F5 refreshes the open page. Such keys are not available in RoboCam. The table below lists all the keys you can use with RoboCam, and their codes.</p>
+<table align="center">
+<tbody>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Code</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Key</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Code</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Key</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Code</strong></td>
+<td style="padding: 5px; border: 1px solid #000000;"><strong>Key</strong></td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">8</td>
+<td style="padding: 5px; border: 1px solid #000000;">Backspace</td>
+<td style="padding: 5px; border: 1px solid #000000;">57</td>
+<td style="padding: 5px; border: 1px solid #000000;">9</td>
+<td style="padding: 5px; border: 1px solid #000000;">99</td>
+<td style="padding: 5px; border: 1px solid #000000;">3 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">9</td>
+<td style="padding: 5px; border: 1px solid #000000;">Tab</td>
+<td style="padding: 5px; border: 1px solid #000000;">65</td>
+<td style="padding: 5px; border: 1px solid #000000;">A</td>
+<td style="padding: 5px; border: 1px solid #000000;">100</td>
+<td style="padding: 5px; border: 1px solid #000000;">4 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">12</td>
+<td style="padding: 5px; border: 1px solid #000000;">Clear</td>
+<td style="padding: 5px; border: 1px solid #000000;">66</td>
+<td style="padding: 5px; border: 1px solid #000000;">B</td>
+<td style="padding: 5px; border: 1px solid #000000;">101</td>
+<td style="padding: 5px; border: 1px solid #000000;">5 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">13</td>
+<td style="padding: 5px; border: 1px solid #000000;">Enter</td>
+<td style="padding: 5px; border: 1px solid #000000;">67</td>
+<td style="padding: 5px; border: 1px solid #000000;">C</td>
+<td style="padding: 5px; border: 1px solid #000000;">102</td>
+<td style="padding: 5px; border: 1px solid #000000;">6 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">16</td>
+<td style="padding: 5px; border: 1px solid #000000;">Shift</td>
+<td style="padding: 5px; border: 1px solid #000000;">68</td>
+<td style="padding: 5px; border: 1px solid #000000;">D</td>
+<td style="padding: 5px; border: 1px solid #000000;">103</td>
+<td style="padding: 5px; border: 1px solid #000000;">7 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">17</td>
+<td style="padding: 5px; border: 1px solid #000000;">Ctrl</td>
+<td style="padding: 5px; border: 1px solid #000000;">69</td>
+<td style="padding: 5px; border: 1px solid #000000;">E</td>
+<td style="padding: 5px; border: 1px solid #000000;">104</td>
+<td style="padding: 5px; border: 1px solid #000000;">8 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">18</td>
+<td style="padding: 5px; border: 1px solid #000000;">Alt</td>
+<td style="padding: 5px; border: 1px solid #000000;">70</td>
+<td style="padding: 5px; border: 1px solid #000000;">F</td>
+<td style="padding: 5px; border: 1px solid #000000;">105</td>
+<td style="padding: 5px; border: 1px solid #000000;">9 (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">19</td>
+<td style="padding: 5px; border: 1px solid #000000;">Pause</td>
+<td style="padding: 5px; border: 1px solid #000000;">71</td>
+<td style="padding: 5px; border: 1px solid #000000;">G</td>
+<td style="padding: 5px; border: 1px solid #000000;">106</td>
+<td style="padding: 5px; border: 1px solid #000000;">(*) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">20</td>
+<td style="padding: 5px; border: 1px solid #000000;">Caps Lock</td>
+<td style="padding: 5px; border: 1px solid #000000;">72</td>
+<td style="padding: 5px; border: 1px solid #000000;">H</td>
+<td style="padding: 5px; border: 1px solid #000000;">107</td>
+<td style="padding: 5px; border: 1px solid #000000;">(+) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">27</td>
+<td style="padding: 5px; border: 1px solid #000000;">Esc</td>
+<td style="padding: 5px; border: 1px solid #000000;">73</td>
+<td style="padding: 5px; border: 1px solid #000000;">I</td>
+<td style="padding: 5px; border: 1px solid #000000;">109</td>
+<td style="padding: 5px; border: 1px solid #000000;">(-) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">32</td>
+<td style="padding: 5px; border: 1px solid #000000;">Space</td>
+<td style="padding: 5px; border: 1px solid #000000;">74</td>
+<td style="padding: 5px; border: 1px solid #000000;">J</td>
+<td style="padding: 5px; border: 1px solid #000000;">110</td>
+<td style="padding: 5px; border: 1px solid #000000;">(.) (Numpad)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">33</td>
+<td style="padding: 5px; border: 1px solid #000000;">Page Up</td>
+<td style="padding: 5px; border: 1px solid #000000;">75</td>
+<td style="padding: 5px; border: 1px solid #000000;">K</td>
+<td style="padding: 5px; border: 1px solid #000000;">113</td>
+<td style="padding: 5px; border: 1px solid #000000;">F2</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">34</td>
+<td style="padding: 5px; border: 1px solid #000000;">Page Down</td>
+<td style="padding: 5px; border: 1px solid #000000;">76</td>
+<td style="padding: 5px; border: 1px solid #000000;">L</td>
+<td style="padding: 5px; border: 1px solid #000000;">115</td>
+<td style="padding: 5px; border: 1px solid #000000;">F4</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">35</td>
+<td style="padding: 5px; border: 1px solid #000000;">End</td>
+<td style="padding: 5px; border: 1px solid #000000;">77</td>
+<td style="padding: 5px; border: 1px solid #000000;">M</td>
+<td style="padding: 5px; border: 1px solid #000000;">118</td>
+<td style="padding: 5px; border: 1px solid #000000;">F7</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">36</td>
+<td style="padding: 5px; border: 1px solid #000000;">Home</td>
+<td style="padding: 5px; border: 1px solid #000000;">78</td>
+<td style="padding: 5px; border: 1px solid #000000;">N</td>
+<td style="padding: 5px; border: 1px solid #000000;">119</td>
+<td style="padding: 5px; border: 1px solid #000000;">F8</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">37</td>
+<td style="padding: 5px; border: 1px solid #000000;">Left</td>
+<td style="padding: 5px; border: 1px solid #000000;">79</td>
+<td style="padding: 5px; border: 1px solid #000000;">O</td>
+<td style="padding: 5px; border: 1px solid #000000;">120</td>
+<td style="padding: 5px; border: 1px solid #000000;">F9</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">38</td>
+<td style="padding: 5px; border: 1px solid #000000;">Up</td>
+<td style="padding: 5px; border: 1px solid #000000;">80</td>
+<td style="padding: 5px; border: 1px solid #000000;">P</td>
+<td style="padding: 5px; border: 1px solid #000000;">121</td>
+<td style="padding: 5px; border: 1px solid #000000;">F10</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">39</td>
+<td style="padding: 5px; border: 1px solid #000000;">Right</td>
+<td style="padding: 5px; border: 1px solid #000000;">81</td>
+<td style="padding: 5px; border: 1px solid #000000;">Q</td>
+<td style="padding: 5px; border: 1px solid #000000;">144</td>
+<td style="padding: 5px; border: 1px solid #000000;">Num Lock</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">40</td>
+<td style="padding: 5px; border: 1px solid #000000;">Down</td>
+<td style="padding: 5px; border: 1px solid #000000;">82</td>
+<td style="padding: 5px; border: 1px solid #000000;">R</td>
+<td style="padding: 5px; border: 1px solid #000000;">145</td>
+<td style="padding: 5px; border: 1px solid #000000;">Scroll Lock</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">45</td>
+<td style="padding: 5px; border: 1px solid #000000;">Ins</td>
+<td style="padding: 5px; border: 1px solid #000000;">83</td>
+<td style="padding: 5px; border: 1px solid #000000;">S</td>
+<td style="padding: 5px; border: 1px solid #000000;">186</td>
+<td style="padding: 5px; border: 1px solid #000000;">(;)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">46</td>
+<td style="padding: 5px; border: 1px solid #000000;">Del</td>
+<td style="padding: 5px; border: 1px solid #000000;">84</td>
+<td style="padding: 5px; border: 1px solid #000000;">T</td>
+<td style="padding: 5px; border: 1px solid #000000;">188</td>
+<td style="padding: 5px; border: 1px solid #000000;">(,)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">48</td>
+<td style="padding: 5px; border: 1px solid #000000;">0</td>
+<td style="padding: 5px; border: 1px solid #000000;">85</td>
+<td style="padding: 5px; border: 1px solid #000000;">U</td>
+<td style="padding: 5px; border: 1px solid #000000;">189</td>
+<td style="padding: 5px; border: 1px solid #000000;">(-)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">49</td>
+<td style="padding: 5px; border: 1px solid #000000;">1</td>
+<td style="padding: 5px; border: 1px solid #000000;">86</td>
+<td style="padding: 5px; border: 1px solid #000000;">V</td>
+<td style="padding: 5px; border: 1px solid #000000;">190</td>
+<td style="padding: 5px; border: 1px solid #000000;">(.)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">50</td>
+<td style="padding: 5px; border: 1px solid #000000;">2</td>
+<td style="padding: 5px; border: 1px solid #000000;">87</td>
+<td style="padding: 5px; border: 1px solid #000000;">W</td>
+<td style="padding: 5px; border: 1px solid #000000;">191</td>
+<td style="padding: 5px; border: 1px solid #000000;">(/)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">51</td>
+<td style="padding: 5px; border: 1px solid #000000;">3</td>
+<td style="padding: 5px; border: 1px solid #000000;">88</td>
+<td style="padding: 5px; border: 1px solid #000000;">X</td>
+<td style="padding: 5px; border: 1px solid #000000;">192</td>
+<td style="padding: 5px; border: 1px solid #000000;">(`)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">52</td>
+<td style="padding: 5px; border: 1px solid #000000;">4</td>
+<td style="padding: 5px; border: 1px solid #000000;">89</td>
+<td style="padding: 5px; border: 1px solid #000000;">Y</td>
+<td style="padding: 5px; border: 1px solid #000000;">219</td>
+<td style="padding: 5px; border: 1px solid #000000;">([)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">53</td>
+<td style="padding: 5px; border: 1px solid #000000;">5</td>
+<td style="padding: 5px; border: 1px solid #000000;">90</td>
+<td style="padding: 5px; border: 1px solid #000000;">Z</td>
+<td style="padding: 5px; border: 1px solid #000000;">220</td>
+<td style="padding: 5px; border: 1px solid #000000;">(\)</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">54</td>
+<td style="padding: 5px; border: 1px solid #000000;">6</td>
+<td style="padding: 5px; border: 1px solid #000000;">96</td>
+<td style="padding: 5px; border: 1px solid #000000;">0 (Numpad)</td>
+<td style="padding: 5px; border: 1px solid #000000;">221</td>
+<td style="padding: 5px; border: 1px solid #000000;">(])</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">55</td>
+<td style="padding: 5px; border: 1px solid #000000;">7</td>
+<td style="padding: 5px; border: 1px solid #000000;">97</td>
+<td style="padding: 5px; border: 1px solid #000000;">1 (Numpad)</td>
+<td style="padding: 5px; border: 1px solid #000000;">222</td>
+<td style="padding: 5px; border: 1px solid #000000;">(')</td>
+</tr>
+<tr>
+<td style="padding: 5px; border: 1px solid #000000;">56</td>
+<td style="padding: 5px; border: 1px solid #000000;">8</td>
+<td style="padding: 5px; border: 1px solid #000000;">98</td>
+<td style="padding: 5px; border: 1px solid #000000;">2 (Numpad)</td>
+<td style="padding: 5px; border: 1px solid #000000;">&nbsp;</td>
+<td style="padding: 5px; border: 1px solid #000000;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>That covers the new functionality in RoboCam. You may also find the other <a href="hub-en.html">RoboCam articles</a> useful.</p>
+  </div>
+
+  <h2>All RoboCam versions</h2>
+  <ul class="versions">
+      <li><a href="v1-4-2-en.html"><span class="ver">v1.4.2</span> Turning a smartphone into a robot remote control with RoboCam</a></li>
+      <li><a href="v1-3-1-en.html"><span class="ver">v1.3.1</span> Building first-person control for an Arduino robot</a></li>
+      <li><a href="v1-2-en.html" aria-current="page"><span class="ver">v1.2</span> RoboCam &ndash; controlling a robot in first person from a computer keyboard<span class="here">you are here</span></a></li>
+      <li><a href="v1-1-en.html"><span class="ver">v1.1</span> Importing, exporting, copying and sending robot settings in RoboCam</a></li>
+      <li><a href="v1-0-en.html"><span class="ver">v1.0</span> Controlling a LEGO Mindstorms EV3 robot in first person</a></li>
+  </ul>
+  <p class="sub" style="margin-top:14px"><a href="hub-en.html">All articles (hub)</a> &middot; <a href="index.html">Field Manual</a></p>
+</main>
+
+<footer>
+  <p>Translation of an article by Alexey (ПрогХаус); RoboCam, its screenshots and downloads are the work of their author. The original tutorials are collected at <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a>. Unofficial reference, not affiliated with ПрогХаус.</p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>
