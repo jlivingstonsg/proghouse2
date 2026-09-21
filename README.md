@@ -19,4 +19,11 @@ The site is served by GitHub Pages from `index.html` on the `main` branch (root 
 a single self-contained file, no build step. To update, edit `index.html` and push;
 Pages redeploys within a minute.
 
+## Pages
+
+- `index.html` — the full bilingual field manual (built from `robocam.html` by `build-index.sh`).
+- `hub-en.html` / `hub-sv.html` — standalone English and Swedish translations of the
+  ProgHouse RoboCam hub page (<http://proghouse.ru/tags/robocam>): downloads plus the five
+  original tutorials with translated titles and summaries.
+
 Unofficial reference, not affiliated with ПрогХаус.

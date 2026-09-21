@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="English translation of the ProgHouse RoboCam hub: the app, downloads and the five original tutorials on controlling LEGO EV3 and Arduino robots in first person.">
+<title>RoboCam articles from ProgHouse (English)</title>
+<link rel="alternate" hreflang="sv" href="hub-sv.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
+  :root[data-theme="dark"]{--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",Roboto,system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
+  .topbar .mark b{color:var(--accent-line)}
+  .switches{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
+  .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .seg>*+*{border-left:1px solid var(--border)}
+  .seg [aria-pressed="true"],.seg [aria-current="page"]{background:var(--ink);color:var(--ground)}
+  #lt[aria-pressed="true"]{background:#e7a53a;color:#3a2905}
+  #dk[aria-pressed="true"]{background:#4a48ab;color:#edecff}
+  .seg a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-line);outline-offset:-2px}
+  main{max-width:860px;margin:0 auto;padding:34px clamp(16px,4vw,40px) 40px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 14px}
+  h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.06;margin:0 0 18px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+  h2{font-size:1.35rem;margin:38px 0 6px;letter-spacing:-.01em}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;margin:0}
+  .sub{color:var(--ink-faint);font-size:.92rem;margin:0 0 16px}
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:22px 0 0}
+  .dl a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .dl a:hover{border-color:var(--accent-line)}
+  .dl b{display:block;font-weight:600}
+  .dl span{display:block;font-size:.82rem;color:var(--ink-faint);margin-top:2px}
+  .dl a.play b{color:var(--server)}
+  .cards{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h3{font-size:1.06rem;line-height:1.3;margin:0 0 6px;font-weight:600}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:.96rem}
+  .card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+  .ver{font-family:"IBM Plex Mono",monospace;font-size:.74rem;padding:1px 8px;border-radius:999px;border:1px solid var(--connect);color:var(--connect);background:color-mix(in srgb,var(--connect) 12%,transparent)}
+  .ru{color:var(--ink-faint);font-style:italic}
+  .note{border:1px solid var(--border);border-left:3px solid var(--accent-line);background:var(--surface-2);border-radius:8px;padding:14px 16px;margin:34px 0 0;font-size:.95rem}
+  footer{max-width:860px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 60px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:.85rem}
+  footer a{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:3px}
+</style>
+
+<div class="topbar">
+  <span class="mark">Robo<b>Cam</b> · ProgHouse articles</span>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Language">
+      <a href="hub-en.html" hreflang="en" lang="en" aria-current="page">English</a>
+      <a href="hub-sv.html" hreflang="sv" lang="sv">Svenska</a>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="lt" aria-pressed="false">Light</button>
+      <button id="dk" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="kicker">Translated hub page · proghouse.ru/tags/robocam</p>
+  <h1>RoboCam articles from ProgHouse</h1>
+  <p class="lead">This page collects articles on using and configuring the Android app RoboCam, which lets you control LEGO Mindstorms EV3 robots in first person. You can install the app from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a> or download and install it manually. There are two versions to download: the <a href="http://proghouse.ru/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">regular version of RoboCam</a> and the <a href="http://proghouse.ru/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">version of RoboCam that uses RenderScript</a> (for some older smartphones).</p>
+
+  <h2>Get the app</h2>
+  <div class="dl">
+    <a class="play" href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam"><b>Google Play</b><span>Official listing</span></a>
+    <a href="http://proghouse.ru/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0"><b>Regular version</b><span>Manual download from proghouse.ru</span></a>
+    <a href="http://proghouse.ru/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0"><b>RenderScript version</b><span>For some older smartphones &middot; proghouse.ru</span></a>
+    <a href="https://apkpure.com/robocam/ru.proghouse.robocam"><b>APKPure mirror</b><span>Third-party mirror of the Play Store release</span></a>
+  </div>
+
+  <h2>The tutorials</h2>
+  <p class="sub">Newest first, as on the original page. The articles themselves are in Russian; the titles and summaries below are translated.</p>
+  <ul class="cards">
+      <li class="card">
+        <h3>Turning a smartphone into a robot remote control with RoboCam</h3>
+        <p>In all the earlier RoboCam articles I described how to use it to control a robot in first person. But sometimes first-person control isn't needed &mdash; you only want to turn the smartphone into a remote control. The latest version of RoboCam adds exactly that.</p>
+        <div class="meta"><span class="ver">v1.4.2</span><a href="http://proghouse.ru/article-box/131-robocam-local-controls">Read the original (Russian)</a> <span class="ru" lang="ru">Превращаем смартфон в пульт управления роботом с приложением RoboCam</span></div>
+      </li>
+      <li class="card">
+        <h3>Building first-person control for an Arduino robot</h3>
+        <p>The latest version of RoboCam can control not only EV3 robots but also robots built on platforms such as Arduino, Raspberry Pi and similar, where you can work directly with the data received and sent over Bluetooth. Now you can process RoboCam's commands however you like.</p>
+        <div class="meta"><span class="ver">v1.3.1</span><a href="http://proghouse.ru/article-box/128-robocam-arduino">Read the original (Russian)</a> <span class="ru" lang="ru">Делаем управление Arduino-роботом от первого лица</span></div>
+      </li>
+      <li class="card">
+        <h3>RoboCam &ndash; controlling a robot in first person from a computer keyboard</h3>
+        <p>The new version of RoboCam adds support for a physical keyboard, so you can now control a LEGO Mindstorms EV3 robot in first person from a desktop computer or laptop. In this article I describe how to set up RoboCam to use the new feature, and what else is new in this version.</p>
+        <div class="meta"><span class="ver">v1.2</span><a href="http://proghouse.ru/article-box/102-robocam-keyboard">Read the original (Russian)</a> <span class="ru" lang="ru">RoboCam – управляем роботом от первого лица с клавиатуры компьютера</span></div>
+      </li>
+      <li class="card">
+        <h3>Importing, exporting, copying and sending robot settings in RoboCam</h3>
+        <p>The previous RoboCam article described how to control an EV3 robot in first person. But robots and mechanisms are built in many ways and each needs its own control layout. If you have developed a new robot, how do you share your settings with others, move them to another smartphone, or simply copy them? There is a solution: the new version of RoboCam adds import, export, copy and send of robot settings.</p>
+        <div class="meta"><span class="ver">v1.1</span><a href="http://proghouse.ru/article-box/97-robocam-settings">Read the original (Russian)</a> <span class="ru" lang="ru">Импорт, экспорт, копирование и отправка настроек роботов в приложении RoboCam</span></div>
+      </li>
+      <li class="card">
+        <h3>Controlling a LEGO Mindstorms EV3 robot in first person</h3>
+        <p>A robot built from the LEGO Mindstorms EV3 kit is easy to control remotely in first person. For this you additionally need two smartphones, with the RoboCam app installed on one of them. Let's get to know RoboCam in more detail and learn how to use it.</p>
+        <div class="meta"><span class="ver">v1.0</span><a href="http://proghouse.ru/article-box/92-robocam">Read the original (Russian)</a> <span class="ru" lang="ru">Управление роботом LEGO Mindstorms EV3 от первого лица</span></div>
+      </li>
+  </ul>
+
+  <div class="note">
+    <strong>Want more than the summaries?</strong> The <a href="index.html">RoboCam Field Manual</a> is a full English/Swedish reference compiled and translated from these articles, with the app&rsquo;s screens, settings and protocol explained in detail.
+  </div>
+</main>
+
+<footer>
+  <p>Translation of the public hub page <a href="http://proghouse.ru/tags/robocam">proghouse.ru/tags/robocam</a> (ПрогХаус) by Alexey; RoboCam and the linked articles are the work of their author. Unofficial reference, not affiliated with ПрогХаус. &middot; <a href="index.html">Field Manual</a> &middot; <a href="hub-sv.html" hreflang="sv">Svenska</a></p>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,TKEY="robocam-theme",LKEY="robocam-lang";
+  function setTheme(t){
+    if(t==="light"||t==="dark"){root.setAttribute("data-theme",t);}
+    else{root.removeAttribute("data-theme");t="system";}
+    document.getElementById("lt").setAttribute("aria-pressed",String(t==="light"));
+    document.getElementById("dk").setAttribute("aria-pressed",String(t==="dark"));
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var t="system";try{t=localStorage.getItem(TKEY)||"system";}catch(e){}
+  setTheme(t);
+  document.getElementById("lt").onclick=function(){setTheme(root.getAttribute("data-theme")==="light"?"system":"light");};
+  document.getElementById("dk").onclick=function(){setTheme(root.getAttribute("data-theme")==="dark"?"system":"dark");};
+  // keep the main manual's language in step with the page the reader picked
+  try{localStorage.setItem(LKEY,root.getAttribute("lang"));}catch(e){}
+})();
+</script>
+</html>
