@@ -13,11 +13,17 @@ from a phone camera and any browser.
   viewer and a Clear Cache button. Documented here with the original author's consent;
   its source code is not released.
 
+## Development
+
+Most pages are generated from data in `tools/` — see [`tools/README.md`](tools/README.md) for
+how to change a translation or a screenshot. `make check` runs the consistency checks that
+GitHub Actions also runs on every push.
+
 ## Hosting
 
-The site is served by GitHub Pages from `index.html` on the `main` branch (root folder) —
-a single self-contained file, no build step. To update, edit `index.html` and push;
-Pages redeploys within a minute.
+The site is served by GitHub Pages from the `main` branch (root folder). It is plain static
+files with no build step on GitHub's side: generate locally (see Development), commit the
+results and push; Pages redeploys within a minute.
 
 ## Pages
 
@@ -30,7 +36,6 @@ Pages redeploys within a minute.
   (1.0, 1.1, 1.2, 1.3.1, 1.4.2). Screenshots are self-hosted: `img/en/` and `img/sv/` hold
   retouched copies with the interface text translated into English and Swedish; images that
   contain no Russian text (photos, 3D renders) are shared from `img/`.
-
 - `files/` — the author's downloads referenced by the tutorials, hosted here: the two RoboCam
   APKs (release 1.4.5: regular and RenderScript), the EV3 Explorer build guide (PDF), the
   ready-made RoboCam settings (XML), the Selenokhod EV3 helper program, the Arduino Explorer
