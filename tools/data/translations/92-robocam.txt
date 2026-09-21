@@ -1,0 +1,381 @@
+@0
+en: A robot built from the LEGO Mindstorms EV3 kit can easily be controlled remotely in first person. For this you additionally need two smartphones, with the RoboCam app installed on one of them. Let's get to know RoboCam in more detail and learn how to use it.
+sv: En robot byggd av LEGO Mindstorms EV3-satsen kan enkelt fjärrstyras i förstaperson. Du behöver då två smartphones till, med appen RoboCam installerad på den ena. Låt oss lära känna RoboCam närmare och lära oss använda den.
+@1
+en: Controlling a LEGO Mindstorms EV3 robot in first person
+sv: Styra en LEGO Mindstorms EV3-robot i förstaperson
+@2
+en: This article describes the first version, 1.0, of RoboCam. All the articles about RoboCam can be found <a href="/tags/robocam">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, or download the APK and install it manually: the <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">regular version of RoboCam</a> or the <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">version of RoboCam that uses RenderScript</a> (for some older smartphones); both are release 1.4.5. There is also an <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror.
+sv: Den här artikeln beskriver den första versionen, 1.0, av RoboCam. Alla artiklar om RoboCam finns <a href="/tags/robocam">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, eller ladda ner APK-filen och installera den manuellt: den <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">vanliga versionen av RoboCam</a> eller <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">versionen av RoboCam som använder RenderScript</a> (för vissa äldre telefoner); båda är utgåva 1.4.5. Det finns också en <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a>-spegling.
+@3
+en: First let's watch the video showing the first-person-controlled robot I call the EV3 Explorer. Besides driving in any direction, the robot can raise and lower its head, i.e. the frame the smartphone is attached to. That means you can look not only to the sides but also up and down.
+sv: Låt oss först titta på videon som visar den förstapersonsstyrda roboten jag kallar EV3 Explorer. Förutom att köra i alla riktningar kan roboten lyfta och sänka huvudet, det vill säga ramen som telefonen sitter fast på. Det betyder att du kan titta inte bara åt sidorna utan också uppåt och nedåt.
+@4
+en: What do you need for the experiment?
+sv: Vad behöver du för experimentet?
+@5
+en: To repeat the experiment you see in the video you need the following:
+sv: För att upprepa experimentet i videon behöver du följande:
+@6
+en: A <strong>robot</strong> built from the LEGO Mindstorms EV3 kit.
+sv: En <strong>robot</strong> byggd av LEGO Mindstorms EV3-satsen.
+@7
+en: An <strong>Android smartphone</strong> with a camera and the <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a> app installed. Android 2.3 and later is supported. The phone must have at least one camera, plus Bluetooth and Wi-Fi modules.
+sv: En <strong>Android-telefon</strong> med kamera och appen <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a> installerad. Android 2.3 och senare stöds. Telefonen måste ha minst en kamera, samt Bluetooth- och Wi-Fi-moduler.
+@8
+en: A <strong>smartphone or tablet</strong> with a modern browser that supports HTML5. Recent versions of Google Chrome, Yandex Browser, Firefox and Opera work well and have been tested. The operating system can in principle be anything (Android, iOS or Windows), but full tests were done only on Android. The smartphone or tablet needs at least a touch screen (preferably recognising at least 2 touch points) and a Wi-Fi module.
+sv: En <strong>telefon eller surfplatta</strong> med en modern webbläsare som stöder HTML5. Senaste versionerna av Google Chrome, Yandex Browser, Firefox och Opera fungerar bra och har testats. Operativsystemet kan i princip vara vilket som helst (Android, iOS eller Windows), men fullständiga tester gjordes bara på Android. Telefonen eller surfplattan måste ha minst en pekskärm (helst med stöd för minst 2 samtidiga beröringspunkter) och en Wi-Fi-modul.
+@9
+en: Further on in the article I give the theory and describe the steps you need to take to repeat the experiment.
+sv: Längre fram i artikeln ger jag teorin och beskriver de steg du behöver ta för att upprepa experimentet.
+@10
+en: Connection diagram
+sv: Anslutningsschema
+@11
+en: First, let's see how all the devices listed above are connected to each other. The picture below illustrates it best.
+sv: Först tittar vi på hur alla ovanstående enheter är anslutna till varandra. Bilden nedan illustrerar det bäst.
+@12
+en: The standard connection to RoboCam
+sv: Standardanslutningen till RoboCam
+@13
+en: As you can see, RoboCam is installed on smartphone 1. This smartphone is attached to the robot and connected to it over Bluetooth. Commands controlling the motors go from smartphone 1 to the EV3, and sensor information comes back.
+sv: Som du ser är RoboCam installerad på telefon 1. Den här telefonen är fäst på roboten och ansluten till den via Bluetooth. Kommandon som styr motorerna går från telefon 1 till EV3, och sensorinformation kommer tillbaka.
+@14
+en: The 2nd smartphone or tablet connects to smartphone 1 over Wi-Fi. Smartphone 1 and smartphone or tablet 2 must be connected to the same router. Joystick coordinates go from smartphone or tablet 2 to smartphone 1, and the video stream from the camera comes back.
+sv: Den andra telefonen eller surfplattan ansluter till telefon 1 via Wi-Fi. Telefon 1 och telefon eller surfplatta 2 måste vara anslutna till samma router. Joystickkoordinater går från telefon eller surfplatta 2 till telefon 1, och videoströmmen från kameran kommer tillbaka.
+@15
+en: How the EV3 is controlled
+sv: Så styrs EV3
+@16
+en: To better understand how the EV3 robot is controlled, look at the following diagram.
+sv: För att bättre förstå hur EV3-roboten styrs, titta på följande schema.
+@17
+en: How RoboCam controls the EV3
+sv: Så styr RoboCam EV3
+@18
+en: When you start touching joysticks A and B, smartphone or tablet 2 sends the touch coordinates to smartphone 1, which turns them into commands for the EV3 motors. How the coordinates are converted depends on the RoboCam settings. We will talk about the settings in more detail below.
+sv: När du börjar röra vid styrspakarna A och B skickar telefon eller surfplatta 2 beröringskoordinaterna till telefon 1, som omvandlar dem till kommandon för EV3-motorerna. Hur koordinaterna omvandlas beror på RoboCams inställningar. Om inställningarna pratar vi mer nedan.
+@19
+en: Building the robot
+sv: Bygga roboten
+@20
+en: To repeat the experiment you first need to build the robot you will control. It can be a simple two-wheeled robot, a robot car, or a robot with a complex drive mechanism. It really doesn't matter what your robot is like, because RoboCam is flexibly configurable and you can control a robot of any design with it. The main thing is that you can fix the smartphone to your robot so that the camera points forward, in the direction of travel.
+sv: För att upprepa experimentet måste du först bygga roboten du ska styra. Det kan vara en enkel tvåhjulsrobot, en robotbil eller en robot med komplex drivning. Det spelar egentligen ingen roll hur din robot ser ut, eftersom RoboCam kan ställas in flexibelt och du kan styra en robot med vilken konstruktion som helst. Huvudsaken är att du kan fästa telefonen på roboten så att kameran pekar framåt, i färdriktningen.
+@21
+en: I recommend starting with a simple model. If you have the LEGO Mindstorms Education EV3 set, you can build the EV3 Explorer you see in the photo and video at the start of the article. Here is the EV3 Explorer build plan:
+sv: Jag rekommenderar att du börjar med en enkel modell. Om du har utbildningssatsen LEGO Mindstorms Education EV3 kan du bygga EV3 Explorer som syns på fotot och videon i början av artikeln. Här är bygganvisningen för EV3 Explorer:
+@22
+en: EV3 Explorer
+sv: EV3 Explorer
+@23
+en: Files:
+sv: Filer:
+@24
+en: <b><a href="/component/jdownloads/finish/5-distributivy/56-x?Itemid=0">EV3 Explorer build instructions</a></b> Version: 2
+sv: <b><a href="/component/jdownloads/finish/5-distributivy/56-x?Itemid=0">Bygganvisning för EV3 Explorer</a></b> Version: 2
+@25
+en: Instructions for building the EV3 Explorer robot from the base LEGO Mindstorms Education EV3 set (45544).
+sv: Anvisning för att bygga roboten EV3 Explorer av basutbildningssatsen LEGO Mindstorms Education EV3 (45544).
+@26
+en: In version 2 the frame is fixed more firmly and doesn't fall off.
+sv: I version 2 är ramen fastsatt stadigare och lossnar inte.
+@27
+en: Date
+sv: Datum
+@28
+en: File size
+sv: Filstorlek
+@29
+en: Downloads
+sv: Nedladdningar
+@30
+en: Preparing the Android smartphone and the RoboCam app
+sv: Förbereda Android-telefonen och appen RoboCam
+@31
+en: RoboCam runs on smartphones or tablets with Android 2.3 and later. The device must have some built-in camera and Bluetooth and Wi-Fi modules. The app is free; you can install it from Google Play or download and install it manually. Here is the <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a> page. To install, press the &laquo;INSTALL&raquo; button and accept the required permissions by pressing &laquo;ACCEPT&raquo;.
+sv: RoboCam fungerar på telefoner eller surfplattor med Android 2.3 och senare. Enheten måste ha någon inbyggd kamera samt Bluetooth- och Wi-Fi-moduler. Appen är gratis; du kan installera den från Google Play eller ladda ner och installera den manuellt. Här är sidan för <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank">RoboCam</a>. För att installera trycker du på knappen &laquo;INSTALLERA&raquo; och godkänner de begärda behörigheterna genom att trycka på &laquo;GODKÄNN&raquo;.
+@32
+en: For a manual install there are 2 versions: the <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">regular version of RoboCam</a> and the <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">version of RoboCam that uses RenderScript</a> (for some older smartphones); both are release 1.4.5. The <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror carries the Play Store release.
+sv: För en manuell installation finns 2 versioner: den <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">vanliga versionen av RoboCam</a> och <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">versionen av RoboCam som använder RenderScript</a> (för vissa äldre telefoner); båda är utgåva 1.4.5. Spegeln <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> har Play Store-utgåvan.
+@33
+en: After installing, open the app. On Android 6 and later you immediately see a request for permission to use the camera. We definitely need the camera, so press &laquo;ALLOW&raquo;.
+sv: Efter installationen öppnar du appen. På Android 6 och senare får du direkt en begäran om tillåtelse att använda kameran. Vi behöver definitivt kameran, så tryck på &laquo;TILLÅT&raquo;.
+@34
+en: Permission to turn on the camera in Android 6
+sv: Tillstånd att slå på kameran i Android 6
+@35
+en: Once the app opens you see three round buttons for the main actions, and the camera image in the background.
+sv: När appen har öppnats ser du tre runda knappar för huvudåtgärderna, och kamerabilden i bakgrunden.
+@36
+en: RoboCam on first launch
+sv: RoboCam vid första start
+@37
+en: The green button on the left starts and stops the RoboCam server, which is needed for connecting smartphone or tablet 2, see the diagram above. The button also shows whether the server is running. In the picture the button background is white, which means the server is not running. The hint at the top says the same. You can start or stop the server at any time by pressing this button.
+sv: Den gröna knappen till vänster startar och stoppar RoboCam-servern, som behövs för att ansluta telefon eller surfplatta 2, se schemat ovan. Knappen visar samtidigt om servern körs. På bilden är knappens bakgrund vit, vilket betyder att servern inte körs. Det säger också tipset högst upp. Du kan när som helst starta eller stoppa servern genom att trycka på knappen.
+@38
+en: The middle purple button connects to the EV3 robot. The button also shows whether the smartphone is connected to the robot. In the picture the button background is white, which means the robot is not connected. This button has a hint too, right under the button: the top line shows the connection state (in the picture the text &laquo;EV3 not connected&raquo;) and the bottom line shows the name of the current robot settings (in the picture &laquo;EV3 Explorer&raquo;).
+sv: Den mittersta lila knappen ansluter till EV3-roboten. Knappen visar samtidigt om telefonen är ansluten till roboten. På bilden är knappens bakgrund vit, vilket betyder att roboten inte är ansluten. Den här knappen har också ett tips, precis under knappen: den övre raden visar anslutningsstatus (på bilden texten &laquo;EV3 inte ansluten&raquo;) och den nedre raden visar namnet på de aktuella robotinställningarna (på bilden &laquo;EV3 Explorer&raquo;).
+@39
+en: The button on the right opens the RoboCam settings. If you use my EV3 Explorer you don't need to configure anything else, because right after the first launch the settings named &laquo;EV3 Explorer&raquo; are selected by default. If your robot is different you will first have to dig around in the settings. We'll talk about that below.
+sv: Knappen till höger öppnar RoboCams inställningar. Om du använder min EV3 Explorer behöver du inte ställa in något mer, eftersom inställningarna &laquo;EV3 Explorer&raquo; är valda som standard direkt efter första starten. Om din robot är en annan får du först pyssla med inställningarna. Det tar vi nedan.
+@40
+en: Starting the RoboCam server and connecting to it
+sv: Starta RoboCam-servern och ansluta till den
+@41
+en: Let me say straight away that it doesn't matter which you do first: start the RoboCam server or connect the smartphone to the robot. You can do it in either order.
+sv: Jag säger direkt att det inte spelar någon roll vad du gör först: starta RoboCam-servern eller ansluta telefonen till roboten. Du kan göra det i vilken ordning som helst.
+@42
+en: So, once the app is installed on smartphone 1 (see the diagrams above) and open, you can start the RoboCam server. Press the green button on the left; the button starts blinking and the hint says &laquo;Initialising RoboCam server...&raquo;. After a while, once the server has started, the button background turns green and the hint says &laquo;RoboCam server is running&raquo;.
+sv: När appen är installerad på telefon 1 (se schemana ovan) och öppen kan du starta RoboCam-servern. Tryck på den gröna knappen till vänster; knappen börjar blinka och tipset säger &laquo;Initierar RoboCam-servern...&raquo;. Efter en stund, när servern har startat, blir knappens bakgrund grön och tipset säger &laquo;RoboCam-servern körs&raquo;.
+@43
+en: Starting the RoboCam server
+sv: Starta RoboCam-servern
+@44
+en: If the smartphone is not yet connected to your Wi-Fi router (as in our picture), it is time to do that. Once it is connected, the second line of the hint at the top shows the address for connecting to the RoboCam server. When turning the server on it makes no difference whether you start the RoboCam server or Wi-Fi first.
+sv: Om telefonen ännu inte är ansluten till din Wi-Fi-router (som på vår bild) är det dags att göra det. Efter anslutningen visas adressen för anslutning till RoboCam-servern på andra raden i tipset högst upp. När du slår på servern spelar det ingen roll om du startar RoboCam-servern eller Wi-Fi först.
+@45
+en: The RoboCam server now has an IP address
+sv: RoboCam-servern har nu en IP-adress
+@46
+en: Now you can connect to the RoboCam server. Take the second smartphone or tablet (I will use a tablet), make sure it is connected to the same Wi-Fi router, open a browser and go to the page at the address shown in the hint in RoboCam (in the picture &laquo;http://192.168.1.153:8088&raquo;). Use one of the browsers mentioned above. If you did everything right, a page for entering a login and password loads in the browser. Enter your login and password and press &laquo;Log in&raquo;. If you haven't changed anything in the settings since installing, the default login is &laquo;admin&raquo; and the password &laquo;123&raquo;.
+sv: Nu kan du ansluta till RoboCam-servern. Ta den andra telefonen eller surfplattan (jag använder en surfplatta), se till att den är ansluten till samma Wi-Fi-router, öppna en webbläsare och gå till sidan med adressen som visas i tipset i RoboCam (på bilden &laquo;http://192.168.1.153:8088&raquo;). Använd någon av webbläsarna som nämndes ovan. Om du gjort allt rätt laddas en sida för inloggning i webbläsaren. Ange ditt användarnamn och lösenord och tryck på &laquo;Logga in&raquo;. Om du inte har ändrat något i inställningarna efter installationen är standardanvändarnamnet &laquo;admin&raquo; och lösenordet &laquo;123&raquo;.
+@47
+en: RoboCam client &ndash; entering the login and password
+sv: RoboCam-klienten &ndash; ange användarnamn och lösenord
+@48
+en: The main page of the RoboCam server then opens, showing the picture from the camera of smartphone 1 (see the diagram above).
+sv: Därefter öppnas RoboCam-serverns huvudsida, som visar bilden från kameran på telefon 1 (se schemat ovan).
+@49
+en: The browser is connected to the RoboCam server
+sv: Webbläsaren är ansluten till RoboCam-servern
+@50
+en: As you can see, smartphone 1 is in portrait orientation and my tablet in landscape. You can turn smartphone 1 so that it is also in landscape orientation. The picture on the tablet then changes to landscape automatically.
+sv: Som du ser är telefon 1 i stående orientering och min surfplatta i liggande. Du kan vrida telefon 1 så att den också är i liggande orientering. Bilden på surfplattan ändras då automatiskt till liggande.
+@51
+en: Note that the orientation does not change if you have locked smartphone 1.
+sv: Observera att orienteringen inte ändras om du har låst telefon 1.
+@52
+en: Landscape image orientation on the RoboCam client and server
+sv: Liggande bildorientering på RoboCam-klienten och -servern
+@53
+en: To make the image fill the screen, press the icon
+sv: För att få bilden att fylla skärmen, tryck på ikonen
+@54
+en: The icon that turns on full-screen mode in RoboCam
+sv: Ikonen som slår på helskärmsläge i RoboCam
+@55
+en: at the top right of the page. This removes all the buttons and browser tabs we don't need, and the camera image becomes larger.
+sv: uppe till höger på sidan. Då försvinner alla knappar och webbläsarflikar vi inte behöver, och kamerabilden blir större.
+@56
+en: RoboCam client in full-screen mode
+sv: RoboCam-klienten i helskärmsläge
+@57
+en: Connecting RoboCam to the EV3
+sv: Ansluta RoboCam till EV3
+@58
+en: Before connecting RoboCam to the EV3, make sure Bluetooth is on for both your EV3 robot and the smartphone and that they are paired. Also make sure the motors are connected to exactly the ports given in the robot settings. The name of the current settings is written in the hint on the second line under the middle button; in the picture below it is &laquo;EV3 Explorer&raquo;. If you built the EV3 Explorer to my plan (see above) and haven't changed the settings after installing RoboCam, you can be sure everything is set up correctly. The settings are described in detail below.
+sv: Innan du ansluter RoboCam till EV3, se till att Bluetooth är påslaget både på din EV3-robot och på telefonen och att de är parkopplade. Se också till att motorerna är anslutna till exakt de portar som anges i robotinställningarna. Namnet på de aktuella inställningarna står i tipset på andra raden under mittenknappen; på bilden nedan är det &laquo;EV3 Explorer&raquo;. Om du byggt EV3 Explorer enligt min anvisning (se ovan) och inte ändrat inställningarna efter installationen av RoboCam kan du vara säker på att allt är rätt inställt. Inställningarna beskrivs i detalj nedan.
+@59
+en: The RoboCam server now has an IP address
+sv: RoboCam-servern har nu en IP-adress
+@60
+en: So, if everything is ready, press the central purple button. If Bluetooth turns out to be off on your phone you will see a request to turn it on. Press &laquo;Yes&raquo;.
+sv: Om allt är klart trycker du alltså på den centrala lila knappen. Om Bluetooth visar sig vara avstängt på telefonen får du en begäran om att slå på det. Tryck på &laquo;Ja&raquo;.
+@61
+en: Request to turn on Bluetooth in Android
+sv: Begäran om att slå på Bluetooth i Android
+@62
+en: Next you will see the button start blinking, and a list of Bluetooth-paired devices appears in place of the hint. Choose your EV3 robot here (in the picture it is &laquo;EV3&raquo;, but your EV3 may have a different name set).
+sv: Sedan ser du knappen börja blinka, och en lista över Bluetooth-parkopplade enheter visas i stället för tipset. Välj din EV3-robot här (på bilden heter den &laquo;EV3&raquo;, men din EV3 kan ha ett annat namn).
+@63
+en: Choosing the EV3 among Bluetooth-paired devices in RoboCam
+sv: Välja EV3 bland Bluetooth-parkopplade enheter i RoboCam
+@64
+en: The app then connects to the EV3.
+sv: Därefter ansluter appen till EV3.
+@65
+en: RoboCam is connected to the EV3
+sv: RoboCam är ansluten till EV3
+@66
+en: If the client is connected to the RoboCam server at this moment, you will see the joysticks appear (the rectangular and round joysticks in the picture below). After that you can control the robot straight away.
+sv: Om klienten är ansluten till RoboCam-servern vid det här laget ser du styrspakarna dyka upp (den rektangulära och den runda styrspaken på bilden nedan). Därefter kan du styra roboten direkt.
+@67
+en: Joysticks on the RoboCam client for controlling the EV3 robot
+sv: Styrspakar på RoboCam-klienten för att styra EV3-roboten
+@68
+en: With the default EV3 Explorer settings you have two joysticks: a round one and a vertical one (see the picture above). The vertical joystick controls the frame that holds the smartphone, and the round one controls the robot's movement. The palm icon at the top right swaps the joysticks around, so you can quickly switch the layout for left- or right-handed use. More about joysticks below.
+sv: Med standardinställningarna för EV3 Explorer har du två styrspakar: en rund och en vertikal (se bilden ovan). Den vertikala styrspaken styr ramen som håller telefonen, och den runda styr robotens rörelser. Ikonen med en handflata uppe till höger byter plats på styrspakarna, så att du snabbt kan växla layouten för vänster- eller högerhänta. Mer om styrspakar nedan.
+@69
+en: Stopping the RoboCam server and disconnecting the EV3
+sv: Stoppa RoboCam-servern och koppla från EV3
+@70
+en: When you have finished controlling the robot, it is recommended to stop the RoboCam server and disconnect the EV3 from the smartphone before closing the RoboCam app. You can do this in either order. To stop the server press the green button on the left. The button background then turns white and the hint shows &laquo;RoboCam server is off&raquo;. To disconnect the EV3 press the central purple button. The button background then turns white and the top line of the hint shows &laquo;EV3 not connected&raquo;. The motors stop or return to their initial position, depending on the settings.
+sv: När du är klar med att styra roboten rekommenderas det att stoppa RoboCam-servern och koppla från EV3 från telefonen innan du stänger appen RoboCam. Du kan göra det i vilken ordning som helst. För att stoppa servern trycker du på den gröna knappen till vänster. Knappens bakgrund blir då vit och tipset visar &laquo;RoboCam-servern är avstängd&raquo;. För att koppla från EV3 trycker du på den centrala lila knappen. Knappens bakgrund blir då vit och den övre raden i tipset visar &laquo;EV3 inte ansluten&raquo;. Motorerna stannar eller går till utgångsläget, beroende på inställningarna.
+@71
+en: RoboCam server settings
+sv: RoboCams serverinställningar
+@72
+en: To open the settings, press the grey button on the right.
+sv: För att öppna inställningarna trycker du på den grå knappen till höger.
+@73
+en: RoboCam on first launch
+sv: RoboCam vid första start
+@74
+en: The settings are split into 2 parts: server settings and robot settings. First let's see what is in the server settings. Choose &laquo;Server&raquo;.
+sv: Inställningarna är uppdelade i 2 delar: serverinställningar och robotinställningar. Först tittar vi på vad som finns i serverinställningarna. Välj &laquo;Server&raquo;.
+@75
+en: RoboCam settings groups
+sv: Inställningsgrupper i RoboCam
+@76
+en: The server settings fall into 2 groups: camera settings and security settings. In the camera settings you can choose the camera (front or rear), the image size and the JPEG quality. The smaller you set the image size, the smoother and faster the video reaches the client, but the picture quality gets worse. JPEG quality affects the video in the same way: the better the JPEG quality (90 percent or more), the better the picture but the slower the speed; and the worse the JPEG quality (40 percent or less), the faster the speed but the worse the picture. Choose what is best for you.
+sv: Serverinställningarna är indelade i 2 grupper: kamerainställningar och säkerhetsinställningar. I kamerainställningarna kan du välja kamera (fram eller bak), bildstorlek och JPEG-kvalitet. Ju mindre bildstorlek du väljer, desto jämnare och snabbare når videon klienten, men bildkvaliteten försämras. JPEG-kvaliteten påverkar videon på samma sätt: ju bättre JPEG-kvalitet (90 procent eller mer), desto bättre bild men lägre hastighet; och ju sämre JPEG-kvalitet (40 procent eller mindre), desto högre hastighet men sämre bild. Välj det som passar dig bäst.
+@77
+en: RoboCam server settings
+sv: RoboCams serverinställningar
+@78
+en: In the security settings you can change the driver's name and password (by default the name is &laquo;admin&raquo; and the password &laquo;123&raquo;). Observers are also enabled by default. Observers can see the camera image alongside you but cannot control the robot. For an observer you can also set a name and password (by default the name &laquo;guest&raquo; and password &laquo;123&raquo;). To turn observers off, untick &laquo;Allow observers&raquo;.
+sv: I säkerhetsinställningarna kan du ändra förarens namn och lösenord (som standard är namnet &laquo;admin&raquo; och lösenordet &laquo;123&raquo;). Observatörer är också påslagna som standard. Observatörer kan se kamerabilden parallellt med dig men kan inte styra roboten. Även för en observatör kan du ange namn och lösenord (som standard namnet &laquo;guest&raquo; och lösenordet &laquo;123&raquo;). För att stänga av observatörer avmarkerar du &laquo;Tillåt observatörer&raquo;.
+@79
+en: Observer settings in RoboCam
+sv: Observatörsinställningar i RoboCam
+@80
+en: The number of drivers and observers is not limited, but connecting more than one driver can cause conflicts in simultaneous control and video streaming. It is not recommended to connect more than one driver to the RoboCam server. A large number of observers can also hurt video transmission. It is best to reduce observers to a minimum or turn the feature off altogether.
+sv: Antalet förare och observatörer är inte begränsat, men att ansluta fler än en förare kan orsaka konflikter vid samtidig styrning och videoöverföring. Det rekommenderas inte att ansluta fler än en förare till RoboCam-servern. Ett stort antal observatörer kan också försämra videoöverföringen. Det är bäst att minska observatörerna till ett minimum eller stänga av funktionen helt.
+@81
+en: After changing the settings you can save them by pressing the &laquo;SAVE&raquo; button at the top right, or leave without saving by pressing the &laquo;CANCEL&raquo; button or the arrow at the top left. After the server settings are saved, clients may be disconnected and will need to connect again.
+sv: Efter att du ändrat inställningarna kan du spara dem genom att trycka på knappen &laquo;SPARA&raquo; uppe till höger, eller lämna utan att spara genom att trycka på knappen &laquo;AVBRYT&raquo; eller pilen uppe till vänster. När serverinställningarna har sparats kan klienter kopplas från och måste ansluta igen.
+@82
+en: List of robot settings
+sv: Lista över robotinställningar
+@83
+en: The second part of the RoboCam settings is the robot settings. Press &laquo;Robot&raquo; to go to the list of robot settings.
+sv: Den andra delen av RoboCams inställningar är robotinställningarna. Tryck på &laquo;Robot&raquo; för att gå till listan över robotinställningar.
+@84
+en: RoboCam settings groups
+sv: Inställningsgrupper i RoboCam
+@85
+en: In the list of robot settings you can see the settings for all your robots. You can add or delete settings at any time with the &laquo;ADD&raquo; or &laquo;DELETE&raquo; button at the top right. Right under the buttons you see the current settings. This item is how you switch between the settings for your robots. Now let's look at the EV3 Explorer settings. To do that, choose &laquo;EV3 Explorer&raquo; in the list.
+sv: I listan över robotinställningar ser du inställningarna för alla dina robotar. Du kan när som helst lägga till eller ta bort inställningar med knappen &laquo;LÄGG TILL&raquo; eller &laquo;TA BORT&raquo; uppe till höger. Precis under knapparna ser du de aktuella inställningarna. Med det här alternativet växlar du mellan inställningarna för dina robotar. Nu tittar vi på inställningarna för EV3 Explorer. Välj då &laquo;EV3 Explorer&raquo; i listan.
+@86
+en: List of robot settings in RoboCam
+sv: Lista över robotinställningar i RoboCam
+@87
+en: At the very top is the general information: the robot's name and description. The name and description are shown in the list so you can easily find the settings you need. The name is also shown on the app's main screen under the central button you use to connect to the EV3. The joystick settings come next.
+sv: Allra överst finns den allmänna informationen: robotens namn och beskrivning. Namn och beskrivning visas i listan så att du lätt hittar rätt inställningar. Namnet visas också på appens huvudskärm under den centrala knappen som du ansluter till EV3 med. Därefter kommer styrspaksinställningarna.
+@88
+en: General robot information in the RoboCam settings
+sv: Allmän robotinformation i RoboCams inställningar
+@89
+en: You can configure up to 4 joysticks in total, but only one pair of joysticks, 1-2 or 3-4, is visible on the client's screen at a time. Even if you use joysticks 1 and 3 they will not be visible at the same time, because they belong to different pairs; you will see either joystick 1 or joystick 3. Each joystick's visibility is switched on with the &laquo;<strong>Visibility</strong>&raquo; checkbox. If you have enabled 2 pairs of joysticks, a button appears on the client screen
+sv: Du kan ställa in upp till 4 styrspakar totalt, men bara ett par styrspakar, 1-2 eller 3-4, syns på klientens skärm åt gången. Även om du använder styrspakarna 1 och 3 syns de inte samtidigt, eftersom de hör till olika par; du ser antingen styrspak 1 eller styrspak 3. Varje styrspaks synlighet slås på med kryssrutan &laquo;<strong>Synlighet</strong>&raquo;. Om du har aktiverat 2 par styrspakar visas en knapp på klientskärmen
+@90
+en: The button that switches the joystick pair on the RoboCam client
+sv: Knappen som växlar styrspaksparet på RoboCam-klienten
+@91
+en: for switching between the pairs.
+sv: för att växla mellan paren.
+@92
+en: So in the settings you can see the groups &laquo;Joystick 1&raquo;, &laquo;Joystick 2&raquo;, &laquo;Joystick 3&raquo; and &laquo;Joystick 4&raquo;. Each holds the settings for one joystick. Let's look at the settings for &laquo;Joystick 1&raquo;. The &laquo;Visibility&raquo; checkbox, as you have understood, shows or hides the joystick. If the checkbox is not ticked, the settings for that joystick are hidden too.
+sv: I inställningarna ser du alltså grupperna &laquo;Styrspak 1&raquo;, &laquo;Styrspak 2&raquo;, &laquo;Styrspak 3&raquo; och &laquo;Styrspak 4&raquo;. Var och en innehåller inställningarna för en styrspak. Vi tittar på inställningarna för &laquo;Styrspak 1&raquo;. Kryssrutan &laquo;Synlighet&raquo; visar eller döljer, som du förstått, styrspaken. Om kryssrutan inte är markerad döljs även inställningarna för den styrspaken.
+@93
+en: A little lower, in the drop-down list &laquo;<strong>Shape</strong>&raquo;, you can choose the joystick's shape, and with the shape its characteristics. The following joystick shapes are available: vertical, horizontal, round, square, arrows, vertical arrows and horizontal arrows. Here is what these joysticks look like:
+sv: Lite längre ner, i listan &laquo;<strong>Form</strong>&raquo;, kan du välja styrspakens form, och med formen dess egenskaper. Följande former finns: vertikal, horisontell, rund, kvadratisk, pilar, vertikala pilar och horisontella pilar. Så här ser styrspakarna ut:
+@94
+en: RoboCam joysticks
+sv: RoboCams styrspakar
+@95
+en: The vertical joystick only senses the height of the touch, i.e. it doesn't matter whether you touch it further left or right, only at what height. The touch coordinate for it ranges from -100 at the very bottom to 100 at the very top, with 0 in the middle.
+sv: Den vertikala styrspaken känner bara av beröringens höjd, det vill säga det spelar ingen roll om du rör vid den längre åt vänster eller höger, bara på vilken höjd. Beröringskoordinaten går för den från -100 längst ner till 100 längst upp, med 0 i mitten.
+@96
+en: The horizontal joystick works the same way, but horizontally. It doesn't matter at what height the touch happens, only whether it is to the left or right. Here the touch coordinate is calculated horizontally from -100 at the far left to 100 at the far right, with 0 in the middle.
+sv: Den horisontella styrspaken fungerar likadant, men horisontellt. Det spelar ingen roll på vilken höjd beröringen sker, bara om den är till vänster eller höger. Här beräknas beröringskoordinaten horisontellt från -100 längst till vänster till 100 längst till höger, med 0 i mitten.
+@97
+en: The round and square joysticks are similar. They determine the touch coordinates on both the horizontal and vertical axes, again from -100 to 100 with 0 at the centre. But in the round joystick, touches cannot go outside the circle. That is, if the touch point is outside the circle, the point taken is where the line from the touch point to the centre of the circle crosses the circumference. This is easier to see in the picture below.
+sv: Den runda och den kvadratiska styrspaken liknar varandra. De bestämmer beröringskoordinaterna på både horisontell och vertikal axel, också från -100 till 100 med 0 i mitten. Men i den runda styrspaken kan beröringar inte hamna utanför cirkeln. Om beröringspunkten ligger utanför cirkeln tas alltså den punkt där linjen från beröringspunkten till cirkelns mitt korsar cirkelns omkrets. Det syns tydligare på bilden nedan.
+@98
+en: Calculating the touch point coordinates of the RoboCam round joystick
+sv: Beräkning av beröringspunktens koordinater för RoboCams runda styrspak
+@99
+en: The arrow joysticks are not sensitive to the touch point; what matters is which arrow you touch. If you touch the up arrow, the joystick's vertical coordinate is taken to be 100 and the horizontal one 0. For the down arrow the horizontal coordinate is also 0 and the vertical one becomes -100. Likewise for the left and right arrows: the vertical coordinate is 0 and the horizontal one is -100 and 100 respectively.
+sv: Pilstyrspakarna är inte känsliga för beröringspunkten; det som räknas är vilken pil du rör vid. Om du rör vid uppåtpilen anses styrspakens vertikala koordinat vara 100 och den horisontella 0. För nedåtpilen är den horisontella koordinaten också 0 och den vertikala blir -100. På samma sätt för vänster- och högerpilarna: den vertikala koordinaten är 0 och den horisontella är -100 respektive 100.
+@100
+en: Right under the shape you choose the joystick type in the drop-down list &laquo;<strong>Type</strong>&raquo;. You can choose one of these values: &laquo;Independent motors&raquo;, &laquo;Steering 1&raquo;, &laquo;Steering 2&raquo; and &laquo;Mailbox&raquo;.
+sv: Direkt under formen väljer du styrspakens typ i listan &laquo;<strong>Typ</strong>&raquo;. Du kan välja ett av följande värden: &laquo;Oberoende motorer&raquo;, &laquo;Styrning 1&raquo;, &laquo;Styrning 2&raquo; och &laquo;Brevlåda&raquo;.
+@101
+en: Joysticks of type &laquo;<strong>Steering 1</strong>&raquo; and &laquo;<strong>Steering 2</strong>&raquo; let you control a robot with two independent drive wheels, such as the EV3 Explorer. The touch coordinates on these joysticks are converted automatically into motor commands. For the joystick you only have to choose which port has the left wheel and which the right one. That is described a little further down.
+sv: Styrspakar av typen &laquo;<strong>Styrning 1</strong>&raquo; och &laquo;<strong>Styrning 2</strong>&raquo; låter dig styra en robot med två oberoende drivhjul, som EV3 Explorer. Beröringskoordinaterna på sådana styrspakar omvandlas automatiskt till motorkommandon. För styrspaken behöver du bara välja vilken port som har vänster hjul och vilken som har höger. Det beskrivs lite längre ner.
+@102
+en: &laquo;Steering 1&raquo; lets you drive a two-wheeled robot like a car. You cannot turn the robot on the spot with it. The closer the touch is to the centre vertically, the lower the speed. &laquo;Steering 2&raquo; lets the robot spin on the spot.
+sv: &laquo;Styrning 1&raquo; låter dig köra en tvåhjulig robot som en bil. Du kan inte vända roboten på stället med den. Ju närmare mitten beröringen ligger vertikalt, desto lägre hastighet. &laquo;Styrning 2&raquo; låter roboten snurra på stället.
+@103
+en: A joystick of type &laquo;<strong>Independent motors</strong>&raquo; converts the horizontal touch coordinate into motor commands independently of the vertical coordinate. For the joystick you have to specify which motor is controlled when the horizontal coordinate changes and which when the vertical coordinate changes. This type of joystick can be used to drive a car in which one motor steers and a second motor turns the drive wheels. In that case the change of the horizontal coordinate is set to turn the first motor and the change of the vertical coordinate to turn the second motor.
+sv: En styrspak av typen &laquo;<strong>Oberoende motorer</strong>&raquo; omvandlar den horisontella beröringskoordinaten till motorkommandon oberoende av den vertikala koordinaten. För styrspaken måste du ange vilken motor som styrs när den horisontella koordinaten ändras och vilken när den vertikala koordinaten ändras. Den här typen av styrspak kan användas för att köra en bil där en motor styr och en andra motor driver drivhjulen. I så fall ställs ändringen av den horisontella koordinaten in på att vrida den första motorn och ändringen av den vertikala koordinaten på att vrida den andra motorn.
+@104
+en: A joystick of type &laquo;<strong>Mailbox</strong>&raquo; simply passes the touch coordinates to EV3 mailboxes. To bring your robot to life you will have to write an EV3 program that processes these coordinates. With this type of joystick you can build more complex robot control models, because you can implement your own algorithm for converting the coordinates taken from the joystick into motor commands. For example, you could build control for the EV3 Gyro Boy. Joystick 1 passes coordinates to mailboxes named x and y, joystick 2 to mailboxes w and z, joystick 3 to mailboxes a and b and joystick 4 to mailboxes c and d.
+sv: En styrspak av typen &laquo;<strong>Brevlåda</strong>&raquo; skickar bara vidare beröringskoordinaterna till EV3-brevlådor. För att din robot ska väckas till liv måste du skriva ett EV3-program som bearbetar koordinaterna. Med den här typen av styrspak kan du bygga mer komplexa styrmodeller för roboten, eftersom du kan implementera din egen algoritm för att omvandla koordinaterna från styrspaken till motorkommandon. Du kan till exempel bygga styrning för EV3 Gyro Boy. Styrspak 1 skickar koordinater till brevlådor med namnen x och y, styrspak 2 till brevlådorna w och z, styrspak 3 till brevlådorna a och b och styrspak 4 till brevlådorna c och d.
+@105
+en: The next two settings, &laquo;<strong>End of touch (for horizontal axis)</strong>&raquo; and &laquo;<strong>End of touch (for vertical axis)</strong>&raquo;, determine what happens when you stop touching the joystick. You can choose one of two options: &laquo;Return to zero&raquo; or &laquo;Keep position&raquo;. Returning to zero makes sense in most situations; for example, if you want the robot to stop when you stop touching the joystick, &laquo;Return to zero&raquo; is the right choice. Keeping the position is useful when you need to remember the last touch coordinate. It is used, for example, for tilting the EV3 Explorer's frame. This setting is available for all joystick shapes except arrow joysticks.
+sv: De nästa två inställningarna, &laquo;<strong>Slut på beröring (för horisontell axel)</strong>&raquo; och &laquo;<strong>Slut på beröring (för vertikal axel)</strong>&raquo;, bestämmer vad som händer när du slutar röra vid styrspaken. Du kan välja ett av två alternativ: &laquo;Återgå till noll&raquo; eller &laquo;Behåll position&raquo;. Att återgå till noll är lämpligt i de flesta situationer; om du till exempel vill att roboten ska stanna när du slutar röra vid styrspaken är &laquo;Återgå till noll&raquo; rätt val. Att behålla positionen är användbart när den senaste beröringskoordinaten ska kommas ihåg. Det används till exempel för att luta EV3 Explorers ram. Inställningen finns för alla styrspaksformer utom pilstyrspakar.
+@106
+en: If you use the joystick type &laquo;Independent motors&raquo;, &laquo;Steering 1&raquo; or &laquo;Steering 2&raquo;, you will find the port settings for that joystick below. The ports the joystick controls can be added and removed with the &laquo;ADD&raquo; and &laquo;DELETE&raquo; buttons. The number of ports is not limited. The first picture below shows the settings for a joystick of type &laquo;Independent motors&raquo;, and the second for a joystick of type &laquo;Steering 1&raquo; and &laquo;Steering 2&raquo;. As you can see, there is a small difference.
+sv: Om du använder styrspakstypen &laquo;Oberoende motorer&raquo;, &laquo;Styrning 1&raquo; eller &laquo;Styrning 2&raquo; hittar du portinställningarna för den styrspaken nedanför. De portar styrspaken styr kan läggas till och tas bort med knapparna &laquo;LÄGG TILL&raquo; och &laquo;TA BORT&raquo;. Antalet portar är inte begränsat. Den första bilden nedan visar inställningarna för en styrspak av typen &laquo;Oberoende motorer&raquo;, och den andra för en styrspak av typen &laquo;Styrning 1&raquo; och &laquo;Styrning 2&raquo;. Som du ser finns en liten skillnad.
+@107
+en: Joystick port settings in RoboCam
+sv: Styrspakens portinställningar i RoboCam
+@108
+en: Joystick port settings in RoboCam
+sv: Styrspakens portinställningar i RoboCam
+@109
+en: Let's run through the port settings. The &laquo;<strong>Joystick axis</strong>&raquo; setting appears only for a joystick of type &laquo;Independent motors&raquo;. There are two options: &laquo;Horizontal&raquo; and &laquo;Vertical&raquo;. If you choose &laquo;Horizontal&raquo; the motor reacts only to changes of the touch coordinate on the horizontal axis, and if you choose &laquo;Vertical&raquo; it reacts to touches on the vertical axis.
+sv: Vi går igenom portinställningarna. Inställningen &laquo;<strong>Styrspakens axel</strong>&raquo; finns bara för en styrspak av typen &laquo;Oberoende motorer&raquo;. Det finns två alternativ: &laquo;Horisontell&raquo; och &laquo;Vertikal&raquo;. Om du väljer &laquo;Horisontell&raquo; reagerar motorn bara på ändringar av beröringskoordinaten på den horisontella axeln, och om du väljer &laquo;Vertikal&raquo; reagerar den på beröringar på den vertikala axeln.
+@110
+en: The &laquo;<strong>Motor</strong>&raquo; setting appears only for a joystick of type &laquo;Steering 1&raquo; or &laquo;Steering 2&raquo;. Here you choose between &laquo;Left&raquo; and &laquo;Right&raquo;.
+sv: Inställningen &laquo;<strong>Motor</strong>&raquo; finns bara för en styrspak av typen &laquo;Styrning 1&raquo; eller &laquo;Styrning 2&raquo;. Här väljer du mellan &laquo;Vänster&raquo; och &laquo;Höger&raquo;.
+@111
+en: The &laquo;<strong>EV3 brick</strong>&raquo; setting is needed if you built a robot using several EV3 bricks connected in a &laquo;daisy chain&raquo;. You can choose a brick number from 1 to 4 here. If you only use one EV3 brick, this must always be 1.
+sv: Inställningen &laquo;<strong>EV3-enhet</strong>&raquo; behövs om du byggt en robot med flera EV3-enheter kopplade i en &laquo;seriekoppling&raquo;. Här kan du välja ett enhetsnummer från 1 till 4. Om du bara använder en EV3-enhet ska det alltid vara 1.
+@112
+en: With the &laquo;<strong>Port number</strong>&raquo; setting you choose the motor port, A to D.
+sv: Med inställningen &laquo;<strong>Portnummer</strong>&raquo; väljer du motorport, A till D.
+@113
+en: The &laquo;<strong>Changed value</strong>&raquo; setting appears only for a joystick of type &laquo;Independent motors&raquo;. There are two options: &laquo;Motor power&raquo; and &laquo;Motor rotation angle&raquo;. If you choose &laquo;<strong>Motor power</strong>&raquo;, the joystick affects the motor's power, i.e. the further from the joystick's centre you touch, the faster the motor turns. If you choose &laquo;<strong>Motor rotation angle</strong>&raquo;, the joystick affects the motor's rotation angle, i.e. the further from the centre you touch, the larger the angle the motor turns through. In that case the motor's power is set with the &laquo;<strong>Power</strong>&raquo; setting. The larger this number, the faster the motor reacts to a change of the touch coordinate and the better it holds the angle.
+sv: Inställningen &laquo;<strong>Ändrat värde</strong>&raquo; finns bara för en styrspak av typen &laquo;Oberoende motorer&raquo;. Det finns två alternativ: &laquo;Motoreffekt&raquo; och &laquo;Motorns vridningsvinkel&raquo;. Om du väljer &laquo;<strong>Motoreffekt</strong>&raquo; påverkar styrspaken motorns effekt, det vill säga ju längre från styrspakens mitt du rör vid, desto snabbare snurrar motorn. Om du väljer &laquo;<strong>Motorns vridningsvinkel</strong>&raquo; påverkar styrspaken motorns vridningsvinkel, det vill säga ju längre från mitten du rör vid, desto större vinkel vrids motorn. I så fall ställs motorns effekt in med inställningen &laquo;<strong>Effekt</strong>&raquo;. Ju större det här talet är, desto snabbare reagerar motorn på en ändring av beröringskoordinaten och desto bättre håller den vinkeln.
+@114
+en: Ticking &laquo;<strong>Invert</strong>&raquo; inverts the calculated power or angle, and &laquo;<strong>Coefficient</strong>&raquo; increases or decreases the calculated value.
+sv: Genom att markera &laquo;<strong>Invertera</strong>&raquo; inverteras den beräknade effekten eller vinkeln, och &laquo;<strong>Koefficient</strong>&raquo; ökar eller minskar det beräknade värdet.
+@115
+en: With &laquo;<strong>Brake</strong>&raquo; ticked the motors stop quickly, i.e. they brake. With it unticked the motors keep turning for a while by inertia until they stop completely.
+sv: När &laquo;<strong>Bromsa</strong>&raquo; är markerad stannar motorerna snabbt, det vill säga de bromsar. När den är avmarkerad fortsätter motorerna att snurra en stund av tröghet tills de stannar helt.
+@116
+en: Those are, in fact, all the settings in RoboCam.
+sv: Det var i princip alla inställningar som finns i RoboCam.
+@117
+en: Connecting without a router
+sv: Ansluta utan router
+@118
+en: Now a few tricks that can make RoboCam a little more convenient to use. If there is no router nearby, for example if you are outdoors, you can set up a connection between smartphone 1 and smartphone or tablet 2 directly. To do this, turn on the hotspot on smartphone 1 (in Android the hotspot is usually turned on in the network connection settings). Once it is on, smartphone 1 becomes a Wi-Fi router and you can connect tablet or smartphone 2 to it without any problem. This is what the connection looks like schematically.
+sv: Nu några knep som kan göra RoboCam lite bekvämare att använda. Om det inte finns någon router i närheten, till exempel om du är utomhus, kan du ordna en anslutning mellan telefon 1 och telefon eller surfplatta 2 direkt. För det slår du på hotspot på telefon 1 (hotspot slås i Android vanligtvis på i inställningarna för nätverksanslutningar). När den är påslagen blir telefon 1 en Wi-Fi-router och du kan utan problem ansluta surfplatta eller telefon 2 till den. Så här ser anslutningen ut schematiskt.
+@119
+en: Connection in RoboCam without a router
+sv: Anslutning i RoboCam utan router
+@120
+en: You find out the RoboCam server address the same way, from the button's hint. In most cases, for such a hotspot the address is always http://192.168.43.1:8088.
+sv: RoboCam-serverns adress får du reda på på samma sätt, från knappens tips. I de flesta fall är adressen för en sådan hotspot alltid http://192.168.43.1:8088.
+@121
+en: Starting the RoboCam server and a hotspot on an Android smartphone
+sv: Starta RoboCam-servern och en hotspot på en Android-telefon
+@122
+en: Using smartphone 1 as a joystick
+sv: Använda telefon 1 som styrspak
+@123
+en: There is one more trick you can do with RoboCam. On smartphone 1 (the one with RoboCam installed) start the server, connect to the robot, and then start a browser on the same smartphone (naturally one that supports HTML5) and go to the address http://localhost:8088. You will see the page for entering a login and password. Log in as a driver. After logging in you see the joysticks and can control the robot. In this case, though, the camera image is not transmitted. Wi-Fi can be turned off.
+sv: Det finns ytterligare ett knep du kan göra med RoboCam. Starta servern på telefon 1 (den där RoboCam är installerad), anslut till roboten, starta sedan en webbläsare på samma telefon (naturligtvis en som stöder HTML5) och gå till adressen http://localhost:8088. Du ser sidan för inloggning. Logga in som förare. Efter inloggningen ser du styrspakarna och kan styra roboten. I det här fallet överförs dock ingen kamerabild. Wi-Fi kan stängas av.
+@124
+en: Using a smartphone with RoboCam as a joystick for controlling an EV3 robot
+sv: Använda en telefon med RoboCam som styrspak för att styra en EV3-robot
+@125
+en: Summary
+sv: Sammanfattning
+@126
+en: I hope I have given enough information on how to use RoboCam. If you have questions about the app or suggestions, you can leave them in the RoboCam <a href="https://goo.gl/JIcs9F" target="_blank">community</a>.
+sv: Jag hoppas att jag har gett tillräckligt med information om hur man kan använda RoboCam. Om du har frågor om appen eller förslag kan du lämna dem i <a href="https://goo.gl/JIcs9F" target="_blank">RoboCam-gruppen</a>.

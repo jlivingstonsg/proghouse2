@@ -1,0 +1,243 @@
+@0
+en: The previous article about RoboCam described how to control an EV3 robot in first person. But robots and mechanisms are built in many ways and each needs its own unique control layout. If you have developed a new robot, the question is how to share your settings with other people, move them to another smartphone, or simply copy them. There is a solution: the new version of RoboCam adds import, export, copy and send of robot settings.
+sv: Den förra artikeln om RoboCam beskrev hur man styr en EV3-robot i förstaperson. Men robotar och mekanismer kan se olika ut och var och en behöver sin egen styrning. Om du har utvecklat en ny robot uppstår frågan hur du delar dina inställningar med andra, för över dem till en annan telefon eller helt enkelt kopierar dem. Det finns en lösning: i den nya versionen av RoboCam har funktionerna import, export, kopiering och sändning av robotinställningar lagts till.
+@1
+en: Importing, exporting, copying and sending robot settings in the RoboCam app
+sv: Importera, exportera, kopiera och skicka robotinställningar i appen RoboCam
+@2
+en: This article describes the new features in version 1.1 of RoboCam. All the articles about RoboCam can be found <a href="/tags/robocam">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, or download the APK and install it manually: the <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">regular version of RoboCam</a> or the <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">version of RoboCam that uses RenderScript</a> (for some older smartphones); both are release 1.4.5. There is also an <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror.
+sv: Den här artikeln beskriver de nya funktionerna i version 1.1 av RoboCam. Alla artiklar om RoboCam finns <a href="/tags/robocam">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, eller ladda ner APK-filen och installera den manuellt: den <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">vanliga versionen av RoboCam</a> eller <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">versionen av RoboCam som använder RenderScript</a> (för vissa äldre telefoner); båda är utgåva 1.4.5. Det finns också en <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a>-spegling.
+@3
+en: Exporting settings to a file
+sv: Exportera inställningar till en fil
+@4
+en: First let's look at how to export settings. Open the RoboCam settings by pressing the grey button on the right.
+sv: Först tittar vi på hur man exporterar inställningar. Öppna RoboCams inställningar genom att trycka på den grå knappen till höger.
+@5
+en: The RoboCam app
+sv: Appen RoboCam
+@6
+en: Then choose the &laquo;Robot&raquo; section.
+sv: Välj sedan avsnittet &laquo;Robot&raquo;.
+@7
+en: Choosing a settings section in RoboCam
+sv: Välja ett inställningsavsnitt i RoboCam
+@8
+en: Choose the settings you want to export, for example &laquo;EV3 Explorer&raquo;.
+sv: Välj de inställningar du vill exportera, till exempel &laquo;EV3 Explorer&raquo;.
+@9
+en: List of robot settings in RoboCam
+sv: Lista över robotinställningar i RoboCam
+@10
+en: Once the robot's settings are shown on the screen, tap the button with three dots at the top right and choose &laquo;Export to file&raquo; in the menu that appears.
+sv: När robotens inställningar visas på skärmen, tryck på knappen med tre punkter uppe till höger och välj &laquo;Exportera till fil&raquo; i menyn som visas.
+@11
+en: Exporting settings to a file in RoboCam
+sv: Exportera inställningar till en fil i RoboCam
+@12
+en: If you have Android 6 or later you may see a request for permission to access your phone's shared folders, see the picture below. As a rule you only need to grant the permission once; Android remembers your choice. Press &laquo;ALLOW&raquo;.
+sv: Om du har Android 6 eller senare kan du få en begäran om tillåtelse att komma åt telefonens delade mappar, se bilden nedan. Som regel behöver du bara ge tillståndet en gång; Android kommer ihåg ditt val. Tryck på &laquo;TILLÅT&raquo;.
+@13
+en: Permission to access the shared folders of an Android smartphone
+sv: Tillstånd att komma åt en Android-telefons delade mappar
+@14
+en: The settings are then written to a file immediately, and a message on the screen tells you where to find it. As you can see, the file is saved in the downloads folder, which on my phone is &laquo;/storage/emulated/0/Download&raquo;. The name always starts with the prefix &laquo;RoboCam&raquo;, followed by the name of the settings and the current date. If the file name would clash, for example if you export the settings a second time in a row, the previous file is not overwritten; a second file is created in the same folder with the suffix 2 in its name, then suffix 3, and so on.
+sv: Inställningarna skrivs sedan direkt till en fil, och ett meddelande på skärmen visar var du hittar den. Som du ser sparas filen i nedladdningsmappen, hos mig &laquo;/storage/emulated/0/Download&raquo;. Namnet börjar alltid med prefixet &laquo;RoboCam&raquo;, följt av inställningarnas namn och dagens datum. Om filnamnet skulle krocka, till exempel om du exporterar inställningarna en andra gång i rad, skrivs den tidigare filen inte över; i stället skapas en andra fil i samma mapp med suffixet 2 i namnet, sedan suffixet 3 och så vidare.
+@15
+en: Settings exported successfully in RoboCam
+sv: Inställningarna exporterades i RoboCam
+@16
+en: <em>Note that the settings are written to the file together with any unsaved changes you have made. For example, if you open the &laquo;EV3 Explorer&raquo; settings, change the robot's name to &laquo;My EV3 Explorer&raquo;, export the settings to a file and then close the settings without saving, the file will contain the name &laquo;My EV3 Explorer&raquo;, while the settings themselves keep &laquo;EV3 Explorer&raquo;.</em>
+sv: <em>Observera att inställningarna skrivs till filen tillsammans med osparade ändringar du har gjort. Om du till exempel öppnar inställningarna &laquo;EV3 Explorer&raquo;, ändrar robotens namn till &laquo;Min EV3 Explorer&raquo;, exporterar inställningarna till en fil och sedan stänger inställningarna utan att spara, innehåller filen namnet &laquo;Min EV3 Explorer&raquo;, medan själva inställningarna behåller &laquo;EV3 Explorer&raquo;.</em>
+@17
+en: Sending robot settings
+sv: Skicka robotinställningar
+@18
+en: Now let's learn how to send settings to another smartphone over Bluetooth, or by e-mail. As with export, open the robot settings you need, tap the three-dot button at the top right and choose &laquo;Send&raquo; in the menu.
+sv: Nu lär vi oss att skicka inställningar till en annan telefon via Bluetooth eller med e-post. Precis som vid export öppnar du de robotinställningar du behöver, trycker på knappen med tre punkter uppe till höger och väljer &laquo;Skicka&raquo; i menyn.
+@19
+en: Sending robot settings from the RoboCam app
+sv: Skicka robotinställningar från appen RoboCam
+@20
+en: If you have Android 6 or later you may see a request for permission to access your phone's shared folders, see the picture below. As a rule you only need to grant the permission once; Android remembers your choice. Press &laquo;ALLOW&raquo;.
+sv: Om du har Android 6 eller senare kan du få en begäran om tillåtelse att komma åt telefonens delade mappar, se bilden nedan. Som regel behöver du bara ge tillståndet en gång; Android kommer ihåg ditt val. Tryck på &laquo;TILLÅT&raquo;.
+@21
+en: Permission to access the shared folders of an Android smartphone
+sv: Tillstånd att komma åt en Android-telefons delade mappar
+@22
+en: A dialog then appears for choosing the device or app to send the file with. Not every possible option is listed, only those that can send an XML settings file. The dialog in the picture below will look different on different Android versions. Choose how you want to send the settings file and continue according to your choice and your Android version. For more about sending files in Android, see your device's manual.
+sv: Därefter visas en dialogruta där du väljer enhet eller app att skicka filen med. Alla möjliga alternativ visas inte, bara de som kan skicka en XML-fil med inställningar. Dialogrutan på bilden nedan ser olika ut i olika Android-versioner. Välj hur du vill skicka inställningsfilen och fortsätt beroende på ditt val och din Android-version. Mer om att skicka filer i Android finns i din enhets bruksanvisning.
+@23
+en: Choosing an app to send robot settings from RoboCam
+sv: Välja app för att skicka robotinställningar från RoboCam
+@24
+en: <em>Note that the settings are sent together with any unsaved changes you have made. For example, if you open the &laquo;EV3 Explorer&raquo; settings, change the robot's name to &laquo;My EV3 Explorer&raquo;, send the settings and then close them without saving, the file sent will have the robot name &laquo;My EV3 Explorer&raquo;, while the settings themselves keep &laquo;EV3 Explorer&raquo;.</em>
+sv: <em>Observera att inställningarna skickas tillsammans med osparade ändringar du har gjort. Om du till exempel öppnar inställningarna &laquo;EV3 Explorer&raquo;, ändrar robotens namn till &laquo;Min EV3 Explorer&raquo;, skickar inställningarna och sedan stänger dem utan att spara, får den skickade filen robotnamnet &laquo;Min EV3 Explorer&raquo;, medan själva inställningarna behåller &laquo;EV3 Explorer&raquo;.</em>
+@25
+en: <em>Also keep in mind that the file being sent is stored in the folder &laquo;/storage/emulated/0/.robocam&raquo;. If you change the settings and send them again without waiting for the first send to finish, the file will be overwritten and the changed settings may end up being sent twice.</em>
+sv: <em>Tänk också på att filen som skickas sparas i mappen &laquo;/storage/emulated/0/.robocam&raquo;. Om du ändrar inställningarna och skickar dem igen utan att vänta på att den första sändningen blir klar skrivs filen över, och de ändrade inställningarna kan då skickas två gånger.</em>
+@26
+en: Making a copy of settings
+sv: Skapa en kopia av inställningar
+@27
+en: You may want to copy settings if you are making settings for a new robot based on existing ones. Making a copy is very easy. As with export, open the robot settings you need, tap the three-dot button at the top right and choose &laquo;Make a copy&raquo; in the menu.
+sv: Du kan vilja kopiera inställningar om du gör inställningar för en ny robot utifrån befintliga. Att skapa en kopia är mycket enkelt. Precis som vid export öppnar du de robotinställningar du behöver, trycker på knappen med tre punkter uppe till höger och väljer &laquo;Skapa kopia&raquo; i menyn.
+@28
+en: Making a copy of robot settings in RoboCam
+sv: Skapa en kopia av robotinställningar i RoboCam
+@29
+en: The settings are copied straight away, and you see a message confirming it. Back in the list of settings you will find the copy.
+sv: Inställningarna kopieras direkt, och du ser ett meddelande om det. Tillbaka i listan över inställningar hittar du kopian.
+@30
+en: Importing settings
+sv: Importera inställningar
+@31
+en: Importing settings is very easy. Say you have downloaded a file and put it in the downloads folder &laquo;/storage/emulated/0/Download&raquo;. Open the list of robot settings and tap the three-dot button at the top right. In the menu that appears choose &laquo;Import from file&raquo;.
+sv: Att importera inställningar är mycket enkelt. Säg att du har laddat ner en fil och lagt den i nedladdningsmappen &laquo;/storage/emulated/0/Download&raquo;. Öppna listan över robotinställningar och tryck på knappen med tre punkter uppe till höger. I menyn som visas väljer du &laquo;Importera från fil&raquo;.
+@32
+en: Importing robot settings from a file in RoboCam
+sv: Importera robotinställningar från en fil i RoboCam
+@33
+en: If you have Android 6 or later you may see a request for permission to access your phone's shared folders, see the picture below. As a rule you only need to grant the permission once; Android remembers your choice. Press &laquo;ALLOW&raquo;.
+sv: Om du har Android 6 eller senare kan du få en begäran om tillåtelse att komma åt telefonens delade mappar, se bilden nedan. Som regel behöver du bara ge tillståndet en gång; Android kommer ihåg ditt val. Tryck på &laquo;TILLÅT&raquo;.
+@34
+en: Request for access to the shared folders of the Android file system
+sv: Begäran om åtkomst till Androids delade filsystemsmappar
+@35
+en: A navigator for your file system then appears. Use it to find the settings file you want to import. Tap folders to open them. Use the arrow or the phone's Back button to leave a folder. The &laquo;Cancel&raquo; button closes the navigator straight away.
+sv: Därefter visas en navigator för ditt filsystem. Använd den för att hitta den inställningsfil du vill importera. Tryck på mappar för att öppna dem. Använd pilen eller telefonens Bakåt-knapp för att lämna en mapp. Knappen &laquo;Avbryt&raquo; stänger navigatorn direkt.
+@36
+en: The RoboCam file navigator
+sv: RoboCams filnavigator
+@37
+en: Once you have found the settings files, choose the one to import.
+sv: När du har hittat inställningsfilerna väljer du den som ska importeras.
+@38
+en: Choosing a robot settings file in RoboCam
+sv: Välja en fil med robotinställningar i RoboCam
+@39
+en: The settings are imported immediately, a pop-up message tells you so, and you will see them at the top of the list. As you can see, the number 2 has been added to the name. If you import the same settings again, the number 3 is added, and so on. After the import the settings are ready to use.
+sv: Inställningarna importeras direkt, ett meddelande visas, och du ser dem överst i listan. Som du ser har siffran 2 lagts till i namnet. Om du importerar samma inställningar igen läggs siffran 3 till, och så vidare. Efter importen kan inställningarna användas.
+@40
+en: Robot settings imported successfully in RoboCam
+sv: Robotinställningarna importerades i RoboCam
+@41
+en: Now that we know how to import settings, here are ready-made settings for a few robots. Videos are also available that show how to drive the robots with these settings.
+sv: Nu när vi vet hur man importerar inställningar finns här färdiga inställningar för några robotar. Det finns också videor som visar hur man styr robotarna med dessa inställningar.
+@42
+en: Settings for driving the Formula 1 EV3 racing car
+sv: Inställningar för att styra racerbilen Formel 1 EV3
+@43
+en: These settings define three joysticks. The first two are a vertical and a horizontal joystick: one spins the car's rear wheels and the other works as the steering wheel. The third joystick is a second way to drive: with it you control the speed and the turns at the same time. There are deliberately three joysticks so that you can see how switching between joysticks 1-2 and 3-4 works. I fixed the smartphone with two angle brackets and two rubber bands so that the front wheels are in the phone camera's view, which makes it easier to feel the car's dimensions.
+sv: De här inställningarna har tre styrspakar. De två första är en vertikal och en horisontell styrspak: den ena får bilens bakhjul att snurra och den andra fungerar som ratt. Den tredje styrspaken är ett andra sätt att köra: med den styr du hastighet och svängar samtidigt. Det är avsiktligt tre styrspakar så att du kan förstå hur växlingen mellan styrspakarna 1-2 och 3-4 fungerar. Jag fäste telefonen med två vinkelbeslag och två gummiband så att framhjulen syns i telefonens kamera, vilket gör det lättare att känna bilens mått.
+@44
+en: Settings files for the standard and speed versions of the car are listed below:
+sv: Inställningsfiler för bilens standardversion och snabbversion finns listade nedan:
+@45
+en: Files:
+sv: Filer:
+@46
+en: <b><a href="/component/jdownloads/finish/4-razrabotki/59-x?Itemid=0">RoboCam settings for the Formula 1 EV3 racing car</a></b>
+sv: <b><a href="/component/jdownloads/finish/4-razrabotki/59-x?Itemid=0">RoboCam-inställningar för racerbilen Formel 1 EV3</a></b>
+@47
+en: RoboCam settings for the Formula 1 EV3 racing car.
+sv: RoboCam-inställningar för racerbilen Formel 1 EV3.
+@48
+en: Date
+sv: Datum
+@49
+en: File size
+sv: Filstorlek
+@50
+en: Downloads
+sv: Nedladdningar
+@51
+en: <b><a href="/component/jdownloads/finish/4-razrabotki/60-x?Itemid=0">RoboCam settings for the Formula 1 EV3 racing car (speed version)</a></b>
+sv: <b><a href="/component/jdownloads/finish/4-razrabotki/60-x?Itemid=0">RoboCam-inställningar för racerbilen Formel 1 EV3 (snabbversion)</a></b>
+@52
+en: RoboCam settings for the Formula 1 EV3 racing car (speed version).
+sv: RoboCam-inställningar för racerbilen Formel 1 EV3 (snabbversion).
+@53
+en: Date
+sv: Datum
+@54
+en: File size
+sv: Filstorlek
+@55
+en: Downloads
+sv: Nedladdningar
+@56
+en: The build plan and description of the racing car are in the original article &laquo;Formula 1 EV3 racing car&raquo; (Russian).
+sv: Bygganvisningen och beskrivningen av racerbilen finns i originalartikeln &laquo;Racerbil Formel 1 EV3&raquo; (på ryska).
+@57
+en: Settings for driving the robot with a claw
+sv: Inställningar för att styra roboten med klo
+@58
+en: For the claw robot there is a round joystick and arrows. The round joystick drives the robot's movement, i.e. the wheels, and the arrows work the claw. I fixed the smartphone with several extra parts so that the claw is in the camera's view. That way you can see straight away what I am grabbing and how.
+sv: För klorobboten finns en rund styrspak och pilar. Den runda styrspaken styr robotens rörelser, det vill säga hjulen, och pilarna styr klon. Jag fäste telefonen med några extra delar så att klon syns i kameran. Då ser man direkt vad jag greppar och hur.
+@59
+en: Here is the settings file for the claw robot:
+sv: Här är inställningsfilen för klorobboten:
+@60
+en: <b><a href="/component/jdownloads/finish/4-razrabotki/61-x?Itemid=0">RoboCam settings for the EV3 claw robot</a></b>
+sv: <b><a href="/component/jdownloads/finish/4-razrabotki/61-x?Itemid=0">RoboCam-inställningar för EV3-klorobboten</a></b>
+@61
+en: RoboCam settings for the EV3 claw robot.
+sv: RoboCam-inställningar för EV3-klorobboten.
+@62
+en: Date
+sv: Datum
+@63
+en: File size
+sv: Filstorlek
+@64
+en: Downloads
+sv: Nedladdningar
+@65
+en: The build plan and description of the claw robot are in the original article &laquo;LEGO EV3 claw robot&raquo; (Russian).
+sv: Bygganvisningen och beskrivningen av klorobboten finns i originalartikeln &laquo;Robot med klo LEGO EV3&raquo; (på ryska).
+@66
+en: Settings for driving the Selenokhod EV3 (lunar rover)
+sv: Inställningar för att styra Selenokhod EV3 (månbil)
+@67
+en: Driving the Selenokhod is a little more complicated than the previous robots. The joysticks here are arrows. The first joystick only passes the touch coordinates to the EV3 brick (into its mailboxes), and a specially written program inside the EV3 then processes those coordinates. So for the robot to move, you must run the program SelenokhodFPV.ev3 on it before connecting the RoboCam app to the robot. The video also demonstrates a local connection to the RoboCam server, i.e. from the same smartphone.
+sv: Att köra Selenokhod är lite mer komplicerat än de tidigare robotarna. Styrspakarna här är pilar. Den första styrspaken skickar bara vidare beröringskoordinaterna till EV3-enheten (till dess brevlådor), och ett särskilt skrivet program inuti EV3 bearbetar sedan koordinaterna. För att roboten ska röra sig måste du därför köra programmet SelenokhodFPV.ev3 på den innan du ansluter RoboCam till roboten. Videon visar också en lokal anslutning till RoboCam-servern, det vill säga från samma telefon.
+@68
+en: The settings file and the EV3 program are listed below:
+sv: Inställningsfilen och EV3-programmet finns listade nedan:
+@69
+en: <b><a href="/component/jdownloads/finish/4-razrabotki/62-x?Itemid=0">RoboCam settings for driving the Selenokhod EV3</a></b>
+sv: <b><a href="/component/jdownloads/finish/4-razrabotki/62-x?Itemid=0">RoboCam-inställningar för att styra Selenokhod EV3</a></b>
+@70
+en: RoboCam settings for driving the Selenokhod EV3.
+sv: RoboCam-inställningar för att styra Selenokhod EV3.
+@71
+en: Date
+sv: Datum
+@72
+en: File size
+sv: Filstorlek
+@73
+en: Downloads
+sv: Nedladdningar
+@74
+en: <b><a href="/component/jdownloads/finish/4-razrabotki/63-x?Itemid=0">Helper program for driving the Selenokhod EV3 with RoboCam</a></b>
+sv: <b><a href="/component/jdownloads/finish/4-razrabotki/63-x?Itemid=0">Hjälpprogram för att styra Selenokhod EV3 med RoboCam</a></b>
+@75
+en: Helper program for driving the Selenokhod EV3 with RoboCam.
+sv: Hjälpprogram för att styra Selenokhod EV3 med RoboCam.
+@76
+en: <strong>Running the program requires LEGO Mindstorms Education EV3 software version 1.1.1 or later.</strong>
+sv: <strong>För att köra programmet krävs programvaran LEGO Mindstorms Education EV3 version 1.1.1 eller senare.</strong>
+@77
+en: Date
+sv: Datum
+@78
+en: File size
+sv: Filstorlek
+@79
+en: Downloads
+sv: Nedladdningar
+@80
+en: The build plan and description of the Selenokhod EV3 are in the original article &laquo;Selenokhod&raquo; (Russian).
+sv: Bygganvisningen och beskrivningen av Selenokhod EV3 finns i originalartikeln &laquo;Selenokhod&raquo; (på ryska).

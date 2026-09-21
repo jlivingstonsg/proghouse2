@@ -1,0 +1,48 @@
+@0
+en: In all the earlier articles about the RoboCam app I described how to use it to control a robot in first person. But sometimes first-person control isn't needed &mdash; you only want to turn the smartphone into a remote control. The latest version of RoboCam adds exactly that.
+sv: I alla tidigare artiklar om appen RoboCam beskrev jag hur man styr en robot i förstaperson. Men ibland behövs inte förstapersonsstyrning &mdash; man vill bara göra telefonen till en fjärrkontroll. Den senaste versionen av RoboCam har just den möjligheten.
+@1
+en: Local control of a robot with the RoboCam app
+sv: Lokal styrning av en robot med appen RoboCam
+@2
+en: This article describes the new features in RoboCam version <strong>1.4.2</strong>. All the articles about RoboCam can be found <a href="/tags/robocam">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank" rel="nofollow">Google Play</a>, or download the APK and install it manually: the <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">regular version of RoboCam</a> or the <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">version of RoboCam that uses RenderScript</a> (for some older smartphones); both are release 1.4.5. There is also an <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror.
+sv: Den här artikeln beskriver de nya funktionerna i RoboCam version <strong>1.4.2</strong>. Alla artiklar om RoboCam finns <a href="/tags/robocam">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam" target="_blank" rel="nofollow">Google Play</a>, eller ladda ner APK-filen och installera den manuellt: den <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">vanliga versionen av RoboCam</a> eller <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">versionen av RoboCam som använder RenderScript</a> (för vissa äldre telefoner); båda är utgåva 1.4.5. Det finns också en <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a>-spegling.
+@3
+en: Everything from the previous versions of the app is unchanged. Version 1.4.2 only adds local controls. They are off by default and everything works as before. To turn local controls on, open the server settings and tick &laquo;<strong>Use local controls</strong>&raquo;. All the other server settings then disappear. Press the &laquo;Save&raquo; button. If you don't know where to find the server settings, read the <a href="/article-box/92-robocam">first article</a> about RoboCam first.
+sv: Allt från de tidigare versionerna av appen är oförändrat. Version 1.4.2 lägger bara till lokala reglage. De är av som standard och allt fungerar som förut. För att slå på lokala reglage, öppna serverinställningarna och markera &laquo;<strong>Använd lokala reglage</strong>&raquo;. Alla andra serverinställningar försvinner då. Tryck på knappen &laquo;Spara&raquo;. Om du inte vet var serverinställningarna finns, läs först den <a href="/article-box/92-robocam">första artikeln</a> om RoboCam.
+@4
+en: Turning on local controls in RoboCam
+sv: Slå på lokala reglage i RoboCam
+@5
+en: Then go back to the main screen and you will see that the left green button has changed. It now shows a joystick. You will also see that the camera is now off.
+sv: Gå sedan tillbaka till huvudskärmen så ser du att den vänstra gröna knappen har ändrats. Nu visar den en styrspak. Du ser också att kameran nu är av.
+@6
+en: The RoboCam main screen after local controls are turned on
+sv: RoboCams huvudskärm efter att lokala reglage slagits på
+@7
+en: Press the middle purple button to connect to the robot. How to connect to a robot and configure it is described in detail in the <a href="/article-box/92-robocam">first article</a> about RoboCam. Then press the left green button to open the screen with the local controls, i.e. the joysticks.
+sv: Tryck på den mittersta lila knappen för att ansluta till roboten. Hur man ansluter till en robot och ställer in den beskrivs i detalj i den <a href="/article-box/92-robocam">första artikeln</a> om RoboCam. Tryck sedan på den vänstra gröna knappen för att öppna skärmen med de lokala reglagen, det vill säga styrspakarna.
+@8
+en: Connecting to the robot to use the local controls
+sv: Ansluta till roboten för att använda de lokala reglagen
+@9
+en: As you can see, the joysticks look the same as in the browser when you control the robot in first person with RoboCam.
+sv: Som du ser ser styrspakarna likadana ut som i webbläsaren när du styr roboten i förstaperson med RoboCam.
+@10
+en: RoboCam local joysticks
+sv: RoboCams lokala styrspakar
+@11
+en: But small joysticks are awkward to use on a phone with a small screen, so go back to the server settings, tick &laquo;<strong>Maximise joysticks</strong>&raquo; and press the &laquo;Save&raquo; button.
+sv: Men små styrspakar är opraktiska på en telefon med liten skärm, så gå tillbaka till serverinställningarna, markera &laquo;<strong>Maximera styrspakar</strong>&raquo; och tryck på knappen &laquo;Spara&raquo;.
+@12
+en: Turning on the maximum joystick size in RoboCam
+sv: Slå på maximal storlek på styrspakarna i RoboCam
+@13
+en: Now, when you open the screen with the local controls, you will see that the joysticks have become larger.
+sv: När du nu öppnar skärmen med de lokala reglagen ser du att styrspakarna har blivit större.
+@14
+en: Large local joysticks in RoboCam
+sv: Stora lokala styrspakar i RoboCam
+@15
+en: By the way, if you connect a keyboard to the smartphone you can control the robot from it. However, for the keyboard to work the RoboCam app must be active and the phone must be unlocked. Read more about keyboard control in the <a href="/article-box/102-robocam-keyboard">third article</a> about RoboCam.
+sv: Förresten, om du ansluter ett tangentbord till telefonen kan du styra roboten från det. För att tangentbordet ska fungera måste dock RoboCam-appen vara aktiv och telefonen olåst. Läs mer om tangentbordsstyrning i den <a href="/article-box/102-robocam-keyboard">tredje artikeln</a> om RoboCam.

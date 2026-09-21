@@ -1,0 +1,17 @@
+//В переменной messageSize будем хранить размер сообщения. => //We store the message size in the variable messageSize. | //I variabeln messageSize lagrar vi meddelandets storlek.
+//Проверяем, можно ли считать два байта из серийного порта. => //Check whether two bytes can be read from the serial port. | //Kontrollera om två byte kan läsas från serieporten.
+//Считываем размер сообщения в переменную messageSize. => //Read the message size into the variable messageSize. | //Läs in meddelandets storlek i variabeln messageSize.
+//Переменную readMessageBytes будем использовать как счётчик считанных байт. => //The variable readMessageBytes is used as a counter of bytes read. | //Variabeln readMessageBytes används som räknare för lästa byte.
+//Проверяем, все ли байты сообщения считаны и есть ли данные в серийном порте. => //Check whether all bytes of the message have been read and whether there is data in the serial port. | //Kontrollera om alla byte i meddelandet har lästs och om det finns data i serieporten.
+//Считываем один байт. => //Read one byte. | //Läs en byte.
+//Увеличиваем значение счётчика считанных байт на 1. => //Increase the counter of bytes read by 1. | //Öka räknaren för lästa byte med 1.
+//Допустим, в переменной replySize хранится размер сообщения с ответом. => //Say the variable replySize holds the size of the reply message. | //Säg att variabeln replySize innehåller svarsmeddelandets storlek.
+//А в массиве reply хранятся байты ответа. => //And the array reply holds the bytes of the reply. | //Och matrisen reply innehåller svarets byte.
+//Формируем ответ и кладём его в массив reply. => //Build the reply and put it in the array reply. | //Bygg svaret och lägg det i matrisen reply.
+//Параллельно считаем размер ответа в байтах и кладём его в переменную replySize. => //At the same time count the size of the reply in bytes and put it in the variable replySize. | //Räkna samtidigt ut svarets storlek i byte och lägg den i variabeln replySize.
+//Сначала отправляем размер сообщения. => //First send the message size. | //Skicka först meddelandets storlek.
+//Затем отправляем заготовленное сообщение. => //Then send the prepared message. | //Skicka sedan det förberedda meddelandet.
+//Оси джойстиков. => //Joystick axes. | //Styrspakarnas axlar.
+//Состояние клавиши. => //Key state. | //Tangentens tillstånd.
+//Клавиша нажата. => //Key pressed. | //Tangent nedtryckt.
+//Клавиша не нажата. => //Key not pressed. | //Tangent inte nedtryckt.

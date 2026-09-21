@@ -1,0 +1,213 @@
+@0
+en: The new version of RoboCam adds support for a physical keyboard, so you can now control a LEGO Mindstorms EV3 robot in first person from a desktop computer or laptop. In this article I describe how to set up RoboCam to use the new feature, and also what else is new in this version.
+sv: Den nya versionen av RoboCam har stöd för ett fysiskt tangentbord, så nu kan du styra en LEGO Mindstorms EV3-robot i förstaperson från en stationär dator eller bärbar dator. I den här artikeln beskriver jag hur du ställer in RoboCam för att använda den nya funktionen, och vad mer som är nytt i versionen.
+@1
+en: RoboCam &ndash; controlling a robot in first person from a computer keyboard
+sv: RoboCam &ndash; styr roboten i förstaperson med datorns tangentbord
+@2
+en: This article describes the new features in version 1.2 of RoboCam. All the articles about RoboCam can be found <a href="/tags/robocam">here</a>. You can install RoboCam from <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, or download the APK and install it manually: the <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">regular version of RoboCam</a> or the <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">version of RoboCam that uses RenderScript</a> (for some older smartphones); both are release 1.4.5. There is also an <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a> mirror.
+sv: Den här artikeln beskriver de nya funktionerna i version 1.2 av RoboCam. Alla artiklar om RoboCam finns <a href="/tags/robocam">här</a>. Du kan installera RoboCam från <a href="https://play.google.com/store/apps/details?id=ru.proghouse.robocam">Google Play</a>, eller ladda ner APK-filen och installera den manuellt: den <a href="/component/jdownloads/finish/5-distributivy/82-robocam-bez-renderscript/0?Itemid=0">vanliga versionen av RoboCam</a> eller <a href="/component/jdownloads/finish/5-distributivy/81-robocam-s-renderscript/0?Itemid=0">versionen av RoboCam som använder RenderScript</a> (för vissa äldre telefoner); båda är utgåva 1.4.5. Det finns också en <a href="https://apkpure.com/robocam/ru.proghouse.robocam">APKPure</a>-spegling.
+@3
+en: All the changes in the new version concern only the robot settings, so let's go straight to what is new there. Update or install RoboCam, start it and open the settings of any robot. In this article I use the &laquo;EV3 Explorer&raquo; settings. If you don't know how to open a robot's settings, read the <a href="/article-box/92-robocam">first article about RoboCam</a>.
+sv: Alla ändringar i den nya versionen gäller bara robotinställningarna, så vi går direkt på vad som är nytt där. Uppdatera eller installera RoboCam, starta den och öppna inställningarna för någon robot. I artikeln använder jag inställningarna &laquo;EV3 Explorer&raquo;. Om du inte vet hur man öppnar en robots inställningar, läs den <a href="/article-box/92-robocam">första artikeln om RoboCam</a>.
+@4
+en: The first thing that catches the eye is the checkbox &laquo;<strong>Show debug information</strong>&raquo;. If it is ticked, the client shows the joystick coordinates while a joystick is in use, and the codes of the keys pressed.
+sv: Det första som märks är kryssrutan &laquo;<strong>Visa felsökningsinformation</strong>&raquo;. Om den är markerad visar klienten styrspakens koordinater medan den används, samt koderna för nedtryckta tangenter.
+@5
+en: The &quot;Show debug information&quot; and &quot;Hide joysticks when using the keyboard&quot; checkboxes in RoboCam
+sv: Kryssrutorna &quot;Visa felsökningsinformation&quot; och &quot;Dölj styrspakar vid tangentbordsanvändning&quot; i RoboCam
+@6
+en: If &laquo;<strong>Hide joysticks when using the keyboard</strong>&raquo; is ticked, the joysticks on the client disappear as soon as any key is pressed on the client, so that they don't get in your way. As soon as you click the screen with the mouse, the joysticks appear again.
+sv: Om &laquo;<strong>Dölj styrspakar vid tangentbordsanvändning</strong>&raquo; är markerad försvinner styrspakarna på klienten så fort någon tangent trycks ned på klienten, så att de inte är i vägen. Så fort du klickar på skärmen med musen visas styrspakarna igen.
+@7
+en: Automatically running a user program on the EV3
+sv: Starta ett användarprogram automatiskt på EV3
+@8
+en: The next setting is useful if, while you control the robot through RoboCam, a user program must run on the EV3 brick &mdash; for example one that watches certain mailboxes and drives the motors. If you tick &laquo;<strong>Run program</strong>&raquo; and enter the full path of the program file in the field below (for example &laquo;../prjs/MyProgram/MyProgram.rbf&raquo;), that program starts on the EV3 as soon as RoboCam connects. When the driver client disconnects, the program is restarted.
+sv: Nästa inställning är användbar om ett användarprogram måste köras på EV3-enheten medan du styr roboten via RoboCam &mdash; till exempel ett som bevakar vissa brevlådor och styr motorerna. Om du markerar &laquo;<strong>Kör program</strong>&raquo; och skriver in programfilens fullständiga sökväg i fältet nedanför (till exempel &laquo;../prjs/MyProgram/MyProgram.rbf&raquo;) startar programmet på EV3 så fort RoboCam ansluter. När förarklienten kopplas från startas programmet om.
+@9
+en: Programs you create with the official LEGO MINDSTORMS Education EV3 software and download to the EV3 end up in the user projects folder &laquo;../prjs&raquo;. A folder named after the project is created there, and in it a file named after the program with the extension &laquo;.rbf&raquo;. Let's take an example. Say you created a simple project called &laquo;MyProject&raquo; with a program called &laquo;MyProgram&raquo;, see the picture below. The program shows the text &laquo;Hello!&raquo; on the screen and hangs in an endless loop.
+sv: Program du skapar med den officiella programvaran LEGO MINDSTORMS Education EV3 och laddar ner till EV3 hamnar i mappen för användarprojekt &laquo;../prjs&raquo;. Där skapas en mapp med projektets namn, och i den en fil med programmets namn och ändelsen &laquo;.rbf&raquo;. Vi tar ett exempel. Säg att du har skapat ett enkelt projekt som heter &laquo;MyProject&raquo; med ett program som heter &laquo;MyProgram&raquo;, se bilden nedan. Programmet visar texten &laquo;Hello!&raquo; på skärmen och fastnar i en oändlig slinga.
+@10
+en: An EV3 program with an endless loop for testing RoboCam
+sv: Ett EV3-program med en oändlig slinga för att testa RoboCam
+@11
+en: As you can see, the upper tab says &laquo;MyProject&raquo; &mdash; the project name &mdash; and the tab below says &laquo;MyProgram&raquo; &mdash; the program name. After the program is downloaded to the EV3, the path to the program file is &laquo;../prjs/MyProject/MyProgram.rbf&raquo;. That is what we enter in the RoboCam settings, see the picture below.
+sv: Som du ser står det &laquo;MyProject&raquo; på den övre fliken &mdash; projektets namn &mdash; och &laquo;MyProgram&raquo; på fliken under &mdash; programmets namn. När programmet har laddats ner till EV3 är sökvägen till programfilen &laquo;../prjs/MyProject/MyProgram.rbf&raquo;. Det är den vi anger i RoboCams inställningar, se bilden nedan.
+@12
+en: Entering the full path of the EV3 program in the robot settings in RoboCam
+sv: Ange den fullständiga sökvägen till EV3-programmet i robotinställningarna i RoboCam
+@13
+en: Now, when you connect RoboCam to the EV3, the program &laquo;MyProgram.rbf&raquo; starts on the EV3 straight away and the text &laquo;Hello!&raquo; appears on the screen. When RoboCam disconnects from the EV3, the program stops and the menu appears on the EV3 screen again.
+sv: När du nu ansluter RoboCam till EV3 startar programmet &laquo;MyProgram.rbf&raquo; direkt på EV3 och texten &laquo;Hello!&raquo; visas på skärmen. När RoboCam kopplas från EV3 stoppas programmet och menyn visas på EV3-skärmen igen.
+@14
+en: <em>Note that the case matters when you enter the full path to the program. If you write a lower-case letter instead of a capital, the program will not start. If you get even one character of the path wrong, the program will not start either.</em>
+sv: <em>Observera att skiftläget spelar roll när du anger programmets fullständiga sökväg. Om du skriver en liten bokstav i stället för en stor startar inte programmet. Om du skriver även ett enda tecken fel i sökvägen startar programmet inte heller.</em>
+@15
+en: <em>If some user program is already running when you connect to the EV3, the program given in the RoboCam settings will not be started.</em>
+sv: <em>Om något användarprogram redan körs när du ansluter till EV3 startas inte programmet som anges i RoboCams inställningar.</em>
+@16
+en: Controlling the robot with a physical keyboard
+sv: Styra roboten med ett fysiskt tangentbord
+@17
+en: Besides the settings mentioned above, RoboCam now supports a physical keyboard on the client. Let's see how EV3 robot control from the keyboard works. It works like this. In the RoboCam settings you specify the keys the robot should react to in some way. The client knows about these keys and constantly checks their status, pressed or not. If one of the watched keys is pressed or released, the key's code and its new status are immediately passed to the RoboCam app. Then, depending on the settings, RoboCam either drives the robot's motors directly or sends the key codes to EV3 mailboxes.
+sv: Förutom inställningarna ovan har RoboCam nu stöd för ett fysiskt tangentbord på klienten. Låt oss se hur EV3-roboten styrs med tangentbordet. Det fungerar så här. I RoboCams inställningar anger du de tangenter som roboten ska reagera på på något sätt. Klienten känner till dessa tangenter och kontrollerar hela tiden deras status, nedtryckt eller inte. Om en av de bevakade tangenterna trycks ned eller släpps skickas tangentens kod och dess nya status direkt till RoboCam-appen. Sedan, beroende på inställningarna, styr RoboCam antingen robotens motorer direkt eller skickar tangentkoderna till EV3-brevlådor.
+@18
+en: Key groups
+sv: Tangentgrupper
+@19
+en: To divide up the functions given to particular keys, RoboCam uses key groups. The number of key groups is unlimited. To each key group, just as with joysticks, you can entrust either direct control of the motors, or the key codes are simply passed to a mailbox and you leave their processing to an EV3 program.
+sv: För att fördela funktionerna mellan olika tangenter använder RoboCam tangentgrupper. Antalet tangentgrupper är obegränsat. Varje tangentgrupp kan, precis som styrspakarna, antingen styra motorerna direkt, eller så skickas tangentkoderna bara till en brevlåda och du överlåter bearbetningen åt ett EV3-program.
+@20
+en: Scroll the robot settings down to the heading &laquo;Key groups&raquo;. If you are looking at the &laquo;EV3 Explorer&raquo; settings, two key groups have most likely been added already (the picture below shows key group 1): one for steering the robot (keys W, A, S, D and the arrow keys) and a second for controlling the frame that holds the smartphone (keys Y and H).
+sv: Bläddra ner i robotinställningarna till rubriken &laquo;Tangentgrupper&raquo;. Om du tittar på inställningarna &laquo;EV3 Explorer&raquo; har det troligen redan lagts till två tangentgrupper (bilden nedan visar tangentgrupp 1): en för att styra roboten (tangenterna W, A, S, D och piltangenterna) och en andra för att styra ramen som håller telefonen (tangenterna Y och H).
+@21
+en: Key groups in RoboCam
+sv: Tangentgrupper i RoboCam
+@22
+en: If you updated RoboCam, you won't see the key groups in the &laquo;EV3 Explorer&raquo; settings. This is because the settings are left over from the previous version, which had no key group support. If you want the configured key groups to appear, delete the &laquo;EV3 Explorer&raquo; settings; after RoboCam restarts they are created again, this time with the key groups.
+sv: Om du har uppdaterat RoboCam ser du inga tangentgrupper i inställningarna &laquo;EV3 Explorer&raquo;. Det beror på att inställningarna finns kvar från den tidigare versionen, som inte hade stöd för tangentgrupper. Om du vill att de färdiga tangentgrupperna ska dyka upp, ta bort inställningarna &laquo;EV3 Explorer&raquo;; efter att RoboCam startat om skapas de på nytt, och nu med tangentgrupper.
+@23
+en: <em>You can delete the &laquo;EV3 Explorer&raquo; settings in one of the following ways:</em>
+sv: <em>Du kan ta bort inställningarna &laquo;EV3 Explorer&raquo; på något av följande sätt:</em>
+@24
+en: <em>Press the &laquo;Delete&raquo; button in the list of settings. For this to work the settings must not be the current ones.</em>
+sv: <em>Tryck på knappen &laquo;Ta bort&raquo; i listan över inställningar. För att det ska fungera får inställningarna inte vara de aktuella.</em>
+@25
+en: <em>Clear all RoboCam app data in the Android app manager (all your other settings will be lost too, so if they matter to you, export them first and import them again after reinstalling! For how to export and import see the <a href="/article-box/97-robocam-settings">settings article</a>).</em>
+sv: <em>Rensa all RoboCam-appdata i Androids apphanterare (alla dina andra inställningar försvinner då också, så om de är viktiga för dig, exportera dem först och importera dem igen efter ominstallationen! Hur man exporterar och importerar beskrivs i <a href="/article-box/97-robocam-settings">artikeln om inställningar</a>).</em>
+@26
+en: <em>Uninstall RoboCam and install it again (all your other settings will be lost too, so if they matter to you, export them first and import them again after reinstalling! For how to export and import see the <a href="/article-box/97-robocam-settings">settings article</a>).</em>
+sv: <em>Avinstallera RoboCam och installera den på nytt (alla dina andra inställningar försvinner då också, så om de är viktiga för dig, exportera dem först och importera dem igen efter ominstallationen! Hur man exporterar och importerar beskrivs i <a href="/article-box/97-robocam-settings">artikeln om inställningar</a>).</em>
+@27
+en: The first checkbox you see in a key group's settings is &laquo;<strong>Active</strong>&raquo;. If you untick it, the key group becomes inactive, as if it were not there at all. Its settings are hidden in that case, but they are not lost.
+sv: Den första kryssrutan du ser i en tangentgrupps inställningar är &laquo;<strong>Aktiv</strong>&raquo;. Om du avmarkerar den blir tangentgruppen inaktiv, som om den inte fanns alls. Inställningarna döljs då, men försvinner inte.
+@28
+en: <em>Key statuses are checked on the client all the time, even when the keyboard is not being used. So if you plan to use only joysticks, it is recommended to deactivate all key groups so as not to load the client's processor and drain its battery.</em>
+sv: <em>Tangenternas status kontrolleras hela tiden på klienten, även när tangentbordet inte används. Om du bara planerar att använda styrspakar rekommenderas därför att avaktivera alla tangentgrupper, så att klientens processor inte belastas och batteriet inte töms.</em>
+@29
+en: Next comes the choice of key group type &mdash; the &laquo;<strong>Type</strong>&raquo; setting. Each key group can be one of three types: &laquo;<strong>Independent motors</strong>&raquo;, &laquo;<strong>Steering</strong>&raquo; or &laquo;<strong>Mailbox</strong>&raquo;.
+sv: Därefter kommer valet av tangentgruppstyp &mdash; inställningen &laquo;<strong>Typ</strong>&raquo;. Varje tangentgrupp kan vara av en av tre typer: &laquo;<strong>Oberoende motorer</strong>&raquo;, &laquo;<strong>Styrning</strong>&raquo; eller &laquo;<strong>Brevlåda</strong>&raquo;.
+@30
+en: For the &laquo;Independent motors&raquo; and &laquo;Steering&raquo; key groups you can set an unlimited number of &laquo;up&raquo; and &laquo;down&raquo; keys (let's call them the vertical-axis keys) and &laquo;right&raquo; and &laquo;left&raquo; keys (the horizontal-axis keys). You will see how just below.
+sv: För tangentgrupperna &laquo;Oberoende motorer&raquo; och &laquo;Styrning&raquo; kan du ange ett obegränsat antal tangenter &laquo;upp&raquo; och &laquo;ner&raquo; (vi kallar dem den vertikala axelns tangenter) och tangenter &laquo;höger&raquo; och &laquo;vänster&raquo; (den horisontella axelns tangenter). Hur du gör det ser du strax nedan.
+@31
+en: In an &laquo;<strong>Independent motors</strong>&raquo; group the vertical-axis keys can control one motor (motor A below) or several motors, and the horizontal-axis keys another motor (motor B below) or other motors. Motor A does not depend on the horizontal-axis keys, and motor B does not depend on the vertical-axis keys. That is why this type of key group is called &laquo;Independent motors&raquo;.
+sv: I en grupp &laquo;<strong>Oberoende motorer</strong>&raquo; kan den vertikala axelns tangenter styra en motor (nedan motor A) eller flera motorer, och den horisontella axelns tangenter en annan motor (nedan motor B) eller andra motorer. Motor A är inte beroende av den horisontella axelns tangenter, och motor B är inte beroende av den vertikala axelns tangenter. Därför kallas den här typen av tangentgrupp &laquo;Oberoende motorer&raquo;.
+@32
+en: For an &laquo;Independent motors&raquo; group, the ports whose motors the vertical-axis keys control and the ports whose motors the horizontal-axis keys control are set separately. With such a key group you can drive, for example, a car where the &laquo;up&raquo; and &laquo;down&raquo; keys accelerate and stop the motor that turns the rear wheels, and the &laquo;left&raquo; and &laquo;right&raquo; keys turn the motor that steers.
+sv: För en grupp &laquo;Oberoende motorer&raquo; anges portarna för motorerna som styrs av den vertikala axelns tangenter och portarna för motorerna som styrs av den horisontella axelns tangenter var för sig. Med en sådan tangentgrupp kan du till exempel köra en bil där tangenterna &laquo;upp&raquo; och &laquo;ner&raquo; accelererar och stoppar motorn som driver bakhjulen, och tangenterna &laquo;vänster&raquo; och &laquo;höger&raquo; vrider motorn som styr.
+@33
+en: In a &laquo;<strong>Steering</strong>&raquo; group the vertical-axis and horizontal-axis keys are linked. Here the ports of the left and right motor are set, and pressing one of the keys turns both motors. For example, if you press &laquo;up&raquo;, both motors turn so that the robot drives forward; if you press &laquo;left&raquo;, both motors turn again, but the left wheel backwards and the right wheel forwards, so the robot turns left.
+sv: I en grupp &laquo;<strong>Styrning</strong>&raquo; är den vertikala och den horisontella axelns tangenter kopplade till varandra. Här anges portarna för vänster och höger motor, och när du trycker på en tangent snurrar båda motorerna. Om du till exempel trycker på &laquo;upp&raquo; snurrar båda motorerna så att roboten kör framåt; om du trycker på &laquo;vänster&raquo; snurrar också båda motorerna, men vänster hjul bakåt och höger hjul framåt, så att roboten svänger åt vänster.
+@34
+en: A &laquo;<strong>Mailbox</strong>&raquo; key group also has keys set, but here they do not drive the robot; they are simply passed to the specified mailbox on the EV3. Keys not listed here do not reach the key group's mailbox.
+sv: En tangentgrupp &laquo;<strong>Brevlåda</strong>&raquo; har också tangenter, men här styr de inte roboten utan skickas bara vidare till den angivna brevlådan på EV3. Tangenter som inte anges här når inte tangentgruppens brevlåda.
+@35
+en: Now let's look more closely at the settings of the &laquo;Independent motors&raquo; and &laquo;Steering&raquo; key groups. A little lower you will see the parameters &laquo;<strong>End of press (for left/right keys)</strong>&raquo; and &laquo;<strong>End of press (for up/down keys)</strong>&raquo;, which determine what happens when the user releases a pressed key. As with joysticks there are two options &mdash; &laquo;<strong>Return to zero</strong>&raquo; and &laquo;<strong>Keep position</strong>&raquo;.
+sv: Nu tittar vi närmare på inställningarna för tangentgrupperna &laquo;Oberoende motorer&raquo; och &laquo;Styrning&raquo;. Lite längre ner ser du parametrarna &laquo;<strong>Slut på tryckning (för vänster/höger-tangenter)</strong>&raquo; och &laquo;<strong>Slut på tryckning (för upp/ner-tangenter)</strong>&raquo;, som bestämmer vad som händer när användaren släpper en nedtryckt tangent. Precis som för styrspakarna finns två alternativ &mdash; &laquo;<strong>Återgå till noll</strong>&raquo; och &laquo;<strong>Behåll position</strong>&raquo;.
+@36
+en: It works like this. Say that pressing the W key makes two motors of your robot turn and the robot drives forward. If &laquo;Return to zero&raquo; is set, then when you release the W key the speed returns to zero, the motors stop turning and the robot stops. If &laquo;Keep position&raquo; were set, the motor would keep turning; that is, after the key is released the speed is kept.
+sv: Det fungerar så här. Säg att robotens två motorer snurrar och roboten kör framåt när du trycker på W. Om &laquo;Återgå till noll&raquo; är inställt går hastigheten tillbaka till noll när du släpper W, motorerna slutar snurra och roboten stannar. Om &laquo;Behåll position&raquo; hade varit inställt hade motorn fortsatt att snurra; hastigheten hålls alltså kvar efter att tangenten släppts.
+@37
+en: Another example. Say pressing the Y key changes the rotation angle of the medium motor and the frame that holds the smartphone tilts down. In that case, if &laquo;Return to zero&raquo; is set, when you release the Y key the medium motor's angle returns to zero and the frame turns back to vertical. If &laquo;Keep position&raquo; is set and you release the Y key, the motor stays turned at the angle it had at the moment the Y key was released, and the frame keeps its position.
+sv: Ett annat exempel. Säg att tangenten Y ändrar medelmotorns vridningsvinkel så att ramen som håller telefonen lutar nedåt. Om &laquo;Återgå till noll&raquo; är inställt går medelmotorns vinkel tillbaka till noll när du släpper Y, och ramen vrids tillbaka och står lodrätt. Om &laquo;Behåll position&raquo; är inställt och du släpper Y, förblir motorn vriden i den vinkel den hade när Y släpptes, och ramen behåller sin position.
+@38
+en: The next key group parameters are responsible for the <strong>stepwise increase or decrease of motor speed or rotation angle</strong>. A key has only two states &mdash; pressed or released. Imagine we are driving the EV3 Explorer and press the Y key, and the angle changes by 100 degrees at once. It happens so abruptly that the smartphone attached to the frame could come off and fly away. Or another situation: you press the D key and the robot starts turning right sharply; we only needed to turn a little, but because of the high speed we turned too much.
+sv: Nästa parametrar för tangentgruppen styr den <strong>stegvisa ökningen eller minskningen av motorernas hastighet eller vridningsvinkel</strong>. En tangent har bara två tillstånd &mdash; nedtryckt eller släppt. Tänk dig att vi kör EV3 Explorer och trycker på Y och vinkeln ändras med 100 grader på en gång. Det sker så abrupt att telefonen som sitter på ramen kan lossna och flyga iväg. Eller en annan situation: du trycker på D och roboten börjar svänga häftigt åt höger; vi behövde bara svänga lite, men på grund av den höga hastigheten svängde vi för mycket.
+@39
+en: A robot that behaves like this is not what we want, so with stepwise change of speed and angle we can make keyboard control more comfortable. For example, we can make the robot accelerate gradually while driving and the frame move in small steps. That is exactly how the &laquo;EV3 Explorer&raquo; settings are made. Let's look at these parameters.
+sv: En robot som beter sig så är inte vad vi vill ha, så med stegvis ändring av hastighet och vinkel kan vi göra tangentbordsstyrningen bekvämare. Vi kan till exempel låta roboten accelerera gradvis när den kör och ramen röra sig i små steg. Precis så är inställningarna &laquo;EV3 Explorer&raquo; gjorda. Låt oss titta på parametrarna.
+@40
+en: A little lower you will see six fields for stepwise motor control: &laquo;<strong>Increase horizontally</strong>&raquo;, &laquo;<strong>Increase vertically</strong>&raquo;, &laquo;<strong>Decrease horizontally</strong>&raquo;, &laquo;<strong>Decrease vertically</strong>&raquo;, &laquo;<strong>Pause between horizontal increases/decreases</strong>&raquo; and &laquo;<strong>Pause between vertical increases/decreases</strong>&raquo;.
+sv: Lite längre ner ser du sex fält för stegvis motorstyrning: &laquo;<strong>Ökning horisontellt</strong>&raquo;, &laquo;<strong>Ökning vertikalt</strong>&raquo;, &laquo;<strong>Minskning horisontellt</strong>&raquo;, &laquo;<strong>Minskning vertikalt</strong>&raquo;, &laquo;<strong>Paus mellan horisontella ökningar/minskningar</strong>&raquo; och &laquo;<strong>Paus mellan vertikala ökningar/minskningar</strong>&raquo;.
+@41
+en: The &quot;Increase horizontally&quot;, &quot;Increase vertically&quot;, &quot;Decrease horizontally&quot; and &quot;Decrease vertically&quot; settings in RoboCam
+sv: Inställningarna &quot;Ökning horisontellt&quot;, &quot;Ökning vertikalt&quot;, &quot;Minskning horisontellt&quot; och &quot;Minskning vertikalt&quot; i RoboCam
+@42
+en: The &quot;Pause between horizontal increases/decreases&quot; and &quot;Pause between vertical increases/decreases&quot; settings in RoboCam
+sv: Inställningarna &quot;Paus mellan horisontella ökningar/minskningar&quot; och &quot;Paus mellan vertikala ökningar/minskningar&quot; i RoboCam
+@43
+en: As written above, we have vertical-axis keys and horizontal-axis keys. &laquo;Increase horizontally&raquo; and &laquo;Decrease horizontally&raquo; show the step by which the speed or angle of the connected motors changes when the horizontal-axis keys are used, and &laquo;Increase vertically&raquo; and &laquo;Decrease vertically&raquo; do the same for the vertical-axis keys. <em>[Translator's note: the original text says &ldquo;vertical-axis keys&rdquo; for both pairs; the horizontal pair is clearly meant for the horizontal axis.]</em> &laquo;Pause between horizontal increases/decreases&raquo; and &laquo;Pause between vertical increases/decreases&raquo; give the interval in milliseconds between these steps.
+sv: Som skrivet ovan har vi den vertikala axelns tangenter och den horisontella axelns tangenter. &laquo;Ökning horisontellt&raquo; och &laquo;Minskning horisontellt&raquo; anger med vilket steg hastigheten eller vinkeln för de anslutna motorerna ändras när den horisontella axelns tangenter används, och &laquo;Ökning vertikalt&raquo; och &laquo;Minskning vertikalt&raquo; gör detsamma för den vertikala axelns tangenter. <em>[Översättarens anmärkning: originaltexten säger &rdquo;den vertikala axelns tangenter&rdquo; för båda paren; det horisontella paret avser uppenbarligen den horisontella axeln.]</em> &laquo;Paus mellan horisontella ökningar/minskningar&raquo; och &laquo;Paus mellan vertikala ökningar/minskningar&raquo; anger intervallet i millisekunder mellan stegen.
+@44
+en: Let's work through an example. Say the W key is the &laquo;up&raquo; key, i.e. a vertical-axis key. Two large motors that turn the wheels are tied to it. In our settings the vertical increase is 15 and the decrease is 50. This means that when we press and hold W on the client, the speed of the large motors increases step by step by 15 units every 100 milliseconds until it reaches the maximum value, 100 units. So the robot accelerates smoothly. When we release W, the speed starts dropping step by step by 50 units every 100 milliseconds until it reaches zero. So the robot also stops smoothly, but much more sharply than it accelerated.
+sv: Vi går igenom ett exempel. Säg att W är tangenten &laquo;upp&raquo;, alltså en tangent på den vertikala axeln. Två stora motorer som driver hjulen är knutna till den. I våra inställningar är ökningen vertikalt 15 och minskningen 50. Det betyder att när vi trycker ned och håller W på klienten ökar de stora motorernas varvtal stegvis med 15 enheter var 100:e millisekund tills det når maxvärdet, 100 enheter. Roboten accelererar alltså mjukt. När vi släpper W börjar hastigheten sjunka stegvis med 50 enheter var 100:e millisekund tills den når noll. Roboten stannar alltså också mjukt, men mycket kärvare än den accelererade.
+@45
+en: <em>Note that an &ldquo;increase&rdquo; here means a change of speed or angle from 0 to 100 and from 0 to -100, and a &ldquo;decrease&rdquo; means a change from 100 to 0 and from -100 to 0.</em>
+sv: <em>Observera att en &rdquo;ökning&rdquo; här avser en ändring av hastighet eller vinkel från 0 till 100 och från 0 till -100, och en &rdquo;minskning&rdquo; en ändring från 100 till 0 och från -100 till 0.</em>
+@46
+en: <em>The step values can range from 0 to 200; if you set 0 or 200 the speed or angle changes abruptly rather than step by step.</em>
+sv: <em>Stegvärdena kan ligga mellan 0 och 200; om du anger 0 eller 200 ändras hastigheten eller vinkeln abrupt i stället för stegvis.</em>
+@47
+en: <em>The pause value cannot be less than 100 milliseconds. Keep in mind that the real pause between steps may be longer than what you set, because there can be delays when commands are sent to the EV3.</em>
+sv: <em>Pausvärdet kan inte vara mindre än 100 millisekunder. Tänk på att den verkliga pausen mellan stegen kan vara längre än den du anger, eftersom det kan uppstå fördröjningar när kommandon skickas till EV3.</em>
+@48
+en: With the next four buttons &mdash; &laquo;<strong>Up keys</strong>&raquo;, &laquo;<strong>Left keys</strong>&raquo;, &laquo;<strong>Down keys</strong>&raquo; and &laquo;<strong>Right keys</strong>&raquo; &mdash; you assign specific keys to control the robot. To set or change the chosen keys, press the button you need. A list of available keys then opens. Choose the keys you want and press the &laquo;Done&raquo; button.
+sv: Med de följande fyra knapparna &mdash; &laquo;<strong>Upp-tangenter</strong>&raquo;, &laquo;<strong>Vänster-tangenter</strong>&raquo;, &laquo;<strong>Ner-tangenter</strong>&raquo; och &laquo;<strong>Höger-tangenter</strong>&raquo; &mdash; tilldelar du bestämda tangenter för att styra roboten. För att ange eller ändra de valda tangenterna, tryck på den knapp du behöver. Då öppnas en lista över tillgängliga tangenter. Välj de tangenter du vill ha och tryck på knappen &laquo;Klar&raquo;.
+@49
+en: Choosing keys in RoboCam
+sv: Välja tangenter i RoboCam
+@50
+en: If you connect a physical keyboard to your smartphone you can pick keys with it, by pressing the key you want while this list is open. Not all keys can be chosen this way, though.
+sv: Om du ansluter ett fysiskt tangentbord till telefonen kan du välja tangenter med det, genom att trycka på önskad tangent medan listan är öppen. Alla tangenter går dock inte att välja på det sättet.
+@51
+en: Next in the key group settings come the ports. Key group ports are configured the same way as joystick ports, and I won't go into it in detail here. For port settings read the article &laquo;<a href="/article-box/92-robocam">Controlling a LEGO Mindstorms EV3 robot in first person</a>&raquo;.
+sv: Därnäst i tangentgruppens inställningar kommer portarna. Tangentgruppens portar ställs in på samma sätt som styrspakarnas, och det går jag inte in på i detalj här. Om portinställningar, läs artikeln &laquo;<a href="/article-box/92-robocam">Styr en LEGO Mindstorms EV3-robot i förstaperson</a>&raquo;.
+@52
+en: Configuring EV3 ports in RoboCam
+sv: Ställa in EV3-portar i RoboCam
+@53
+en: Now let's look separately at the settings for the &laquo;<strong>Mailbox</strong>&raquo; key group. If you switch the type to &laquo;Mailbox&raquo; you will see the settings for this key group change. There will only be &laquo;Mailbox name&raquo; and &laquo;Keys&raquo;. In the &laquo;<strong>Mailbox name</strong>&raquo; field you enter the name of the EV3 mailbox that receives the codes of the pressed keys among those you list below with the &laquo;<strong>Keys</strong>&raquo; button. Codes of keys not listed here will not arrive in the mailbox.
+sv: Nu tittar vi separat på inställningarna för tangentgruppen &laquo;<strong>Brevlåda</strong>&raquo;. Om du byter typ till &laquo;Brevlåda&raquo; ser du att inställningarna för tangentgruppen ändras. Det finns bara &laquo;Brevlådenamn&raquo; och &laquo;Tangenter&raquo;. I fältet &laquo;<strong>Brevlådenamn</strong>&raquo; anger du namnet på den EV3-brevlåda som ska ta emot koderna för nedtryckta tangenter bland dem du listar nedan med knappen &laquo;<strong>Tangenter</strong>&raquo;. Koder för tangenter som inte listas här kommer inte till brevlådan.
+@54
+en: The settings of the &quot;Mailbox&quot; key group in RoboCam
+sv: Inställningarna för tangentgruppen &quot;Brevlåda&quot; i RoboCam
+@55
+en: Let's take an example of how to get the codes of the digit keys 0&ndash;9 on the EV3. We name the mailbox &laquo;test&raquo; and specify all the keys from 0 to 9.
+sv: Vi tar ett exempel på hur man får koderna för siffertangenterna 0&ndash;9 på EV3. Vi ger brevlådan namnet &laquo;test&raquo; och anger alla tangenter från 0 till 9.
+@56
+en: An example of a configured &quot;Mailbox&quot; key group in RoboCam
+sv: Ett exempel på en konfigurerad tangentgrupp &quot;Brevlåda&quot; i RoboCam
+@57
+en: Now let's rework the EV3 program we made above as follows, see the picture below. Here we simply show on the screen the key code received from the &laquo;test&raquo; mailbox. Download the finished program to the EV3.
+sv: Nu bygger vi om EV3-programmet vi gjorde ovan enligt följande, se bilden nedan. Här visar vi helt enkelt på skärmen tangentkoden som tas emot från brevlådan &laquo;test&raquo;. Ladda ner det färdiga programmet till EV3.
+@58
+en: An EV3 program that reads the key codes sent from RoboCam
+sv: Ett EV3-program som läser tangentkoderna som skickas från RoboCam
+@59
+en: <em>Unfortunately the mailbox block cannot receive an array of numbers, so only the code of the last pressed key is sent to the mailbox, or 0 if the last pressed key was released. So to process several keys independently you need several mailboxes &mdash; one mailbox per key.</em>
+sv: <em>Tyvärr kan brevlådeblocket inte ta emot en matris av tal, så bara koden för den senast nedtryckta tangenten skickas till brevlådan, eller 0 om den senast nedtryckta tangenten släpptes. För att hantera flera tangenter oberoende av varandra behöver du därför flera brevlådor &mdash; en brevlåda per tangent.</em>
+@60
+en: Once the program is downloaded to the EV3, don't forget to tick &laquo;Run program&raquo; and enter its path &laquo;../prjs/MyProject/MyProgram.rbf&raquo;.
+sv: När programmet har laddats ner till EV3, glöm inte att markera &laquo;Kör program&raquo; och ange dess sökväg &laquo;../prjs/MyProject/MyProgram.rbf&raquo;.
+@61
+en: Entering the full path of the EV3 program in the robot settings in RoboCam
+sv: Ange den fullständiga sökvägen till EV3-programmet i robotinställningarna i RoboCam
+@62
+en: Now, when you connect RoboCam to the EV3, the program MyProgram.rbf starts on the EV3 straight away and the digit 0 appears on the screen, meaning that no key is pressed. Now start the RoboCam server, connect to it with a browser on your computer and try pressing keys. You will see that when you press the digit keys, the code of the last pressed key is shown on the EV3 screen, and when you press other keys 0 is shown.
+sv: När du nu ansluter RoboCam till EV3 startar programmet MyProgram.rbf direkt på EV3 och siffran 0 visas på skärmen, vilket betyder att ingen tangent är nedtryckt. Starta nu RoboCam-servern, anslut till den med en webbläsare på din dator och prova att trycka på tangenter. Du ser att när du trycker på siffertangenterna visas koden för den senast nedtryckta tangenten på EV3-skärmen, och när du trycker på andra tangenter visas 0.
+@63
+en: Now let's talk about key codes. You can use most keys; their codes mostly follow ASCII. However, there are so-called hotkeys that the browser reacts to in a special way. For example the F1 key opens the browser's help and F5 refreshes the open page. Such keys are not available in RoboCam. The table below lists all the keys you can use with RoboCam, and their codes.
+sv: Nu pratar vi om tangentkoder. Du kan använda de flesta tangenter; deras koder följer till stor del ASCII. Det finns dock så kallade snabbtangenter som webbläsaren reagerar på på ett särskilt sätt. Till exempel öppnar F1 webbläsarens hjälp och F5 uppdaterar den öppna sidan. Sådana tangenter är inte tillgängliga i RoboCam. Tabellen nedan visar alla tangenter du kan använda med RoboCam, och deras koder.
+@64
+en: <strong>Code</strong>
+sv: <strong>Kod</strong>
+@65
+en: <strong>Key</strong>
+sv: <strong>Tangent</strong>
+@66
+en: <strong>Code</strong>
+sv: <strong>Kod</strong>
+@67
+en: <strong>Key</strong>
+sv: <strong>Tangent</strong>
+@68
+en: <strong>Code</strong>
+sv: <strong>Kod</strong>
+@69
+en: <strong>Key</strong>
+sv: <strong>Tangent</strong>
+@70
+en: That covers the new functionality in RoboCam. You may also find the other <a href="/tags/robocam">RoboCam articles</a> useful.
+sv: Det var den nya funktionaliteten i RoboCam. Även de andra <a href="/tags/robocam">RoboCam-artiklarna</a> kan vara till nytta.
