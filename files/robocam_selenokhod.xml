@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><EV3 Name="Селеноход EV3" Description="Шагающий луноход"><Joystick Index="0" Visible="1" Shape="a" Type="2"/><Joystick Index="1" Visible="1" Shape="l" Type="0"><OutputPort Group="1" Layer="0" Number="B" JoystickType="1" Power="25" Invert="1" Coefficient="2.2"/></Joystick><Joystick Index="2"/><Joystick Index="3"/></EV3>

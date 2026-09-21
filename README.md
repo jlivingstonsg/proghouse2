@@ -30,6 +30,11 @@ Pages redeploys within a minute.
   (1.0, 1.1, 1.2, 1.3.1, 1.4.2). Screenshots are self-hosted in `img/`; they show the app's
   original Russian interface.
 
+- `files/` — the author's downloads referenced by the tutorials, hosted here: the two RoboCam
+  APKs (release 1.4.5: regular and RenderScript), the EV3 Explorer build guide (PDF), the
+  ready-made RoboCam settings (XML), the Selenokhod EV3 helper program, the Arduino Explorer
+  sketch and the two 3D-printable holder parts (STL).
+
 Every page links to the original hub (`proghouse.ru/tags/robocam`) exactly once, in its
 footer; all other links between these pages stay on this site.
 
