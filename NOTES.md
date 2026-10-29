@@ -8,6 +8,7 @@ See `README.md` and `tools/README.md` for how the site is built.
 - Owner: **M.Sc. Magnus Ivarsson** (Sweden). M.Sc. in Engineering Physics, Lund University (LTH).
   National master of 3D Tetris since 1989; on the BlockOut II world ranking as **MagI**; made the
   online BlockOut II port at https://blockout.nu/.
+  Has a parachute (skydiving) licence and a hang gliding licence, and has had two wings (2026-10-29).
 - The app formerly called **RoboCam54** is now **RoboCam Pro** on Google Play:
   https://play.google.com/store/apps/details?id=com.robocam.robocam54
   The package id `com.robocam.robocam54` cannot change — keep it as is.
@@ -66,3 +67,4 @@ See `README.md` and `tools/README.md` for how the site is built.
 - 2026-10-29: removed the Back button from the main page (`robocam.html` / `index.html`) only.
 - 2026-10-29: added the RoboCam robot `favicon.ico` as the browser-tab icon on every page (via build-index.sh,
   gen_hub.py, gen_articles.py and the About pages).
+- 2026-10-29: About pages: added parachute and hang gliding licences and the two wings.
