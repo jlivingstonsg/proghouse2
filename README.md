@@ -8,8 +8,8 @@ from a phone camera and any browser.
 
 - **Part I** — the original RoboCam by Alexey (ПрогХаус), compiled and translated from the
   tutorials at <http://proghouse.ru/tags/robocam>.
-- **Part II** — *RoboCam54*, an independent build by M.Sc. Magnus Ivarsson, now on Google Play as
-  [RoboCam Pro](https://play.google.com/store/apps/details?id=com.robocam.robocam54). It adds LEGO
+- **Part II** — *RoboCam Pro*, an independent build by M.Sc. Magnus Ivarsson, now on
+  [Google Play](https://play.google.com/store/apps/details?id=com.robocam.robocam54). It adds LEGO
   SPIKE Prime, a Huawei 360° USB camera with a pan/tilt viewer, a Google Cardboard VR
   viewer and a Clear Cache button. Documented here with the original author's consent;
   its source code is not released.
@@ -37,7 +37,7 @@ results and push; Pages redeploys within a minute.
   (1.0, 1.1, 1.2, 1.3.1, 1.4.2). Screenshots are self-hosted: `img/en/` and `img/sv/` hold
   retouched copies with the interface text translated into English and Swedish; images that
   contain no Russian text (photos, 3D renders) are shared from `img/`.
-- `about-en.html` / `about-sv.html` — about the developer of RoboCam54 (hand-written).
+- `about-en.html` / `about-sv.html` — about the developer of RoboCam Pro (hand-written).
 - `files/` — the author's downloads referenced by the tutorials, hosted here: the two RoboCam
   APKs (release 1.4.5: regular and RenderScript), the EV3 Explorer build guide (PDF), the
   ready-made RoboCam settings (XML), the Selenokhod EV3 helper program, the Arduino Explorer
