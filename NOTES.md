@@ -45,8 +45,10 @@ See `README.md` and `tools/README.md` for how the site is built.
 - Name: "M.Sc. Magnus Ivarsson" in English; Swedish text still says "teknologie magister" (open, see TODO).
 - So far the About pages link only to Magnus's own things and Alexey's video is only in the manual
   (Claude's default, not confirmed by Magnus — see TODO).
-- Every page has a Back button (top left) and "RoboCam" in the top bar scrolls to the top. Back right
-  after switching EN/SV goes to the other language version (normal browser behaviour; Magnus has not asked to change it).
+- Every page except the main page (`index.html`) has a Back button (top left); Magnus asked on 2026-10-29
+  to remove it from the main page. Back right after switching EN/SV goes to the other language version
+  (normal browser behaviour; Magnus has not asked to change it).
+- "RoboCam" in the top bar scrolls to the top on every page, including the main page.
 
 ## History
 
@@ -58,3 +60,4 @@ See `README.md` and `tools/README.md` for how the site is built.
   "See it in action" box at the top of the manual.
 - 2026-10-29: Magnus asked that TODO.md / NOTES.md be updated continuously during sessions; CLAUDE.md now
   says so.
+- 2026-10-29: removed the Back button from the main page (`robocam.html` / `index.html`) only.

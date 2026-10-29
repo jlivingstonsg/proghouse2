@@ -89,9 +89,6 @@
   .topbar .mark b{color:var(--accent-line)}
   .topbar .totop{color:inherit;text-decoration:none}
   .topbar .totop:hover{color:var(--ink)}
-  .topbar .left{display:flex;align-items:center;gap:12px}
-  .back{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
-  .back:hover{color:var(--ink);border-color:var(--accent-line)}
   .switches{display:flex;gap:8px}
   .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
   .seg button{
@@ -315,7 +312,7 @@
 </style>
 
 <div class="topbar">
-  <div class="left"><button class="back" id="back" hidden onclick="history.back()">&larr; <span class="lang-en">Back</span><span class="lang-sv">Tillbaka</span></button><span class="mark"><a class="totop" href="#" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">Robo<b>Cam</b></a> · Field Manual</span></div>
+  <span class="mark"><a class="totop" href="#" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">Robo<b>Cam</b></a> · Field Manual</span>
   <div class="switches">
     <div class="seg" role="group" aria-label="Language">
       <button id="en" aria-pressed="true">EN</button>
@@ -1087,7 +1084,6 @@ CMD_STOP    command  0100 FF      reply  0100 00</code></pre>
 <script>
 (function(){
   var root=document.documentElement;
-  if(history.length>1)document.getElementById("back").hidden=false;
   var sections=[].slice.call(document.querySelectorAll("main section[id]"));
 
   // ---------- language ----------
