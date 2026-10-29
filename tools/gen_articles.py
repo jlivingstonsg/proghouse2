@@ -152,7 +152,7 @@ def build(slug, ver, stem, iso, lang):
 <style>{H.CSS}{EXTRA_CSS}</style>
 
 <div class="topbar">
-  <span class="mark">{mark}</span>
+  <div class="left"><a class="back" href="hub-{lang}.html" onclick="if(history.length>1){{history.back();return false}}">&larr; {c["back_btn"]}</a><span class="mark">{mark}</span></div>
   <div class="switches">
     <div class="seg" role="group" aria-label="{c["lang_aria"]}">
       <a href="{stem}-en.html" hreflang="en" lang="en"{' aria-current="page"' if lang=="en" else ''}>English</a>

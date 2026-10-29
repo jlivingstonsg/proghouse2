@@ -19,6 +19,9 @@
   .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
   .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
   .topbar .mark b{color:var(--accent-line)}
+  .topbar .left{display:flex;align-items:center;gap:12px}
+  .back{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .back:hover{color:var(--ink);border-color:var(--accent-line)}
   .switches{display:flex;gap:8px;flex-wrap:wrap}
   .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
   .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
@@ -76,7 +79,7 @@
 </style>
 
 <div class="topbar">
-  <span class="mark">Robo<b>Cam</b> · ProgHouse articles</span>
+  <div class="left"><a class="back" href="hub-en.html" onclick="if(history.length>1){history.back();return false}">&larr; Back</a><span class="mark">Robo<b>Cam</b> · ProgHouse articles</span></div>
   <div class="switches">
     <div class="seg" role="group" aria-label="Language">
       <a href="v1-1-en.html" hreflang="en" lang="en" aria-current="page">English</a>

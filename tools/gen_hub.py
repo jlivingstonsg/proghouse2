@@ -58,7 +58,7 @@ T = {
    manual_h="Want more than the summaries?",
    manual='The <a href="index.html">RoboCam Field Manual</a> is a full English/Swedish reference compiled and translated from these articles, with the app&rsquo;s screens, settings and protocol explained in detail.',
    foot='Translation of the public hub page <a href="'+HUB+'">proghouse.ru/tags/robocam</a> (ПрогХаус) by Alexey; RoboCam and the linked articles are the work of their author. Unofficial reference, not affiliated with ПрогХаус.',
-   back="Field Manual", theme_l="Light", theme_d="Dark", lang_aria="Language", theme_aria="Theme"),
+   back="Field Manual", back_btn="Back", theme_l="Light", theme_d="Dark", lang_aria="Language", theme_aria="Theme"),
  "sv": dict(
    lang="sv", other="en", other_file="hub-en.html", other_label="English", this_label="Svenska",
    title="RoboCam-artiklar från ProgHouse (svenska)",
@@ -76,7 +76,7 @@ T = {
    manual_h="Vill du ha mer än sammanfattningarna?",
    manual='<a href="index.html">RoboCam Field Manual</a> är en fullständig referens på engelska/svenska, sammanställd och översatt från dessa artiklar, med appens skärmar, inställningar och protokoll förklarade i detalj.',
    foot='Översättning av den offentliga samlingssidan <a href="'+HUB+'">proghouse.ru/tags/robocam</a> (ПрогХаус) av Alexej; RoboCam och de länkade artiklarna är upphovspersonens verk. Inofficiell referens, inte knuten till ПрогХаус.',
-   back="Field Manual", theme_l="Ljust", theme_d="Mörkt", lang_aria="Språk", theme_aria="Tema"),
+   back="Field Manual", back_btn="Tillbaka", theme_l="Ljust", theme_d="Mörkt", lang_aria="Språk", theme_aria="Tema"),
 }
 
 CSS = """
@@ -90,6 +90,9 @@ CSS = """
   .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
   .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
   .topbar .mark b{color:var(--accent-line)}
+  .topbar .left{display:flex;align-items:center;gap:12px}
+  .back{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
+  .back:hover{color:var(--ink);border-color:var(--accent-line)}
   .switches{display:flex;gap:8px;flex-wrap:wrap}
   .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden}
   .seg a,.seg button{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:0;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
@@ -162,7 +165,7 @@ def page(c):
 <style>{CSS}</style>
 
 <div class="topbar">
-  <span class="mark">{c["mark"]}</span>
+  <div class="left"><a class="back" href="index.html" onclick="if(history.length>1){{history.back();return false}}">&larr; {c["back_btn"]}</a><span class="mark">{c["mark"]}</span></div>
   <div class="switches">
     <div class="seg" role="group" aria-label="{c["lang_aria"]}">
       <a href="hub-en.html" hreflang="en" lang="en"{' aria-current="page"' if c["lang"]=="en" else ''}>English</a>
