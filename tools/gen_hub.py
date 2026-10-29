@@ -79,6 +79,12 @@ T = {
    back="Field Manual", back_btn="Tillbaka", theme_l="Ljust", theme_d="Mörkt", lang_aria="Språk", theme_aria="Tema"),
 }
 
+def totop(mark, lang):
+    """Make the RoboCam part of the top-bar mark scroll the page back to the top."""
+    t = "Back to top" if lang == "en" else "Till toppen"
+    return mark.replace("Robo<b>Cam</b>", f'<a class="totop" href="#" title="{t}" onclick="window.scrollTo({{top:0,behavior:\'smooth\'}});return false">Robo<b>Cam</b></a>', 1)
+
+
 CSS = """
   :root{--ground:#f2f2ee;--surface:#ffffff;--surface-2:#faf9f5;--ink:#1b1d21;--ink-soft:#494c53;--ink-faint:#7b7e86;--border:#dcdcd4;--border-strong:#c3c3b9;--accent-line:#d84924;--accent-ink:#ad3a1c;--server:#2f9e6b;--connect:#8a4fc9;--shadow:0 1px 2px rgba(30,28,22,.05),0 8px 28px -18px rgba(30,28,22,.25)}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#141619;--surface:#1c1f24;--surface-2:#21252b;--ink:#e9e8e3;--ink-soft:#b2b4ba;--ink-faint:#83868d;--border:#31353c;--border-strong:#434952;--accent-line:#ef6a41;--accent-ink:#f7936f;--server:#43b981;--connect:#ab7ae0;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6)}}
@@ -90,6 +96,8 @@ CSS = """
   .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px clamp(16px,4vw,40px);background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
   .topbar .mark{font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;color:var(--ink-soft)}
   .topbar .mark b{color:var(--accent-line)}
+  .topbar .totop{color:inherit;text-decoration:none}
+  .topbar .totop:hover{color:var(--ink)}
   .topbar .left{display:flex;align-items:center;gap:12px}
   .back{font:inherit;font-size:.8rem;font-weight:500;padding:5px 11px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);color:var(--ink-soft);cursor:pointer;line-height:1.2;text-decoration:none}
   .back:hover{color:var(--ink);border-color:var(--accent-line)}
@@ -165,7 +173,7 @@ def page(c):
 <style>{CSS}</style>
 
 <div class="topbar">
-  <div class="left"><a class="back" href="index.html" onclick="if(history.length>1){{history.back();return false}}">&larr; {c["back_btn"]}</a><span class="mark">{c["mark"]}</span></div>
+  <div class="left"><a class="back" href="index.html" onclick="if(history.length>1){{history.back();return false}}">&larr; {c["back_btn"]}</a><span class="mark">{totop(c["mark"], c["lang"])}</span></div>
   <div class="switches">
     <div class="seg" role="group" aria-label="{c["lang_aria"]}">
       <a href="hub-en.html" hreflang="en" lang="en"{' aria-current="page"' if c["lang"]=="en" else ''}>English</a>
