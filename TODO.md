@@ -10,6 +10,8 @@ Open items for the RoboCam site. Tick them off (or delete them) as they get done
       engineering physics degree is normally "civilingenjör". Switch to "civilingenjör Magnus Ivarsson"?
 - [ ] **Contact email** on the About pages: add one or not? (Not added; don't add without asking.)
 - [ ] **GitHub card** on the About pages links to github.com/jlivingstonsg — confirm it should stay.
+- [ ] **Setup video on the About pages too?** Alexey's setup video (KQgNk-JWrVY) is only in the manual's
+      "See it in action" box; it was left off the About pages because it is Alexey's, not Magnus's.
 
 ## Content to add when the information is available
 

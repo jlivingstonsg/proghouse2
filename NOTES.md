@@ -36,6 +36,17 @@ See `README.md` and `tools/README.md` for how the site is built.
    `https://$CODESPACE_NAME-8000.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN/<page>` with
    `timeout 20 "$BROWSER" <url>` (the browser helper can hang without the timeout).
 5. Wait for "commit and push" before committing. Commit only the files that changed (not `tools/__pycache__`).
+6. Keep `TODO.md` and this file updated **as we talk** (Magnus asked for this on 2026-10-29), and commit
+   them together with the site change.
+
+## Decisions and preferences
+
+- The app is called **RoboCam Pro** on the site; "RoboCam54" is no longer used (package id stays).
+- Name: "M.Sc. Magnus Ivarsson" in English; Swedish text still says "teknologie magister" (open, see TODO).
+- So far the About pages link only to Magnus's own things and Alexey's video is only in the manual
+  (Claude's default, not confirmed by Magnus — see TODO).
+- Every page has a Back button (top left) and "RoboCam" in the top bar scrolls to the top. Back right
+  after switching EN/SV goes to the other language version (normal browser behaviour; Magnus has not asked to change it).
 
 ## History
 
@@ -45,3 +56,5 @@ See `README.md` and `tools/README.md` for how the site is built.
   in the top bar scrolls to the top on every page; this TODO/NOTES/CLAUDE.md setup and auto-start of Claude.
 - 2026-10-29: added Alexey's setup video (https://www.youtube.com/watch?v=KQgNk-JWrVY, in Russian) to the
   "See it in action" box at the top of the manual.
+- 2026-10-29: Magnus asked that TODO.md / NOTES.md be updated continuously during sessions; CLAUDE.md now
+  says so.
