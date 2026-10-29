@@ -8,7 +8,8 @@ from a phone camera and any browser.
 
 - **Part I** — the original RoboCam by Alexey (ПрогХаус), compiled and translated from the
   tutorials at <http://proghouse.ru/tags/robocam>.
-- **Part II** — *RoboCam54*, an independent private build by M.Sc. Magnus that adds LEGO
+- **Part II** — *RoboCam54*, an independent build by M.Sc. Magnus, now on Google Play as
+  [RoboCam Pro](https://play.google.com/store/apps/details?id=com.robocam.robocam54). It adds LEGO
   SPIKE Prime, a Huawei 360° USB camera with a pan/tilt viewer, a Google Cardboard VR
   viewer and a Clear Cache button. Documented here with the original author's consent;
   its source code is not released.
