@@ -2,6 +2,13 @@
 
 Open items for the RoboCam site. Tick them off (or delete them) as they get done.
 
+## Start here next session
+
+1. Ask Magnus the quick questions below — most are one-word answers. Suggested first: the Swedish title
+   (recommend "civilingenjör", his own site uses it) and "parashoot" = skydiving or paragliding.
+2. Restart the preview server if needed: `python3 -m http.server 8000` (it does not survive a Codespace restart).
+3. Everything up to commit `3be9c9e` is live on GitHub Pages; only TODO.md / NOTES.md may be uncommitted.
+
 ## Waiting on a decision from Magnus
 
 - [ ] **"National master" wording** on the About pages: keep "national master of 3D Tetris since 1989",

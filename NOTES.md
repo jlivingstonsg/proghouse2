@@ -38,6 +38,17 @@ See `README.md` and `tools/README.md` for how the site is built.
   https://blockout.net/blockout2/worldranking/index.php?setupid=458
 - Privacy policy: https://jlivingstonsg.github.io/robocam-privacy/
 - GitHub: https://github.com/jlivingstonsg
+- GameReality: https://gamereality.se/ · Facebook page https://www.facebook.com/gamereality1
+- Superprof (tutoring): https://www.superprof.se/master-science-engineering-physics-lth-ger-matematik-och-fysiklektioner-upp-till-universitetsniva-fran-helsingborg-till.html
+- Isotopium (comparison in "My vision"): https://www.patreon.com/isotopium/about
+- Alexey's setup video (manual only): https://www.youtube.com/watch?v=KQgNk-JWrVY
+
+## About page layout (about-en.html / about-sv.html, same order in both)
+
+Heading + lead → **About me** (degree, 3D Tetris / BlockOut II rank, blockout.nu, BlockOut licence, Superprof,
+flying) → **GameReality and telerobotics** (2005–2016 timeline) → **My vision** → **RoboCam Pro** → **Links**
+cards (Google Play, manual, privacy policy, LinkedIn, Facebook, GameReality, GameReality Facebook, YouTube,
+RoboCam videos, GitHub).
 
 ## How Magnus likes changes done
 
@@ -86,3 +97,5 @@ See `README.md` and `tools/README.md` for how the site is built.
   licence, Superprof tutoring, and GameReality website + Facebook cards — all from gamereality.se.
 - 2026-10-29: About pages: added "My vision" section (Isotopium-style game, omni robots, 360° views,
   virtual tournaments → real robots, rentals, bring-your-own, robots hunting players on paintball/laser-tag arenas).
+- 2026-10-29 (end of session): all site changes committed and pushed (last: 3be9c9e). TODO.md got a
+  "Start here next session" list; NOTES.md got the About page layout and the remaining links.
