@@ -43,3 +43,5 @@ See `README.md` and `tools/README.md` for how the site is built.
   full name M.Sc. Magnus Ivarsson; new About pages (bio, LinkedIn, Facebook, YouTube, BlockOut II rank);
   video playlist box at the top of the manual; Back button top-left on every page; clicking "RoboCam"
   in the top bar scrolls to the top on every page; this TODO/NOTES/CLAUDE.md setup and auto-start of Claude.
+- 2026-10-29: added Alexey's setup video (https://www.youtube.com/watch?v=KQgNk-JWrVY, in Russian) to the
+  "See it in action" box at the top of the manual.
