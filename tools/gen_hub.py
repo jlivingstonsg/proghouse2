@@ -164,6 +164,7 @@ def page(c):
 <html lang="{c["lang"]}">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 64x64">
 <meta name="description" content="{c["desc"]}">
 <title>{c["title"]}</title>
 <link rel="alternate" hreflang="{c["other"]}" href="{c["other_file"]}">

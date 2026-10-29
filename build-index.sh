@@ -7,6 +7,7 @@ cd "$(dirname "$0")"
   echo '<html lang="en">'
   echo '<meta charset="utf-8">'
   echo '<meta name="viewport" content="width=device-width, initial-scale=1">'
+  echo '<link rel="icon" href="favicon.ico" sizes="16x16 32x32 64x64">'
   echo '<meta name="description" content="Bilingual EN/SV field manual for the RoboCam Android app — first-person control of LEGO EV3, SPIKE Prime and Arduino robots.">'
   cat robocam.html
   echo '</html>'

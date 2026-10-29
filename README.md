@@ -38,6 +38,7 @@ results and push; Pages redeploys within a minute.
   retouched copies with the interface text translated into English and Swedish; images that
   contain no Russian text (photos, 3D renders) are shared from `img/`.
 - `about-en.html` / `about-sv.html` — about the developer of RoboCam Pro (hand-written).
+- `favicon.ico` — the RoboCam robot icon shown in the browser tab, linked from every page.
 - `files/` — the author's downloads referenced by the tutorials, hosted here: the two RoboCam
   APKs (release 1.4.5: regular and RenderScript), the EV3 Explorer build guide (PDF), the
   ready-made RoboCam settings (XML), the Selenokhod EV3 helper program, the Arduino Explorer

@@ -49,6 +49,9 @@ See `README.md` and `tools/README.md` for how the site is built.
   to remove it from the main page. Back right after switching EN/SV goes to the other language version
   (normal browser behaviour; Magnus has not asked to change it).
 - "RoboCam" in the top bar scrolls to the top on every page, including the main page.
+- The "tab robot picture" Magnus asked for is the **browser-tab icon**: `favicon.ico` (robot = phone between two
+  tank tracks), taken from the RoboCam web client (`app/src/main/assets/web/def/favicon.ico` in the public repo
+  jlivingstonsg/RoboCam_latest; github.com/jlivingstonsg/RoboCam54 is not reachable from the Codespace).
 
 ## History
 
@@ -61,3 +64,5 @@ See `README.md` and `tools/README.md` for how the site is built.
 - 2026-10-29: Magnus asked that TODO.md / NOTES.md be updated continuously during sessions; CLAUDE.md now
   says so.
 - 2026-10-29: removed the Back button from the main page (`robocam.html` / `index.html`) only.
+- 2026-10-29: added the RoboCam robot `favicon.ico` as the browser-tab icon on every page (via build-index.sh,
+  gen_hub.py, gen_articles.py and the About pages).
