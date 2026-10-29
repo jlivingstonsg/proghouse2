@@ -9,6 +9,15 @@ See `README.md` and `tools/README.md` for how the site is built.
   National master of 3D Tetris since 1989; on the BlockOut II world ranking as **MagI**; made the
   online BlockOut II port at https://blockout.nu/.
   Has a parachute (skydiving) licence and a hang gliding licence, and has had two wings (2026-10-29).
+- From https://gamereality.se/ (Magnus's own site, read 2026-10-29): civilingenjör i teknisk fysik, LTH, graduated
+  2005; main interests telerobotics and particle physics; founder of GameReality (remote-controlled camera robot
+  game; Facebook page facebook.com/gamereality1); tutors maths/physics via Superprof; licensed in 2021 to use the
+  BlockOut name (gamepuzzles.com); paintball tank driven from Australia 2005; IPSO Challenge 2014 nominee
+  (Chicago); Draknästet TV8 6 Apr 2015 (all five investors, 2.5 MSEK); KDUW.biz radio with Sandy Carter (IBM)
+  28 Apr 2016; Serendipity Challenge Visby June 2016; Creative Business Cup 2016; telerobotics for the
+  "Ariel Fashion Shoot" project. His site still says BlockOut rank 28 — rank 15 is the newer figure.
+- Deliberately left OFF the About pages (private): his child, the LADOK/bullying note, the diploma document,
+  the CV link. Also left off: the competitor Remote Games / isotopium.com.
 - The app formerly called **RoboCam54** is now **RoboCam Pro** on Google Play:
   https://play.google.com/store/apps/details?id=com.robocam.robocam54
   The package id `com.robocam.robocam54` cannot change — keep it as is.
@@ -68,3 +77,5 @@ See `README.md` and `tools/README.md` for how the site is built.
 - 2026-10-29: added the RoboCam robot `favicon.ico` as the browser-tab icon on every page (via build-index.sh,
   gen_hub.py, gen_articles.py and the About pages).
 - 2026-10-29: About pages: added parachute and hang gliding licences and the two wings.
+- 2026-10-29: About pages: added GameReality and telerobotics section (2005–2016 highlights), BlockOut
+  licence, Superprof tutoring, and GameReality website + Facebook cards — all from gamereality.se.

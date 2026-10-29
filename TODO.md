@@ -8,6 +8,7 @@ Open items for the RoboCam site. Tick them off (or delete them) as they get done
       or change to "Swedish champion in 3D Tetris since 1989" ("svensk mästare")?
 - [ ] **Swedish degree title**: the Swedish text uses "teknologie magister Magnus Ivarsson", but an LTH
       engineering physics degree is normally "civilingenjör". Switch to "civilingenjör Magnus Ivarsson"?
+      gamereality.se says "civilingenjör i teknisk fysik från LTH, med examen 2005" — supports switching.
 - [ ] **Contact email** on the About pages: add one or not? (Not added; don't add without asking.)
 - [ ] **GitHub card** on the About pages links to github.com/jlivingstonsg — confirm it should stay.
 - [ ] **Flying wording** on the About pages: written as "skydiving (parachute) licence" and "owned two
@@ -17,6 +18,9 @@ Open items for the RoboCam site. Tick them off (or delete them) as they get done
 
 ## Content to add when the information is available
 
+- [ ] **More for the About pages** — added from gamereality.se on 2026-10-29 (see NOTES). Still possible if
+      Magnus wants: photo; current job; other GitHub projects; languages spoken; a link to his CV
+      (Google Drive link on gamereality.se — left out until he says it should be public).
 - [ ] Add the **public Google Play release date** of RoboCam Pro to the development timeline in
       `robocam.html` (Part II). Only the closed-test dates (2026-09-19 – 09-20) are listed now.
 - [ ] Optionally add "formerly RoboCam54" once in Part II, so the package id `com.robocam.robocam54`
