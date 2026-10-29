@@ -16,8 +16,13 @@ See `README.md` and `tools/README.md` for how the site is built.
   (Chicago); Draknästet TV8 6 Apr 2015 (all five investors, 2.5 MSEK); KDUW.biz radio with Sandy Carter (IBM)
   28 Apr 2016; Serendipity Challenge Visby June 2016; Creative Business Cup 2016; telerobotics for the
   "Ariel Fashion Shoot" project. His site still says BlockOut rank 28 — rank 15 is the newer figure.
+- Magnus's vision (2026-10-29, now on the About pages under "My vision"): a game like Isotopium
+  (https://www.patreon.com/isotopium/about) but with omni robots and 360° camera views; virtual game where
+  gamers build robots and win tournaments → winners' robots built for real and put in his real arena; rent
+  out owners' robots when idle and split the profit; people can buy/build their own robot for the arenas;
+  robots big enough to hunt real people on paintball / laser-tag arenas, remote-controlled from other countries.
 - Deliberately left OFF the About pages (private): his child, the LADOK/bullying note, the diploma document,
-  the CV link. Also left off: the competitor Remote Games / isotopium.com.
+  the CV link. Isotopium is now linked only as the comparison in "My vision", at Magnus's request.
 - The app formerly called **RoboCam54** is now **RoboCam Pro** on Google Play:
   https://play.google.com/store/apps/details?id=com.robocam.robocam54
   The package id `com.robocam.robocam54` cannot change — keep it as is.
@@ -79,3 +84,5 @@ See `README.md` and `tools/README.md` for how the site is built.
 - 2026-10-29: About pages: added parachute and hang gliding licences and the two wings.
 - 2026-10-29: About pages: added GameReality and telerobotics section (2005–2016 highlights), BlockOut
   licence, Superprof tutoring, and GameReality website + Facebook cards — all from gamereality.se.
+- 2026-10-29: About pages: added "My vision" section (Isotopium-style game, omni robots, 360° views,
+  virtual tournaments → real robots, rentals, bring-your-own, robots hunting players on paintball/laser-tag arenas).
