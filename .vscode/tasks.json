@@ -1,0 +1,15 @@
+{
+  // Starts Claude Code in a terminal when this folder opens (e.g. when the Codespace starts).
+  // Claude reads CLAUDE.md, which pulls in TODO.md and NOTES.md.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Claude Code",
+      "type": "shell",
+      "command": "export PATH=\"$HOME/.local/bin:$PATH\"; if command -v claude >/dev/null; then claude 'Read TODO.md and NOTES.md and give me a short status: what is open and what was done last.'; else echo 'Claude Code is not installed. Install it with: curl -fsSL https://claude.ai/install.sh | bash'; fi; exec bash",
+      "runOptions": { "runOn": "folderOpen" },
+      "presentation": { "reveal": "always", "focus": true, "panel": "dedicated", "showReuseMessage": false },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  // Let the "Start Claude Code" task in tasks.json run automatically when the folder opens.
+  "task.allowAutomaticTasks": "on"
+}
